@@ -1,16 +1,20 @@
 #include "map.h"
 #include "texture.h"
 #include "screen.h"
+#include "items/block.h"
+#include "items/itemdefmanager.h"
 #include <iostream>
 #include <math.h>
 
-Map::Map() :
+Map::Map(ItemDefManager* newItemDefs) :
 	tiles(nullptr),
 	mapWidth(128),
 	mapHeight(256),
 	tileWidth(16),
 	tileHeight(16),
-	tileSet(nullptr){
+	tileSet(nullptr),
+	itemDefs(newItemDefs)
+{
 }
 
 Map::~Map(){
@@ -31,11 +35,9 @@ bool Map::generate(int newSeed){
 			auto t = tile(x, y);
 
 			if (y > 26 + sin(x / 7.0) * 5 + sin(x / 11.0) * 5)
-				t->num = ((int)(y + sin(x / 5.0) * 2) / 4) % 2;
-			else if (48 < x && x <= 65 && (x % 8 == 1 || y % 5 == 0) && (y % 5 < 2))
-				t->num = -1;
+				t->blockId = ((int)(y + sin(x / 5.0) * 2) / 4) % 2 + 1;
 			else
-				t->num = -1;
+				t->blockId = 0;
 		}
 	}
 
@@ -52,15 +54,19 @@ void Map::findTileFrame(int x, int y){
 	if (x < 0 || x > mapWidth || y < 0 || y > mapHeight)
 		return;
 
-	auto tId   = tileNum(x,y);
-	auto tNum  = tiles[tId].num;
+	int tId       = tileNum(x,y);
+	int tBlockId  = tiles[tId].blockId;
+	Block* tBlock = dynamic_cast<Block*>(itemDefs->getItemDef(tBlockId));
 
-	bool left  = (x == 0)			 || (tiles[tId - 1].num != tNum);
-	bool right = (x == mapWidth  - 1) || (tiles[tId + 1].num != tNum);
-	bool up	= (y == 0)			 || (tiles[tId - mapWidth].num != tNum);
-	bool down  = (y == mapHeight - 1) || (tiles[tId + mapWidth].num != tNum);
+	if (tBlock != nullptr){
+		bool left  = (x == 0)			 || (tiles[tId - 1].blockId != tBlockId);
+		bool right = (x == mapWidth - 1) || (tiles[tId + 1].blockId != tBlockId);
+		bool up	   = (y == 0)			 || (tiles[tId - mapWidth].blockId != tBlockId);
+		bool down  = (y == mapHeight- 1) || (tiles[tId + mapWidth].blockId != tBlockId);
 
-	tiles[tId].frame = left * 1 + right * 2 + up * 4 + down * 8;
+		tiles[tId].frame = left * 1 + right * 2 + up * 4 + down * 8 + tBlock->startFrame;
+		if (tiles[tId].blockId == 0) tiles[tId].frame = -1;
+	}
 }
 
 void Map::render(){
@@ -70,25 +76,25 @@ void Map::render(){
 	for(int y = 0; y < mapHeight; y++){
 		for(int x = 0; x < mapWidth; x++){
 			Tile* t = &tiles[tileNum(x, y)];
-			if (t->num != -1){
+			if (t->frame != -1){
 				int tX  = (x * tileWidth);
 				int tY  = (y * tileHeight);
 
-				tileSet->drawTile(Vector2i(tX, tY), Vector2i(tileWidth, tileHeight), t->num * 16 + t->frame);
+				tileSet->drawTile(Vector2i(tX, tY), Vector2i(tileWidth, tileHeight), t->frame);
 			}
 		}
 	}
 }
 
-void Map::setTile(int x, int y, int16_t value){
+void Map::setTile(int x, int y, int blockId){
 	auto tMid = tile(x,y);
-	tMid->num = value;
+	tMid->blockId = blockId;
 
-	findTileFrame(x,y);
-	findTileFrame(x-1,y);
-	findTileFrame(x+1,y);
-	findTileFrame(x,y-1);
-	findTileFrame(x,y+1);
+	findTileFrame(x,   y);
+	findTileFrame(x-1, y);
+	findTileFrame(x+1, y);
+	findTileFrame(x,   y-1);
+	findTileFrame(x,   y+1);
 }
 
 /// Gives the tilenum of a given tile.
@@ -116,14 +122,13 @@ bool Map::validPos(int x1Px, int x2Px, int y1Px, int y2Px){
 	if (x1 < 0 || x2 >= mapWidth || y2 >= mapHeight)
 		return false;
 	if (y1 < 0){
-		if (y2 < 0)
-			return true;
 		y1 = 0;
 	}
 
 	for(int y = y1; y < y2; y++){
 		for(int x = x1; x < x2; x++){
-			if (tiles[tileNum(x,y)].num != -1){
+			Block* block = dynamic_cast<Block*>(itemDefs->getItemDef(tiles[tileNum(x,y)].blockId));
+			if (block->collisionType == BlockCollisionType::Solid){
 				return false;
 			}
 		}

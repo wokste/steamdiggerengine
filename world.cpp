@@ -3,12 +3,13 @@
 #include "entities/entity.h"
 #include "map.h"
 #include "entities/entityhandle.h"
+#include "items/itemdefmanager.h"
 
 World * world;
 
 World::World(){
 	entities = new EntityList();
-	map = new Map();
+	map = new Map(new ItemDefManager());
 	map->generate(1);
 }
 

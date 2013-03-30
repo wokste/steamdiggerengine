@@ -3,27 +3,29 @@
 
 class Texture;
 class Screen;
+class ItemDefManager;
 
 class Map{
 public:
 	class Tile{
 	public:
-		int8_t frame;
-		int16_t num;
+		int frame;
+		int blockId;
 	};
 
 	int		  mapWidth, mapHeight;
 	int		  tileWidth, tileHeight;
-	double	   gravity = 200;
+	double	   gravity = 400;
 
 public:
-	Map();
+	Map(ItemDefManager* newItemDefs);
 	~Map();
 
+	ItemDefManager* itemDefs;
 	bool generate(int seed);
 	void render();
-	void setTile(int x, int y, int16_t value);
-
+	void setTile(int x, int y, int blockId);
+	bool validPos(int x1Px, int x2Px, int y1Px, int y2Px);
 private:
 	Texture* tileSet;
 	Tile* tiles;
@@ -34,6 +36,4 @@ private:
 
 	void unloadResources();
 	void findTileFrame(int x, int y);
-public:
-	bool validPos(int x1Px, int x2Px, int y1Px, int y2Px);
 };

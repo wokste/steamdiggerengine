@@ -2,6 +2,7 @@
 #include "../texture.h"
 #include "../world.h"
 #include "../attack.h"
+#include "../map.h"
 
 #include <math.h>
 #include <algorithm>
@@ -39,8 +40,7 @@ void Entity::logic(int timeMs){
 	double timeS = timeMs / 1000.0;
 
 	if (stats->bGravity)
-		speed.y += 400 * timeS;
-	// TODO: Make gravity a configurable constant
+		speed.y += world->map->gravity * timeS;
 
 	if (speed.x < -stats->maxSpeed) speed.x = -stats->maxSpeed;
 	if (speed.x > stats->maxSpeed) speed.x = stats->maxSpeed;
