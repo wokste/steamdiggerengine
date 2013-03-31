@@ -26,12 +26,12 @@ public:
 	void render();
 	void setTile(int x, int y, int blockId);
 	bool validPos(int x1Px, int x2Px, int y1Px, int y2Px);
+	Tile* tile(int x, int y);
 private:
 	Texture* tileSet;
 	Tile* tiles;
 
 	int tileNum(int x, int y);
-	Tile* tile(int x, int y);
 	int32_t seed;
 
 	void unloadResources();

@@ -8,6 +8,7 @@ ItemDefManager::ItemDefManager(){
 	air->frameType = BlockFrameType::None;
 	air->startFrame = 42;
 	air->timeToMine = -1;
+	air->ID = 0;
 	itemDefs.push_back(air);
 
 	Block* dirt = new Block("Dirt");
@@ -16,6 +17,7 @@ ItemDefManager::ItemDefManager(){
 	dirt->frameType = BlockFrameType::XY;
 	dirt->startFrame = 0;
 	dirt->timeToMine = 0.7;
+	dirt->ID = 1;
 	itemDefs.push_back(dirt);
 
 	Block* stone = new Block("Stone");
@@ -24,6 +26,7 @@ ItemDefManager::ItemDefManager(){
 	stone->frameType = BlockFrameType::XY;
 	stone->startFrame = 16;
 	stone->timeToMine = 2.0;
+	stone->ID = 2;
 	itemDefs.push_back(stone);
 }
 ItemDef* ItemDefManager::getItemDef(int id){

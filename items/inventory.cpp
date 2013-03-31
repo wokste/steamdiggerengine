@@ -6,7 +6,7 @@
 
 Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs){
 	for (int i = 0; i < 36; ++i){
-		items[i].id = 0;
+		items[i].id = i % 2 + 1;
 		items[i].count = 10;
 	}
 	selectedItem=0;

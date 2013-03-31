@@ -137,8 +137,8 @@ void EntityStats::load(ConfigNode& config){
 
 	size = config.getVector2i("size");
 
-	frameOffset = -(config.getVector2i("size", 0) + config.getVector2i("size", 1)) / 2;
-	collision  = (config.getVector2i("size", 0) - config.getVector2i("size", 1)) / 2;
+	frameOffset =-(config.getVector2i("collision", 1) + config.getVector2i("collision", 0)) / 2;
+	collision   = (config.getVector2i("collision", 1) - config.getVector2i("collision", 0)) / 2;
 
 	texture=Texture::load(config);
 	hP = config.getInt("hp",100);

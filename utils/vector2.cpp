@@ -1,12 +1,16 @@
 #include "vector2.h"
 #include <math.h>
 
-Vector2d Vector2::SetLength(Vector2d source, double lengthNew){
-	double lengthOld = sqrt(source.x * source.x + source.y * source.y);
+Vector2d Vector2::setLength(Vector2d source, double lengthNew){
+	double lengthOld = length(source);
 	if (lengthOld < 0.1)
 		return Vector2d(0,0);
 
 	return source * lengthNew / lengthOld;
+}
+
+double Vector2::length(Vector2d source){
+	return sqrt(source.x * source.x + source.y * source.y);
 }
 
 Vector2d Vector2::iToD(Vector2i source){

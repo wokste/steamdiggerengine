@@ -29,7 +29,7 @@ int main(){
 	window.setVerticalSyncEnabled(true);
 	Screen screen(&window);
 
-	srand(time(NULL));
+	srand(time(nullptr));
 
 	// load resources, initialize the OpenGL states, ...
 	glEnable(GL_TEXTURE_2D);
@@ -41,7 +41,7 @@ int main(){
 
 	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(200,200)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
-	world->spawn("ghost.json",Vector2d(1200,200));
+	//world->spawn("ghost.json",Vector2d(1200,200));
 	HUD * hud = new HUD();
 
 	bool running = true;

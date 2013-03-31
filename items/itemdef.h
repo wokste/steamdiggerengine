@@ -8,17 +8,8 @@ class Weapon;
 class Armour;
 class Tool;
 
-enum class ItemType{
-	IT_Item,
-	IT_Weapon,
-	IT_Armour,
-	IT_Tool,
-	IT_Block
-};
-
 class ItemDef{
-protected:
-	ItemType itemType;
 public:
+	int ID;
 	virtual bool use(Player& owner, ItemStack& item, Vector2i mousePos) {return false;}
 };
