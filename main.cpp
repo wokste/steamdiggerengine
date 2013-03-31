@@ -52,10 +52,12 @@ int main(){
 
 		sf::Event event;
 		while (window.pollEvent(event)){
-			if (event.type == sf::Event::Closed){
+			if (event.type == sf::Event::EventType::Closed){
 				running = false;
-			} else if (event.type == sf::Event::Resized){
+			} else if (event.type == sf::Event::EventType::Resized){
 				screen.resize(Vector2::uToI(window.getSize()));
+			} else if (event.type == sf::Event::EventType::MouseWheelMoved) {
+				player->onMouseWheel(event.mouseWheel.delta);
 			}
 		}
 		glClearColor(0.2f, 0.0f, 0.4f, 1.0f);

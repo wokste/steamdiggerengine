@@ -1,6 +1,7 @@
-#ifndef INVENTORY_H
-#define INVENTORY_H
+#pragma once
 #include "../utils/vector2.h"
+#include "../cooldown.h"
+#include <SFML/Window.hpp>
 
 class ItemDef;
 class Player;
@@ -12,12 +13,15 @@ struct ItemStack{
 };
 
 class Inventory{
-	ItemStack items[36];
+	constexpr static int width = 9;
+	constexpr static int height = 4;
+
+	ItemStack items[width * height];
 	int selectedItem;
 	ItemDefManager* itemDefs;
+	Cooldown cooldown;
 public:
 	Inventory(ItemDefManager* newItemDefs);
-	bool use(Player & owner, Vector2i absoluteMouseLoc);
+	void logic(int timeMs, Player& owner, Vector2i mousePos);
+	void selectItem(int delta, bool relative = false);
 };
-
-#endif // INVENTORY_H

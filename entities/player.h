@@ -22,10 +22,11 @@ public:
 	virtual void checkInput(int timeMs, Screen& screen);
 	virtual void takeDamage(Attack& attack, Vector2d source);
 
+	void onMouseWheel(int delta);
+
 private:
 	int RP = 0;
 	Inventory inventory;
-	Cooldown cooldown;
 
 	void checkKeyboardMovement(int timeMs);
 };

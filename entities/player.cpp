@@ -13,7 +13,7 @@ Entity * PlayerStats::spawn(Vector2d newPos){
 }
 
 Player::Player(Vector2d newPos, PlayerStats * stats) : Entity(newPos, stats)
-	, inventory(new ItemDefManager()), cooldown(), RP(0){
+	, inventory(new ItemDefManager()), RP(0){
 	entityType = EntityType::ET_Player;
 }
 
@@ -23,7 +23,6 @@ Player::~Player(){
 
 void Player::logic(int timeMs){
 	Entity::logic(timeMs);
-	cooldown -= timeMs;
 }
 
 void Player::checkKeyboardMovement(int timeMs){
@@ -60,11 +59,16 @@ void Player::checkInput(int timeMs, Screen& screen){
 		}
 	}
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-		if (HP > 0 && cooldown.done()){
-			if (inventory.use(*this, screen.mousePos()))
-				cooldown.set(200);
-		}
+	if (HP > 0){
+		inventory.logic(timeMs, *this, screen.mousePos());
+	}
+}
+
+void Player::onMouseWheel(int delta){
+	if (delta > 0){
+		inventory.selectItem(1, true);
+	} else if (delta < 0){
+		inventory.selectItem(-1, true);
 	}
 }
 
