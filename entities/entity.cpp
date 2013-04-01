@@ -91,17 +91,16 @@ void Entity::move(Vector2d movement){
 
 bool Entity::validPos(Vector2d newPos){
 	if (!stats->bMapCollision) return true;
-	int xint = floorInt(newPos.x);
-	int yint = floorInt(newPos.y);
-	return world->validPos(xint - stats->collision.x, xint + stats->collision.x, yint - stats->collision.y, yint + stats->collision.y);
+	Vector2i intPos = Vector2::dToI(newPos);
+	return !world->areaHasBlocks(intPos - stats->collision, intPos + stats->collision);
 }
 
-bool Entity::checkCollision(Entity& other){
+bool Entity::isInArea(Vector2i px1, Vector2i px2){
 	return (
-	   (pos.x + stats->collision.x > other.pos.x - other.stats->collision.y) &&
-	   (pos.x - stats->collision.x < other.pos.x + other.stats->collision.y) &&
-	   (pos.y + stats->collision.x > other.pos.y - other.stats->collision.y) &&
-	   (pos.y - stats->collision.x < other.pos.y + other.stats->collision.y));
+	   (pos.x + stats->collision.x > px1.x) &&
+	   (pos.x - stats->collision.x < px2.x) &&
+	   (pos.y + stats->collision.y > px1.y) &&
+	   (pos.y - stats->collision.y < px2.y));
 }
 
 void Entity::onCollision(Entity& other){

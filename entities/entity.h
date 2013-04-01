@@ -43,6 +43,7 @@ public:
 	EntityType entityType;
 
 	Entity(Vector2d newPos, EntityStats* stats);
+	bool isInArea(Vector2i px1, Vector2i px2);
 
 	virtual ~Entity() {}
 	virtual void logic(int timeMs);
@@ -50,9 +51,8 @@ public:
 	virtual void startAnim(std::string animName);
 	virtual void move(Vector2d change);
 	virtual bool validPos(Vector2d newPos);
-	virtual bool checkCollision(Entity& other);
 	virtual void onCollision(Entity& other);
 	virtual void hitTerrain(bool hitWall);
 	virtual void takeDamage(Attack& attack, Vector2d source);
-	virtual void push(Vector2d dir , double force);
+	virtual void push(Vector2d dir, double force);
 };

@@ -111,14 +111,29 @@ void EntityList::logic(int timeMs){
 	// == Check Collisions ==
 	for (unsigned int i = 0 ; i < numEntities; ++i){
 		if (m_entities[i].exists()){
-			for (unsigned int j = 0 ; j < numEntities; ++j){
-				if (m_entities[j].exists() && m_entities[i].m_pEntry->checkCollision(*m_entities[j].m_pEntry)){
-					m_entities[i].m_pEntry->onCollision(*m_entities[j].m_pEntry);
-					m_entities[j].m_pEntry->onCollision(*m_entities[i].m_pEntry);
+			Entity* entity1 = m_entities[i].m_pEntry;
+			for (unsigned int j = i + 1 ; j < numEntities; ++j){
+				if (!m_entities[j].exists())
+					continue;
+				Entity* entity2 = m_entities[j].m_pEntry;
+				Vector2i entity2Pos = Vector2::dToI(entity2->pos);
+				if (entity1->isInArea(entity2Pos - entity2->stats->collision, entity2Pos + entity2->stats->collision)){
+					entity2->onCollision(*entity2);
+					entity2->onCollision(*entity1);
 				}
 			}
 		}
 	}
+}
+
+bool EntityList::areaHasEntity(Vector2i px1, Vector2i px2){
+	auto numEntities = m_entities.size();
+	for (unsigned int i = 0 ; i < numEntities; ++i){
+		if (m_entities[i].exists() && m_entities[i].m_pEntry->isInArea(px1, px2)){
+			return true;
+		}
+	}
+	return false;
 }
 
 void EntityList::render(){

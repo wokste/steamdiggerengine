@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include "utils/vector2.h"
+#include "items/enums.h"
 
 class Texture;
 class Screen;
@@ -13,9 +15,9 @@ public:
 		int blockId;
 	};
 
-	int		  mapWidth, mapHeight;
-	int		  tileWidth, tileHeight;
-	double	   gravity = 400;
+	Vector2i  mapSize;
+	Vector2i  tileSize;
+	double    gravity = 400;
 
 public:
 	Map(ItemDefManager* newItemDefs);
@@ -25,7 +27,7 @@ public:
 	bool generate(int seed);
 	void render();
 	void setTile(int x, int y, int blockId);
-	bool validPos(int x1Px, int x2Px, int y1Px, int y2Px);
+	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
 	Tile* tile(int x, int y);
 private:
 	Texture* tileSet;

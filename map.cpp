@@ -8,10 +8,8 @@
 
 Map::Map(ItemDefManager* newItemDefs) :
 	tiles(nullptr),
-	mapWidth(128),
-	mapHeight(256),
-	tileWidth(16),
-	tileHeight(16),
+	mapSize(Vector2i(256,128)),
+	tileSize(16,16),
 	tileSet(nullptr),
 	itemDefs(newItemDefs)
 {
@@ -26,12 +24,12 @@ bool Map::generate(int newSeed){
 	//MapGenerator generator(seed);
 
 	unloadResources();
-	tileSet = new Texture("tileset.png", Vector2i(16, 16));
+	tileSet = new Texture("tileset.png", tileSize);
 
-	tiles = new Tile[mapWidth * mapHeight];
+	tiles = new Tile[mapSize.x * mapSize.y];
 
-	for(int y = 0; y < mapHeight; y++){
-		for(int x = 0; x < mapWidth; x++){
+	for(int y = 0; y < mapSize.y; y++){
+		for(int x = 0; x < mapSize.x; x++){
 			auto t = tile(x, y);
 
 			if (y > 26 + sin(x / 7.0) * 5 + sin(x / 11.0) * 5)
@@ -41,8 +39,8 @@ bool Map::generate(int newSeed){
 		}
 	}
 
-	for(int y = 0; y < mapHeight; y++){
-		for(int x = 0; x < mapWidth; x++){
+	for(int y = 0; y < mapSize.y; y++){
+		for(int x = 0; x < mapSize.x; x++){
 			findTileFrame(x, y);
 		}
 	}
@@ -51,7 +49,7 @@ bool Map::generate(int newSeed){
 }
 
 void Map::findTileFrame(int x, int y){
-	if (x < 0 || x > mapWidth || y < 0 || y > mapHeight)
+	if (x < 0 || x > mapSize.x || y < 0 || y > mapSize.y)
 		return;
 
 	int tId       = tileNum(x,y);
@@ -60,9 +58,9 @@ void Map::findTileFrame(int x, int y){
 
 	if (tBlock != nullptr){
 		bool left  = (x == 0)			 || (tiles[tId - 1].blockId != tBlockId);
-		bool right = (x == mapWidth - 1) || (tiles[tId + 1].blockId != tBlockId);
-		bool up	   = (y == 0)			 || (tiles[tId - mapWidth].blockId != tBlockId);
-		bool down  = (y == mapHeight- 1) || (tiles[tId + mapWidth].blockId != tBlockId);
+		bool right = (x == mapSize.x - 1)|| (tiles[tId + 1].blockId != tBlockId);
+		bool up	   = (y == 0)			 || (tiles[tId - mapSize.x].blockId != tBlockId);
+		bool down  = (y == mapSize.y - 1)|| (tiles[tId + mapSize.x].blockId != tBlockId);
 
 		tiles[tId].frame = left * 1 + right * 2 + up * 4 + down * 8 + tBlock->startFrame;
 		if (tiles[tId].blockId == 0) tiles[tId].frame = -1;
@@ -73,14 +71,12 @@ void Map::render(){
 	if(tileSet == nullptr) return;
 
 	tileSet->bind(0xFFFFFFFF);
-	for(int y = 0; y < mapHeight; y++){
-		for(int x = 0; x < mapWidth; x++){
+	for(int y = 0; y < mapSize.y; y++){
+		for(int x = 0; x < mapSize.x; x++){
 			Tile* t = &tiles[tileNum(x, y)];
 			if (t->frame != -1){
-				int tX  = (x * tileWidth);
-				int tY  = (y * tileHeight);
-
-				tileSet->drawTile(Vector2i(tX, tY), Vector2i(tileWidth, tileHeight), t->frame);
+				Vector2i pos(x * tileSize.x, y * tileSize.y);
+				tileSet->drawTile(pos, tileSize, t->frame);
 			}
 		}
 	}
@@ -99,13 +95,13 @@ void Map::setTile(int x, int y, int blockId){
 
 /// Gives the tilenum of a given tile.
 inline int Map::tileNum(int x, int y){
-	return (y * mapWidth + x);
+	return (y * mapSize.x + x);
 }
 
 
 /// Gives the tiledata of a given tile.
 inline Map::Tile* Map::tile(int x, int y){
-	return &tiles[(y * mapWidth + x)];
+	return &tiles[(y * mapSize.x + x)];
 }
 
 void Map::unloadResources(){
@@ -113,14 +109,14 @@ void Map::unloadResources(){
 	if (tileSet  != nullptr) delete tileSet;
 }
 
-bool Map::validPos(int x1Px, int x2Px, int y1Px, int y2Px){
-	int x1 = (int)x1Px / tileWidth;
-	int x2 = (int)x2Px / tileWidth + 1;
-	int y1 = (int)y1Px / tileHeight;
-	int y2 = (int)y2Px / tileHeight + 1;
+bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
+	int x1 = (int)(px1.x / tileSize.x);
+	int x2 = (int)(px2.x / tileSize.x) + 1;
+	int y1 = (int)(px1.y / tileSize.y);
+	int y2 = (int)(px2.y / tileSize.y) + 1;
 
-	if (x1 < 0 || x2 >= mapWidth || y2 >= mapHeight)
-		return false;
+	if (x1 < 0 || x2 >= mapSize.x || y2 >= mapSize.y)
+		return true;
 	if (y1 < 0){
 		y1 = 0;
 	}
@@ -128,10 +124,10 @@ bool Map::validPos(int x1Px, int x2Px, int y1Px, int y2Px){
 	for(int y = y1; y < y2; y++){
 		for(int x = x1; x < x2; x++){
 			Block* block = dynamic_cast<Block*>(itemDefs->getItemDef(tiles[tileNum(x,y)].blockId));
-			if (block->collisionType == BlockCollisionType::Solid){
-				return false;
+			if (block->collisionType == colType){
+				return true;
 			}
 		}
 	}
-	return true;
+	return false;
 }

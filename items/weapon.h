@@ -9,4 +9,5 @@ public:
 
 	std::string projectileName;
 	virtual bool use(Player& owner, ItemStack& item, Vector2i mousePos);
+	virtual void load(ConfigNode& config);
 };

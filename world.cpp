@@ -32,10 +32,6 @@ Entity * World::spawn(EntityStats* stats, Vector2d spawnPos){
 	return nullptr;
 }
 
-bool World::validPos(int x1Px, int x2Px, int y1Px, int y2Px){
-	return map->validPos(x1Px, x2Px, y1Px, y2Px);
-}
-
 void World::logic(int timeMs){
 	entities->logic(timeMs);
 }
@@ -43,4 +39,12 @@ void World::logic(int timeMs){
 void World::render(){
 	map->render();
 	entities->render();
+}
+
+bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
+	return map->areaHasBlocks(px1,px2, colType);
+}
+
+bool World::areaHasEntity(Vector2i px1, Vector2i px2){
+	return entities->areaHasEntity(px1,px2);
 }

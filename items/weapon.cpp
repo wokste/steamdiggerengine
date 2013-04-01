@@ -3,6 +3,7 @@
 #include "../entities/projectile.h"
 
 #include "../world.h"
+#include "../utils/confignode.h"
 
 Weapon::Weapon() : projectileName("bullet.json"){
 }
@@ -14,4 +15,8 @@ bool Weapon::use(Player& owner, ItemStack& item, Vector2i mousePos){
 		shot->moveTo(Vector2::iToD(mousePos));
 	}
 	return true;
+}
+
+void Weapon::load(ConfigNode& config){
+	ItemDef::load(config);
 }
