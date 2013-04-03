@@ -19,6 +19,6 @@ public:
 	Vector2i mousePos();
 
 protected:
-	Vector2i center;
+	Vector2d center;
 	Vector2i size;
 };

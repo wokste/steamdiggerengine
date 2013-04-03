@@ -57,12 +57,7 @@ void Map::findTileFrame(int x, int y){
 	Block* tBlock = dynamic_cast<Block*>(itemDefs->getItemDef(tBlockId));
 
 	if (tBlock != nullptr){
-		bool left  = (x == 0)			 || (tiles[tId - 1].blockId != tBlockId);
-		bool right = (x == mapSize.x - 1)|| (tiles[tId + 1].blockId != tBlockId);
-		bool up	   = (y == 0)			 || (tiles[tId - mapSize.x].blockId != tBlockId);
-		bool down  = (y == mapSize.y - 1)|| (tiles[tId + mapSize.x].blockId != tBlockId);
-
-		tiles[tId].frame = left * 1 + right * 2 + up * 4 + down * 8 + tBlock->startFrame;
+		tiles[tId].frame = tBlock->startFrame;
 		if (tiles[tId].blockId == 0) tiles[tId].frame = -1;
 	}
 }
@@ -75,7 +70,7 @@ void Map::render(){
 		for(int x = 0; x < mapSize.x; x++){
 			Tile* t = &tiles[tileNum(x, y)];
 			if (t->frame != -1){
-				Vector2i pos(x * tileSize.x, y * tileSize.y);
+				Vector2i pos(x, y);
 				tileSet->drawTile(pos, tileSize, t->frame);
 			}
 		}
