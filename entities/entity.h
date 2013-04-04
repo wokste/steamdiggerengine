@@ -19,8 +19,8 @@ struct EntityStats{
 	bool bMapCollision=true;
 	bool bGravity=true;
 	Vector2i size;
-	Vector2i frameOffset;
-	Vector2i collision;
+	Vector2d frameOffset;
+	Vector2d collision;
 	Texture * texture= nullptr;
 	int hP = 0;
 	int color = 0xffffff;
@@ -43,7 +43,7 @@ public:
 	EntityType entityType;
 
 	Entity(Vector2d newPos, EntityStats* stats);
-	bool isInArea(Vector2i px1, Vector2i px2);
+	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}
 	virtual void logic(int timeMs);

@@ -43,21 +43,23 @@ void Texture::bind(int color){
 	glColor4ub((unsigned char)(color >> 24), (unsigned char)(color >> 16), (unsigned char)(color >> 8), (unsigned char)(color));
 }
 
-void Texture::drawTile(Vector2i pos, Vector2i tile, int tileNum){
+void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){
 	double texLeft = (tileNum % framesPerRow) * sizeGL.x;
 	double texRight = texLeft + sizeGL.x;
 	double texTop = (tileNum / framesPerRow) * sizeGL.y;
 	double texBottom = texTop + sizeGL.y;
 
+	Vector2d tileD = Vector2::iToD(tile) / 16.0;
+
 	glBegin(GL_QUADS);
 	glTexCoord2d(texLeft, texTop);
 	glVertex2d(pos.x, pos.y);
 	glTexCoord2d(texLeft, texBottom);
-	glVertex2d(pos.x, pos.y + tile.y);
+	glVertex2d(pos.x, pos.y + tileD.y);
 	glTexCoord2d(texRight, texBottom);
-	glVertex2d(pos.x + tile.x, pos.y + tile.y);
+	glVertex2d(pos.x + tileD.x, pos.y + tileD.y);
 	glTexCoord2d(texRight, texTop);
-	glVertex2d(pos.x + tile.x, pos.y);
+	glVertex2d(pos.x + tileD.x, pos.y);
 	glEnd();
 }
 void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest){

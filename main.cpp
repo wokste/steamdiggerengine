@@ -39,7 +39,7 @@ int main(){
 
 	world = new World();
 
-	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(200,200)));
+	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 	//world->spawn("ghost.json",Vector2d(1200,200));
 	HUD * hud = new HUD();

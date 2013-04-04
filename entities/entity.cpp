@@ -21,8 +21,8 @@ EntityStats::EntityStats() :
 	team(0)
 {
 	size = Vector2i(16,32);
-	frameOffset = Vector2i(0,0);
-	collision = Vector2i(16,32);
+	frameOffset = Vector2d(0,0);
+	collision = Vector2d(1,2);
 }
 
 Entity::Entity(Vector2d newPos, EntityStats * _stats) :
@@ -55,17 +55,17 @@ void Entity::logic(int timeMs){
 
 /// Rendering function
 void Entity::render(){
-	if (speed.x > 10) flipped = false;
-	if (speed.x < -10) flipped = true;
+	if (speed.x > 0.5) flipped = false;
+	if (speed.x < -0.5) flipped = true;
 
 	if (stats->texture != nullptr){
 		stats->texture->bind(stats->color);
 		int frame = 0;
 
 		if (flipped)
-			stats->texture->drawTile(Vector2i(floorInt(pos.x) + stats->frameOffset.x + stats->size.x, floorInt(pos.y) + stats->frameOffset.y), Vector2i(-stats->size.x, stats->size.y), frame);
+			stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x + stats->size.x, pos.y + stats->frameOffset.y), Vector2i(-stats->size.x, stats->size.y), frame);
 		else
-			stats->texture->drawTile(Vector2i(floorInt(pos.x) + stats->frameOffset.x, floorInt(pos.y) + stats->frameOffset.y), stats->size, frame);
+			stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
 	}
 }
 
@@ -90,12 +90,12 @@ void Entity::move(Vector2d movement){
 }
 
 bool Entity::validPos(Vector2d newPos){
-	if (!stats->bMapCollision) return true;
-	Vector2i intPos = Vector2::dToI(newPos);
-	return !world->areaHasBlocks(intPos - stats->collision, intPos + stats->collision);
+	if (!stats->bMapCollision)
+		return true;
+	return !world->areaHasBlocks(Vector2::dToI(newPos - stats->collision), Vector2::dToI(newPos + stats->collision));
 }
 
-bool Entity::isInArea(Vector2i px1, Vector2i px2){
+bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	return (
 	   (pos.x + stats->collision.x > px1.x) &&
 	   (pos.x - stats->collision.x < px2.x) &&
@@ -118,7 +118,7 @@ void Entity::takeDamage(Attack& attack, Vector2d source) {}
 
 void Entity::push(Vector2d dir , double force){
 	double dTot = sqrt(dir.x * dir.x + dir.y * dir.y);
-	if (dTot < 0.1)
+	if (dTot < 0.01)
 		return; // Push too close
 
 	speed += force * dir / dTot;
@@ -130,14 +130,14 @@ EntityStats::~EntityStats(){
 }
 
 void EntityStats::load(ConfigNode& config){
-	maxSpeed = config.getInt("max-speed");
+	maxSpeed = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity = config.getBool("gravity",true);
 
 	size = config.getVector2i("size");
 
-	frameOffset =-(config.getVector2i("collision", 1) + config.getVector2i("collision", 0)) / 2;
-	collision   = (config.getVector2i("collision", 1) - config.getVector2i("collision", 0)) / 2;
+	frameOffset =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
+	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 
 	texture=Texture::load(config);
 	hP = config.getInt("hp",100);

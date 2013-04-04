@@ -70,7 +70,7 @@ void Map::render(){
 		for(int x = 0; x < mapSize.x; x++){
 			Tile* t = &tiles[tileNum(x, y)];
 			if (t->frame != -1){
-				Vector2i pos(x, y);
+				Vector2d pos(x, y);
 				tileSet->drawTile(pos, tileSize, t->frame);
 			}
 		}
@@ -105,10 +105,10 @@ void Map::unloadResources(){
 }
 
 bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
-	int x1 = (int)(px1.x / tileSize.x);
-	int x2 = (int)(px2.x / tileSize.x) + 1;
-	int y1 = (int)(px1.y / tileSize.y);
-	int y2 = (int)(px2.y / tileSize.y) + 1;
+	int x1 = (int)(px1.x);
+	int x2 = (int)(px2.x) + 1;
+	int y1 = (int)(px1.y);
+	int y2 = (int)(px2.y) + 1;
 
 	if (x1 < 0 || x2 >= mapSize.x || y2 >= mapSize.y)
 		return true;

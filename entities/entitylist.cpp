@@ -116,8 +116,7 @@ void EntityList::logic(int timeMs){
 				if (!m_entities[j].exists())
 					continue;
 				Entity* entity2 = m_entities[j].m_pEntry;
-				Vector2i entity2Pos = Vector2::dToI(entity2->pos);
-				if (entity1->isInArea(entity2Pos - entity2->stats->collision, entity2Pos + entity2->stats->collision)){
+				if (entity1->isInArea(entity2->pos - entity2->stats->collision, entity2->pos + entity2->stats->collision)){
 					entity2->onCollision(*entity2);
 					entity2->onCollision(*entity1);
 				}
@@ -129,7 +128,7 @@ void EntityList::logic(int timeMs){
 bool EntityList::areaHasEntity(Vector2i px1, Vector2i px2){
 	auto numEntities = m_entities.size();
 	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (m_entities[i].exists() && m_entities[i].m_pEntry->isInArea(px1, px2)){
+		if (m_entities[i].exists() && m_entities[i].m_pEntry->isInArea(Vector2::iToD(px1), Vector2::iToD(px2))){
 			return true;
 		}
 	}

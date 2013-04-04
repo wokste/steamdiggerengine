@@ -17,7 +17,7 @@ public:
 
 	Vector2i  mapSize;
 	Vector2i  tileSize;
-	double    gravity = 400;
+	double    gravity = 25;
 
 public:
 	Map(ItemDefManager* newItemDefs);

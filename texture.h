@@ -26,7 +26,7 @@ public:
 	void bind(int color);
 
 	void setSize(Vector2i imgSize, Vector2i frameSize);
-	void drawTile(Vector2i pos, Vector2i tileSize, int tileNum);
+	void drawTile(Vector2d pos, Vector2i tileSize, int tileNum);
 	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest);
 };
 

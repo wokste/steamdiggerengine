@@ -40,9 +40,9 @@ void Player::checkKeyboardMovement(int timeMs){
 
 	if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
 	if (speed.x < -STATS->walkSpeed) speed.x = -STATS->walkSpeed;
-	if (speed.x < 10 && speed.x > -10 && slowDown) speed.x = 0;
+	if (speed.x < 0.5 && speed.x > -0.5 && slowDown) speed.x = 0;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !validPos(Vector2d(pos.x, pos.y + 4))){
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !validPos(Vector2d(pos.x, pos.y + 0.1))){
 		speed.y = -STATS->jumpHeight;
 	}
 }

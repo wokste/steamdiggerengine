@@ -22,8 +22,18 @@ ConfigNode ConfigNode::load(const std::string& filename){
 int ConfigNode::getInt(const std::string& name, const int defaultValue, const bool useDefault){
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_integer(val))
-		return (int)json_integer_value(val);
+		return json_integer_value(val);
 	ASSERT(useDefault, "??", "Integer " + name + " undefined");
+	return defaultValue;
+}
+
+double ConfigNode::getDouble(const std::string& name, const double defaultValue, const bool useDefault){
+	json_t* val = json_object_get(m_Node, name.c_str());
+	if (json_is_real(val))
+		return json_real_value(val);
+	else if (json_is_integer(val))
+		return (double)json_integer_value(val);
+	ASSERT(useDefault, "??", "Double " + name + " undefined");
 	return defaultValue;
 }
 
@@ -54,6 +64,19 @@ Vector2i ConfigNode::getVector2i(const std::string& name, int vecNr){
 	}
 
 	return Vector2i(16, 16);
+}
+
+Vector2d ConfigNode::getVector2d(const std::string& name, int vecNr){
+	vecNr *= 2;
+
+	json_t* arr = json_object_get(m_Node, name.c_str());
+	if (json_is_array(arr)){
+		json_t* v0 = json_array_get(arr, vecNr);
+		json_t* v1 = json_array_get(arr, vecNr+1);
+		return Vector2d(json_real_value(v0), json_real_value(v1));
+	}
+
+	return Vector2d(1, 1);
 }
 
 ConfigNode ConfigNode::getNode(const std::string& name){

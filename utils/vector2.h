@@ -2,6 +2,7 @@
 #include <SFML/System/Vector2.hpp>
 
 typedef sf::Vector2i Vector2i;
+typedef sf::Vector3i Vector3i;
 typedef sf::Vector2<double> Vector2d;
 
 namespace Vector2{
