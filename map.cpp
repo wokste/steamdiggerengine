@@ -8,7 +8,7 @@
 
 Map::Map(ItemDefManager* newItemDefs) :
 	tiles(nullptr),
-	mapSize(Vector2i(256,128)),
+	mapSize(Vector2i(128,64)),
 	tileSize(16,16),
 	tileSet(nullptr),
 	itemDefs(newItemDefs)
@@ -70,8 +70,8 @@ void Map::render(){
 		for(int x = 0; x < mapSize.x; x++){
 			Tile* t = &tiles[tileNum(x, y)];
 			if (t->frame != -1){
-				Vector2d pos(x, y);
-				tileSet->drawTile(pos, tileSize, t->frame);
+				Vector3i pos(x, y, 0);
+				tileSet->drawBlock(pos, t->frame, 255);
 			}
 		}
 	}

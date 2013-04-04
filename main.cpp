@@ -33,8 +33,10 @@ int main(){
 
 	// load resources, initialize the OpenGL states, ...
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	world = new World();
@@ -61,7 +63,7 @@ int main(){
 			}
 		}
 		glClearColor(0.2f, 0.0f, 0.4f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		screen.startScene();
 		glPushMatrix();

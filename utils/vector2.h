@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vector3.hpp>
 
 typedef sf::Vector2i Vector2i;
 typedef sf::Vector3i Vector3i;

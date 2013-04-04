@@ -53,15 +53,60 @@ void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){
 
 	glBegin(GL_QUADS);
 	glTexCoord2d(texLeft, texTop);
-	glVertex2d(pos.x, pos.y);
+	glVertex3d(pos.x, pos.y, 0);
 	glTexCoord2d(texLeft, texBottom);
-	glVertex2d(pos.x, pos.y + tileD.y);
+	glVertex3d(pos.x, pos.y + tileD.y, 0);
 	glTexCoord2d(texRight, texBottom);
-	glVertex2d(pos.x + tileD.x, pos.y + tileD.y);
+	glVertex3d(pos.x + tileD.x, pos.y + tileD.y, 0);
 	glTexCoord2d(texRight, texTop);
-	glVertex2d(pos.x + tileD.x, pos.y);
+	glVertex3d(pos.x + tileD.x, pos.y, 0);
 	glEnd();
 }
+
+void Texture::drawBlock(Vector3i pos, int tileNum, char light){
+	double x = pos.x;
+	double y = pos.y;
+	double z = pos.z;
+
+	double texLeft = (tileNum % framesPerRow) * sizeGL.x;
+	double texRight = texLeft + sizeGL.x;
+	double texTop = (tileNum / framesPerRow) * sizeGL.y;
+	double texBottom = texTop + sizeGL.y;
+
+	glBegin(GL_QUADS);
+		// Front Face
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y    ,z+1.0);
+		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y    ,z+1.0);
+		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z+1.0);
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z+1.0);
+		// Back Face
+		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z);
+		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y+1.0,z);
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y+1.0,z);
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z);
+		// Top Face
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z);
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y+1.0,z+1.0);
+		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y+1.0,z+1.0);
+		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z);
+		// Bottom Face
+		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y    ,z);
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y    ,z);
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z+1.0);
+		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z+1.0);
+		// Right face
+		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y    ,z);
+		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z);
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y+1.0,z+1.0);
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z+1.0);
+		// Left Face
+		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y    ,z);
+		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z+1.0);
+		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y+1.0,z+1.0);
+		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z);
+	glEnd();
+}
+
 void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest){
 	double texLeft = ((double)src.x / size.x);
 	double texRight = ((double)(src.x + imgSize.x) / size.x);
