@@ -17,7 +17,7 @@ Screen::Screen(sf::Window* newWindow){
 void Screen::startScene(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum(-8,8,6,-6,5,15);      // Left=-2, Right=2, Bottom=-2, Top=2, Near=5, Far=9
+	glFrustum(-4,4,3,-3,5,15);      // Left=-2, Right=2, Bottom=-2, Top=2, Near=5, Far=9
 	//glFrustum(-size.x / 2,size.x / 2,size.y / 2,-size.y / 2,0.1, 9001);
 	//gluPerspective(65.0, 1.5, 0.0, 9001.1337);
 	gluLookAt(0,0,1,0,0,0,0,1,0);

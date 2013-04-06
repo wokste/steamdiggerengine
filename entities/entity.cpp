@@ -62,9 +62,9 @@ void Entity::render(){
 		stats->texture->bind(stats->color);
 		int frame = 0;
 
-		if (flipped)
-			stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x + stats->size.x, pos.y + stats->frameOffset.y), Vector2i(-stats->size.x, stats->size.y), frame);
-		else
+		//if (flipped)
+		//	stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x + stats->size.x / 16.0, pos.y + stats->frameOffset.y), Vector2i(-stats->size.x, stats->size.y), frame);
+		//else
 			stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
 	}
 }

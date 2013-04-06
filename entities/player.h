@@ -7,7 +7,7 @@ class Screen;
 
 struct PlayerStats : public EntityStats{
 	double jumpHeight;
-	int accelSpeed;
+	double accelSpeed;
 	double walkSpeed;
 	PlayerStats() = default;
 	virtual Entity* spawn(Vector2d pos);

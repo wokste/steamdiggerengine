@@ -72,6 +72,9 @@ void Map::render(){
 			if (t->frame != -1){
 				Vector3i pos(x, y, 0);
 				tileSet->drawBlock(pos, t->frame, 255);
+
+				Vector3i pos2(x, y, 1);
+				tileSet->drawBlock(pos2, 32, 255);
 			}
 		}
 	}

@@ -79,7 +79,7 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 
 void PlayerStats::load(ConfigNode& config){
 	EntityStats::load(config);
-	jumpHeight = config.getInt("jump-height");
-	accelSpeed = config.getInt("acceleration");
-	walkSpeed = config.getInt("walk-speed");
+	jumpHeight = config.getDouble("jump-height");
+	accelSpeed = config.getDouble("acceleration");
+	walkSpeed = config.getDouble("walk-speed");
 }
