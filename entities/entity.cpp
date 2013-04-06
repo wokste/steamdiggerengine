@@ -21,7 +21,7 @@ EntityStats::EntityStats() :
 	team(0)
 {
 	size = Vector2i(16,32);
-	frameOffset = Vector2d(0,0);
+	frameOffset = Vector2d(-1,-2);
 	collision = Vector2d(1,2);
 }
 

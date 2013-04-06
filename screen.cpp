@@ -5,6 +5,9 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 
+constexpr double eyedist = 3;
+constexpr double blocksOnScreen = 50;
+
 int floorInt(double);
 
 Screen::Screen(sf::Window* newWindow){
@@ -17,7 +20,10 @@ Screen::Screen(sf::Window* newWindow){
 void Screen::startScene(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum(-4,4,3,-3,5,15);      // Left=-2, Right=2, Bottom=-2, Top=2, Near=5, Far=9
+
+	double blocksX = sqrt(blocksOnScreen * size.x / size.y);
+	double blocksY = sqrt(blocksOnScreen * size.y / size.x);
+	glFrustum(-blocksX/2, blocksX/2, blocksY/2, -blocksY/2, eyedist-1, eyedist+2);
 	//glFrustum(-size.x / 2,size.x / 2,size.y / 2,-size.y / 2,0.1, 9001);
 	//gluPerspective(65.0, 1.5, 0.0, 9001.1337);
 	gluLookAt(0,0,1,0,0,0,0,1,0);
@@ -34,7 +40,9 @@ void Screen::centerOn(Entity * player){
 	if (player != nullptr){
 		center = player->pos;
 	}
-	glTranslated(-center.x,-center.y,-10);
+	glScaled(1,1,-1);
+	glTranslated(-center.x,-center.y,eyedist);
+
 	/*gluLookAt(center.x, center.y, 0.0f,
 		center.x, center.y, 1.0f,
 		0.0f, 1.0f,  0.0f);*/

@@ -53,13 +53,13 @@ void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){
 
 	glBegin(GL_QUADS);
 	glTexCoord2d(texLeft, texTop);
-	glVertex3d(pos.x, pos.y, 0);
+	glVertex3d(pos.x, pos.y, 0.5);
 	glTexCoord2d(texLeft, texBottom);
-	glVertex3d(pos.x, pos.y + tileD.y, 0);
+	glVertex3d(pos.x, pos.y + tileD.y, 0.5);
 	glTexCoord2d(texRight, texBottom);
-	glVertex3d(pos.x + tileD.x, pos.y + tileD.y, 0);
+	glVertex3d(pos.x + tileD.x, pos.y + tileD.y, 0.5);
 	glTexCoord2d(texRight, texTop);
-	glVertex3d(pos.x + tileD.x, pos.y, 0);
+	glVertex3d(pos.x + tileD.x, pos.y, 0.5);
 	glEnd();
 }
 

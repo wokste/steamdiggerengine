@@ -19,8 +19,8 @@ Vector2d Vector2::iToD(Vector2i source){
 
 Vector2i Vector2::dToI(Vector2d source){
 	Vector2i ret;
-	ret.x = (int) (source.x - 0.5);
-	ret.y = (int) (source.y - 0.5);
+	ret.x = (int) (source.x);
+	ret.y = (int) (source.y);
 	return ret;
 }
 

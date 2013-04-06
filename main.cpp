@@ -34,10 +34,12 @@ int main(){
 	// load resources, initialize the OpenGL states, ...
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH);
-	glEnable(GL_ALPHA_TEST);
+	 glEnable (GL_DEPTH_TEST);
+	//glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	world = new World();
 
@@ -68,7 +70,6 @@ int main(){
 		screen.startScene();
 		glPushMatrix();
 		screen.centerOn(player);
-
 		world->render();
 		glPopMatrix();
 

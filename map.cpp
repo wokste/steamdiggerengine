@@ -8,7 +8,7 @@
 
 Map::Map(ItemDefManager* newItemDefs) :
 	tiles(nullptr),
-	mapSize(Vector2i(128,64)),
+	mapSize(Vector2i(64,64)),
 	tileSize(16,16),
 	tileSet(nullptr),
 	itemDefs(newItemDefs)
