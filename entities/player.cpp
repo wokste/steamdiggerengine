@@ -60,7 +60,7 @@ void Player::checkInput(int timeMs, Screen& screen){
 	}
 
 	if (HP > 0){
-		inventory.logic(timeMs, *this, screen.mousePos());
+		inventory.logic(timeMs, *this, screen);
 	}
 }
 

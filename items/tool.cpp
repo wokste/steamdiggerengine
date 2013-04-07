@@ -4,11 +4,12 @@
 
 #include "../world.h"
 #include "../utils/confignode.h"
+#include "../screen.h"
 
 Tool::Tool(){
 }
 
-bool Tool::use(Player& owner, ItemStack& item, Vector2i mousePos){
+bool Tool::use(Player& owner, ItemStack& item, Screen& screen){
 	// TODO: implement tool
 	return false;
 }

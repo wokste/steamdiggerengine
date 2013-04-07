@@ -16,7 +16,7 @@ public:
 	void centerOn(Entity * player);
 
 	// Note that openGL uses a different coordinate system than we do.
-	Vector2i mousePos();
+	Vector2d mousePos(int layer = -1);
 
 protected:
 	Vector2d center;

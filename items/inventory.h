@@ -6,6 +6,7 @@
 class ItemDef;
 class Player;
 class ItemDefManager;
+class Screen;
 
 struct ItemStack{
 	int id;
@@ -22,6 +23,6 @@ class Inventory{
 	Cooldown cooldown;
 public:
 	Inventory(ItemDefManager* newItemDefs);
-	void logic(int timeMs, Player& owner, Vector2i mousePos);
+	void logic(int timeMs, Player& owner, Screen& screen);
 	void selectItem(int delta, bool relative = false);
 };

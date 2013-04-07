@@ -27,7 +27,7 @@ public:
 
 	void setSize(Vector2i imgSize, Vector2i frameSize);
 	void drawTile(Vector2d pos, Vector2i tileSize, int tileNum);
-	void drawBlock(Vector3i pos, int tileNum, char light);
+	void drawBlock(Vector3i pos, int tileNum, int light);
 	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest);
 };
 

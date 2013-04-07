@@ -8,10 +8,11 @@ class Weapon;
 class Armour;
 class Tool;
 class ConfigNode;
+class Screen;
 
 class ItemDef{
 public:
 	int ID;
-	virtual bool use(Player& owner, ItemStack& item, Vector2i mousePos) {return false;}
+	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
 	virtual void load(ConfigNode& config);
 };

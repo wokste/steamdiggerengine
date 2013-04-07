@@ -4,6 +4,7 @@
 #include "weapon.h"
 #include <iostream>
 #include "../cooldown.h"
+#include "../screen.h"
 
 Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	for (int i = 0; i < width * height; ++i){
@@ -13,7 +14,7 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 	selectedItem=0;
 }
 
-void Inventory::logic(int timeMs, Player& owner, Vector2i mousePos){
+void Inventory::logic(int timeMs, Player& owner, Screen& screen){
 	cooldown -= timeMs;
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		return;
@@ -21,7 +22,7 @@ void Inventory::logic(int timeMs, Player& owner, Vector2i mousePos){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return;
 
-	if (itemDefs->getItemDef(items[selectedItem].id)->use(owner, items[selectedItem], mousePos)){
+	if (itemDefs->getItemDef(items[selectedItem].id)->use(owner, items[selectedItem], screen)){
 		cooldown.set(200);
 	}
 }

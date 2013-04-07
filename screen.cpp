@@ -5,8 +5,10 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 
-constexpr double eyedist = 3;
+constexpr double eyedist = 8;
 constexpr double blocksOnScreen = 50;
+constexpr double nearPlane = eyedist - 3;
+constexpr double farPlane = eyedist + 3;
 
 int floorInt(double);
 
@@ -23,7 +25,7 @@ void Screen::startScene(){
 
 	double blocksX = sqrt(blocksOnScreen * size.x / size.y);
 	double blocksY = sqrt(blocksOnScreen * size.y / size.x);
-	glFrustum(-blocksX/2, blocksX/2, blocksY/2, -blocksY/2, eyedist-1, eyedist+2);
+	glFrustum(-blocksX/2, blocksX/2, blocksY/2, -blocksY/2, nearPlane, farPlane);
 	//glFrustum(-size.x / 2,size.x / 2,size.y / 2,-size.y / 2,0.1, 9001);
 	//gluPerspective(65.0, 1.5, 0.0, 9001.1337);
 	gluLookAt(0,0,1,0,0,0,0,1,0);
@@ -48,8 +50,35 @@ void Screen::centerOn(Entity * player){
 		0.0f, 1.0f,  0.0f);*/
 }
 
-// Note that openGL uses a different coordinate system than we do.
-Vector2i Screen::mousePos(){
-	// TODO: 3DFIX
-	return sf::Mouse::getPosition(*window);// + center - size / 2;
+// Magical function inspired by http://olivers.posterous.com/linear-depth-in-glsl-for-real, but reversed
+constexpr double zBufferForLayer(int layer){
+	return (
+		(farPlane + nearPlane - (2.0 * nearPlane * farPlane) / (eyedist + layer + 1)) // No idea why this +1 is needed
+	/
+		(farPlane - nearPlane)
+	+ 1.0 ) / 2.0;
+}
+
+Vector2d Screen::mousePos(int layer){
+	auto mouse = sf::Mouse::getPosition(*window);
+
+    GLint viewport[4];
+    GLdouble modelview[16];
+    GLdouble projection[16];
+    GLfloat winX, winY, winZ;
+    GLdouble posX, posY, posZ;
+
+    glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+    glGetDoublev( GL_PROJECTION_MATRIX, projection );
+    glGetIntegerv( GL_VIEWPORT, viewport );
+
+    winX = (double)mouse.x;
+    winY = (double)size.y - (double)mouse.y;
+    if (layer == -1)
+		glReadPixels( mouse.x, mouse.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+	else
+		winZ = zBufferForLayer(layer);
+	std::cout << winZ << '\n';
+    gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+    return Vector2d(posX + center.x, posY + center.y);
 }
