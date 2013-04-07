@@ -6,7 +6,7 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-Block::Block(const std::string& name){
+Block::Block(){
 }
 
 bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
@@ -42,7 +42,7 @@ void Block::load(ConfigNode& config){
 
 	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
 	materialType = getBlockMaterialType(config.getString("material", "None"));
-	frameType = getBlockFrameType(config.getString("frame-method", "None"));
-	startFrame = config.getInt("frame-start");
-	//timeToMine = config.getDouble("time-to-mine");
+	startFrame = config.getInt("frame-start", -1);
+	numFrames = config.getInt("frame-count", 1);
+	timeToMine = config.getDouble("time-to-mine", -1);
 }

@@ -1,33 +1,31 @@
 #include "itemdefmanager.h"
 #include "block.h"
+#include "../utils/confignode.h"
+#include "../utils/assert.h"
+#include <iostream>
 
 ItemDefManager::ItemDefManager(){
-	Block* air = new Block("Air");
-	air->collisionType = BlockCollisionType::Air;
-	air->materialType = BlockMaterialType::None;
-	air->frameType = BlockFrameType::None;
-	air->startFrame = 42;
-	air->timeToMine = -1;
-	air->ID = 0;
-	itemDefs.push_back(air);
+	std::string fileName = "blocks.json";
+	std::cout << "loading " << fileName << "\n";
+	int id = 0;
 
-	Block* dirt = new Block("Dirt");
-	dirt->collisionType = BlockCollisionType::Solid;
-	dirt->materialType = BlockMaterialType::Stone;
-	dirt->frameType = BlockFrameType::XY;
-	dirt->startFrame = 0;
-	dirt->timeToMine = 0.7;
-	dirt->ID = 1;
-	itemDefs.push_back(dirt);
+	ConfigNode configArray = configArray.load(fileName);
+	configArray.forEachNode([&] (ConfigNode& config) {
+		ItemDef * stat = nullptr;
+		std::string className = config.getString("class");
 
-	Block* stone = new Block("Stone");
-	stone->collisionType = BlockCollisionType::Solid;
-	stone->materialType = BlockMaterialType::Stone;
-	stone->frameType = BlockFrameType::XY;
-	stone->startFrame = 16;
-	stone->timeToMine = 2.0;
-	stone->ID = 2;
-	itemDefs.push_back(stone);
+#define OPTION(str,class) if (className == str) {stat = new class ();}
+		OPTION("block",Block)
+#undef OPTION
+
+		ASSERT(stat, fileName, "Unknown class " + className);
+		if (stat != nullptr){
+			stat->ID = id;
+			id++;
+			stat->load(config);
+			itemDefs.push_back(stat);
+		}
+	});
 }
 ItemDef* ItemDefManager::getItemDef(int id){
 	return itemDefs[id];

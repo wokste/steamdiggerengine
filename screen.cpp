@@ -78,7 +78,7 @@ Vector2d Screen::mousePos(int layer){
 		glReadPixels( mouse.x, mouse.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
 	else
 		winZ = zBufferForLayer(layer);
-	std::cout << winZ << '\n';
+
     gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
     return Vector2d(posX + center.x, posY + center.y);
 }

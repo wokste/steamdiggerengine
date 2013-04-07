@@ -7,11 +7,11 @@ class Block : public ItemDef{
 public:
 	BlockCollisionType collisionType;
 	BlockMaterialType materialType;
-	BlockFrameType frameType;
 	int startFrame;
+	int numFrames;
 	double timeToMine;
 
-	Block(const std::string& name);
+	Block();
 	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
 	virtual void load(ConfigNode& config);
 };

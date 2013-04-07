@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <functional>
 #include "vector2.h"
 #include "../../external/jansson-2.4/src/jansson.h"
 
@@ -24,4 +25,5 @@ public:
 	Vector2i getVector2i(const std::string& name, int vecNr = 0);
 	Vector2d getVector2d(const std::string& name, int vecNr = 0);
 	ConfigNode getNode(const std::string& name);
+	void forEachNode(std::function<void (ConfigNode&)> elem_func);
 };

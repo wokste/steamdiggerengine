@@ -11,8 +11,3 @@ enum class BlockMaterialType{
 	None, Wood, Dirt, Stone, Plant
 };
 BlockMaterialType getBlockMaterialType(std::string);
-
-enum class BlockFrameType{
-	None, X, Y, XY
-};
-BlockFrameType getBlockFrameType(std::string);

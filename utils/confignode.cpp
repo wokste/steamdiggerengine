@@ -82,3 +82,16 @@ Vector2d ConfigNode::getVector2d(const std::string& name, int vecNr){
 ConfigNode ConfigNode::getNode(const std::string& name){
 	return ConfigNode(json_object_get(m_Node, name.c_str()));
 }
+
+void ConfigNode::forEachNode(std::function<void (ConfigNode&)> elem_func){
+	if (json_is_array(m_Node)){
+		unsigned int count = json_array_size(m_Node);
+		std::cout << "count " <<  count << "\n";
+		for (unsigned int i = 0; i < count; ++i){
+			ConfigNode childNode(json_array_get(m_Node, i));
+			elem_func(childNode);
+		}
+	} else {
+		std::cout << "not an array\n";
+	}
+}

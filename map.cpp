@@ -68,13 +68,17 @@ void Map::render(){
 	tileSet->bind(0xFFFFFFFF);
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
-			Tile* t = &tiles[tileNum(x, y)];
-			if (t->frame != -1){
+			Tile* frontTile = &tiles[tileNum(x, y)];
+			if (frontTile->frame != -1){
 				Vector3i pos(x, y, 0);
-				tileSet->drawBlock(pos, t->frame, 255);
+				tileSet->drawBlock(pos, frontTile->frame, 255);
 			}
-			Vector3i pos2(x, y, 1);
-			tileSet->drawBlock(pos2, 32, 128);
+
+			Tile* backTile = &tiles[tileNum(x, y)];
+			if (backTile->frame != -1){
+				Vector3i pos(x, y, 1);
+				tileSet->drawBlock(pos, backTile->frame, 128);
+			}
 		}
 	}
 }
