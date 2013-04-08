@@ -67,27 +67,17 @@ EntityStats * EntityList::load(std::string fileName){
 		return it->second;
 
 	EntityStats * stat = nullptr;
-
-	std::cout << "loading " << fileName << "\n";
-
-	ConfigNode config = config.load(fileName);
-
-	std::string className = config.getString("class");
-
+	ConfigNode::load(fileName, [&] (ConfigNode& config){
+		std::string className = config.getString("class");
 #define OPTION(str,class) if (className == str) {stat = new class ();}
-	//OPTION("entity",EntityStats)
-	OPTION("player",PlayerStats)
-	OPTION("projectile",ProjectileStats)
-	//OPTION("monster",MonsterStats)
-	OPTION("flyingmonster",FlyingMonsterStats)
+		OPTION("player",PlayerStats)
+		OPTION("projectile",ProjectileStats)
+		OPTION("flyingmonster",FlyingMonsterStats)
 #undef OPTION
-
-	ASSERT(stat, fileName, "Unknown class " + className);
-	if (stat != nullptr)
-		stat->load(config);
-
-	//input >> value;
-
+		ASSERT(stat, fileName, "Unknown class " + className);
+		if (stat != nullptr)
+			stat->load(config);
+	});
 	m_stats[fileName] = stat;
 	return stat;
 }

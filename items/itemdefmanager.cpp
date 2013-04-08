@@ -9,22 +9,23 @@ ItemDefManager::ItemDefManager(){
 	std::cout << "loading " << fileName << "\n";
 	int id = 0;
 
-	ConfigNode configArray = configArray.load(fileName);
-	configArray.forEachNode([&] (ConfigNode& config) {
-		ItemDef * stat = nullptr;
-		std::string className = config.getString("class");
+	ConfigNode::load(fileName, [&] (ConfigNode& configArray){
+		configArray.forEachNode([&] (ConfigNode& config) {
+			ItemDef * stat = nullptr;
+			std::string className = config.getString("class");
 
 #define OPTION(str,class) if (className == str) {stat = new class ();}
-		OPTION("block",Block)
+			OPTION("block",Block)
 #undef OPTION
 
-		ASSERT(stat, fileName, "Unknown class " + className);
-		if (stat != nullptr){
-			stat->ID = id;
-			id++;
-			stat->load(config);
-			itemDefs.push_back(stat);
-		}
+			ASSERT(stat, fileName, "Unknown class " + className);
+			if (stat != nullptr){
+				stat->ID = id;
+				id++;
+				stat->load(config);
+				itemDefs.push_back(stat);
+			}
+		});
 	});
 }
 ItemDef* ItemDefManager::getItemDef(int id){

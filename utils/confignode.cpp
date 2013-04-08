@@ -11,12 +11,14 @@ ConfigNode::~ConfigNode(){
 	//json_decref(m_Node);
 }
 
-ConfigNode ConfigNode::load(const std::string& filename){
+void ConfigNode::load(const std::string& filename, std::function<void (ConfigNode&)> load_func){
 	json_error_t error;
 	std::string fullName = dataDirectory + filename;
-	auto node = json_load_file(fullName.c_str(), 0, &error);
+	json_t* node = json_load_file(fullName.c_str(), 0, &error);
 	ASSERT(node, error.source, "Could not load " + filename + "\n" + error.text);
-	return ConfigNode(node);
+	auto cnode = ConfigNode(node);
+	load_func(cnode);
+	json_decref(node);
 }
 
 int ConfigNode::getInt(const std::string& name, const int defaultValue, const bool useDefault){

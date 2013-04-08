@@ -12,7 +12,7 @@ public:
 	//ConfigNode();
 	ConfigNode(json_t* node);
 	~ConfigNode();
-	static ConfigNode load(const std::string& filename);
+	static void load(const std::string& filename, std::function<void (ConfigNode&)> load_func);
 
 	int getInt(const std::string& name){return getInt(name, 0, false);}
 	int getInt(const std::string& name, const int defaultValue, const bool useDefault = true);
