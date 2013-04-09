@@ -8,7 +8,7 @@
 
 Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	for (int i = 0; i < width * height; ++i){
-		items[i].id = i % 4 + 1;
+		items[i].id = i % 7 + 1;
 		items[i].count = 50;
 	}
 	selectedItem=0;

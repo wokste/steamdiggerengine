@@ -1,5 +1,9 @@
 #include "itemdefmanager.h"
 #include "block.h"
+#include "weapon.h"
+#include "armour.h"
+#include "tool.h"
+
 #include "../utils/confignode.h"
 #include "../utils/assert.h"
 #include <iostream>
@@ -16,6 +20,9 @@ ItemDefManager::ItemDefManager(){
 
 #define OPTION(str,class) if (className == str) {stat = new class ();}
 			OPTION("block",Block)
+			OPTION("tool",Tool)
+			OPTION("weapon",Weapon)
+			OPTION("armour",Armour)
 #undef OPTION
 
 			ASSERT(stat, fileName, "Unknown class " + className);

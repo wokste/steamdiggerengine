@@ -18,7 +18,7 @@ bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 
 	Map* map = world->map;
 
-	if (map->tile(mousePos.x,mousePos.y)->blockId != 0)
+	if (map->tile(mousePos.x,mousePos.y, 0)->blockId != 0)
 		return false;
 
 	//Vector2i tilePx(mousePos.x, mousePos.y);
@@ -32,7 +32,7 @@ bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	//	(map->tile(x  ,y+1)->blockId == 0) && (map->tile(x  ,y-1)->blockId == 0))
 	//	return false;
 
-	map->setTile(mousePos.x, mousePos.y, ID);
+	map->setTile(mousePos.x, mousePos.y, 0, ID);
 	itemStack.count--;
 	return true;
 }

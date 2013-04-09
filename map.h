@@ -26,16 +26,16 @@ public:
 	ItemDefManager* itemDefs;
 	bool generate(int seed);
 	void render();
-	void setTile(int x, int y, int blockId);
+	void setTile(int x, int y, int layer, int blockId);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
-	Tile* tile(int x, int y);
+	Tile* tile(int x, int y, int layer);
 private:
 	Texture* tileSet;
 	Tile* tiles;
 
-	int tileNum(int x, int y);
+	int tileNum(int x, int y, int layer);
 	int32_t seed;
 
 	void unloadResources();
-	void findTileFrame(int x, int y);
+	void findTileFrame(int x, int y, int layer);
 };
