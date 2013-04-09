@@ -62,6 +62,11 @@ int main(){
 				screen.resize(Vector2::uToI(window.getSize()));
 			} else if (event.type == sf::Event::EventType::MouseWheelMoved) {
 				player->onMouseWheel(event.mouseWheel.delta);
+			} else if (event.type == sf::Event::EventType::KeyPressed){
+				if (event.key.code == sf::Keyboard::Key::Space)
+					player->tryJump();
+				else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
+					player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
 			}
 		}
 		glClearColor(0.2f, 0.0f, 0.4f, 1.0f);

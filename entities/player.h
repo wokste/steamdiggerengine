@@ -23,7 +23,8 @@ public:
 	virtual void takeDamage(Attack& attack, Vector2d source);
 
 	void onMouseWheel(int delta);
-
+	void selectItem(int nr);
+	void tryJump();
 private:
 	int RP = 0;
 	Inventory inventory;

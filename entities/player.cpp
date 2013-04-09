@@ -41,10 +41,6 @@ void Player::checkKeyboardMovement(int timeMs){
 	if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
 	if (speed.x < -STATS->walkSpeed) speed.x = -STATS->walkSpeed;
 	if (speed.x < 0.5 && speed.x > -0.5 && slowDown) speed.x = 0;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !validPos(Vector2d(pos.x, pos.y + 0.1))){
-		speed.y = -STATS->jumpHeight;
-	}
 }
 
 void Player::checkInput(int timeMs, Screen& screen){
@@ -69,6 +65,16 @@ void Player::onMouseWheel(int delta){
 		inventory.selectItem(1, true);
 	} else if (delta < 0){
 		inventory.selectItem(-1, true);
+	}
+}
+
+void Player::selectItem(int nr){
+	inventory.selectItem(nr, false);
+}
+
+void Player::tryJump(){
+	if (!validPos(Vector2d(pos.x, pos.y + 0.1))){
+		speed.y = -STATS->jumpHeight;
 	}
 }
 
