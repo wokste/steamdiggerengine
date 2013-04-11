@@ -6,6 +6,7 @@
 class Texture;
 class Screen;
 class ItemDefManager;
+class Block;
 
 class Map{
 public:
@@ -13,6 +14,8 @@ public:
 	public:
 		int frame;
 		int blockId;
+
+		void setBlock(Block* block);
 	};
 
 	Vector2i  mapSize;
@@ -26,10 +29,11 @@ public:
 	ItemDefManager* itemDefs;
 	bool generate(int seed);
 	void render();
-	void setTile(int x, int y, int layer, int blockId);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
-	Tile* tile(int x, int y, int layer);
+	Tile* tileRef(int x, int y, int layer);
+
 private:
+	Tile* tile(int x, int y, int layer);
 	Texture* tileSet;
 	Tile* tiles;
 

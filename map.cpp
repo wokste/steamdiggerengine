@@ -8,6 +8,12 @@
 
 constexpr int MAX_LAYERS = 2;
 
+void Map::Tile::setBlock(Block* block){
+	// TODO: random frame using numFrames
+	frame = block->startFrame;
+	blockId = block->ID;
+}
+
 Map::Map(ItemDefManager* newItemDefs) :
 	tiles(nullptr),
 	mapSize(Vector2i(64,64)),
@@ -93,13 +99,6 @@ void Map::render(){
 	}
 }
 
-void Map::setTile(int x, int y, int layer, int blockId){
-	auto tMid = tile(x, y, layer);
-	tMid->blockId = blockId;
-
-	findTileFrame(x, y, layer);
-}
-
 /// Gives the tilenum of a given tile.
 inline int Map::tileNum(int x, int y, int layer){
 	return (y * mapSize.x + x) * MAX_LAYERS + layer;
@@ -107,7 +106,15 @@ inline int Map::tileNum(int x, int y, int layer){
 
 
 /// Gives the tiledata of a given tile.
-inline Map::Tile* Map::tile(int x, int y, int layer){
+Map::Tile* Map::tile(int x, int y, int layer){
+	return &tiles[(y * mapSize.x + x) * MAX_LAYERS + layer];
+}
+
+/// Gives the tiledata of a given tileor nullptr if it is not a valid tile.
+Map::Tile* Map::tileRef(int x, int y, int layer){
+	if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
+		return nullptr;
+
 	return &tiles[(y * mapSize.x + x) * MAX_LAYERS + layer];
 }
 

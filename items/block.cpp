@@ -10,21 +10,21 @@ Block::Block(){
 }
 
 bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
-	Vector2i mousePos = Vector2::dToI(screen.mousePos(0));
+	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
+	int layerNum = useFrontLayer ? 0 : 1;
 
+	Vector2i mousePos = Vector2::dToI(screen.mousePos(layerNum));
 	auto dist = Vector2::length(owner.pos - Vector2::iToD(mousePos));
 	//if (dist > 80)
 	//	return false;
 
-	Map* map = world->map;
+	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
 
-	if (map->tile(mousePos.x,mousePos.y, 0)->blockId != 0)
+	if (t == nullptr || t->blockId != 0)
 		return false;
 
-	//Vector2i tilePx(mousePos.x, mousePos.y);
-
-	//if (world->areaHasEntity(Vector2.iToD(mousePos), Vector2.iToD(mousePos + Vector2i(1,1))))
-	//	return false;
+	if (useFrontLayer && world->areaHasEntity(mousePos, mousePos + Vector2i(1,1)))
+		return false;
 
 	// TODO: Fix buffer overflows
 	//if (
@@ -32,7 +32,7 @@ bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	//	(map->tile(x  ,y+1)->blockId == 0) && (map->tile(x  ,y-1)->blockId == 0))
 	//	return false;
 
-	map->setTile(mousePos.x, mousePos.y, 0, ID);
+	t->setBlock(this);
 	itemStack.count--;
 	return true;
 }
