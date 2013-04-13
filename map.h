@@ -7,6 +7,7 @@ class Texture;
 class Screen;
 class ItemDefManager;
 class Block;
+class MapGenerator;
 
 class Map{
 public:
@@ -23,11 +24,11 @@ public:
 	double    gravity = 25;
 
 public:
-	Map(ItemDefManager* newItemDefs);
+	Map(int seed, ItemDefManager* newItemDefs);
 	~Map();
 
 	ItemDefManager* itemDefs;
-	bool generate(int seed);
+	bool generate();
 	void render();
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
 	Tile* tileRef(int x, int y, int layer);
@@ -36,6 +37,7 @@ private:
 	Tile* tile(int x, int y, int layer);
 	Texture* tileSet;
 	Tile* tiles;
+	MapGenerator* generator;
 
 	int tileNum(int x, int y, int layer);
 	int32_t seed;

@@ -37,13 +37,13 @@ int main(){
 	 glEnable (GL_DEPTH_TEST);
 	//glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	world = new World();
 
-	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,10)));
+	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 	//world->spawn("ghost.json",Vector2d(1200,200));
 	HUD * hud = new HUD();

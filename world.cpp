@@ -4,13 +4,14 @@
 #include "map.h"
 #include "entities/entityhandle.h"
 #include "items/itemdefmanager.h"
+#include <stdlib.h>
 
 World * world;
 
 World::World(){
 	entities = new EntityList();
-	map = new Map(new ItemDefManager());
-	map->generate(1);
+	map = new Map(rand(), new ItemDefManager());
+	map->generate();
 }
 
 World::~World(){

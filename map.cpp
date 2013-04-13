@@ -6,6 +6,8 @@
 #include <iostream>
 #include <math.h>
 
+#include "utils/mapgenerator.h"
+
 constexpr int MAX_LAYERS = 2;
 
 void Map::Tile::setBlock(Block* block){
@@ -14,23 +16,22 @@ void Map::Tile::setBlock(Block* block){
 	blockId = block->ID;
 }
 
-Map::Map(ItemDefManager* newItemDefs) :
+Map::Map(int seed, ItemDefManager* newItemDefs) :
 	tiles(nullptr),
 	mapSize(Vector2i(64,64)),
 	tileSize(16,16),
 	tileSet(nullptr),
 	itemDefs(newItemDefs)
 {
+	generator = new MapGenerator(seed);
 }
 
 Map::~Map(){
 	unloadResources();
+	delete generator;
 }
 
-bool Map::generate(int newSeed){
-	seed = newSeed;
-	//MapGenerator generator(seed);
-
+bool Map::generate(){
 	unloadResources();
 	tileSet = new Texture("tileset.png", tileSize);
 
@@ -38,26 +39,11 @@ bool Map::generate(int newSeed){
 
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
-			auto t = tile(x, y, 0);
-
-			if (y > 26 + sin(x / 7.0) * 5 + sin(x / 11.0) * 5)
-				t->blockId = ((int)(y + sin(x / 5.0) * 2) / 4) % 2 + 1;
-			else
-				t->blockId = 0;
-
-			t = tile(x, y, 1);
-
-			if (y > 26 + sin(x / 7.0) * 5 + sin(x / 11.0) * 5)
-				t->blockId = ((int)(y + sin(x / 5.0) * 2) / 4) % 2 + 1;
-			else
-				t->blockId = 0;
-		}
-	}
-
-	for(int y = 0; y < mapSize.y; y++){
-		for(int x = 0; x < mapSize.x; x++){
-			findTileFrame(x, y, 0);
-			findTileFrame(x, y, 1);
+			for (int l = 0; l <= 1; l++){
+				auto t = tile(x, y, l);
+				t->blockId = generator->getBlockId(x,y,l);
+				findTileFrame(x, y, l);
+			}
 		}
 	}
 
