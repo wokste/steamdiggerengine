@@ -15,9 +15,6 @@ bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	int layerNum = useFrontLayer ? 0 : 1;
 
 	Vector2i mousePos = Vector2::dToI(screen.mousePos(layerNum));
-	auto dist = Vector2::length(owner.pos - Vector2::iToD(mousePos));
-	//if (dist > 80)
-	//	return false;
 
 	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
 	t->setBlock(nullptr);

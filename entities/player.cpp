@@ -12,7 +12,7 @@ Entity * PlayerStats::spawn(Vector2d newPos){
 	return new Player(newPos, this);
 }
 
-Player::Player(Vector2d newPos, PlayerStats * stats) : Entity(newPos, stats)
+Player::Player(Vector2d newPos, PlayerStats * newStats) : Entity(newPos, newStats)
 	, inventory(new ItemDefManager()), RP(0){
 	entityType = EntityType::ET_Player;
 }

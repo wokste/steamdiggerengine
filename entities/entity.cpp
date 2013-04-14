@@ -16,7 +16,7 @@ EntityStats::EntityStats() :
 	bMapCollision(true),
 	bGravity(true),
 	texture(nullptr),
-	hP(0),
+	HP(0),
 	color(0xffffff),
 	team(0)
 {
@@ -33,7 +33,7 @@ Entity::Entity(Vector2d newPos, EntityStats * _stats) :
 {
 	pos = newPos;
 	speed = Vector2d(0,0);
-	HP = stats->hP;
+	HP = stats->HP;
 }
 
 void Entity::logic(int timeMs){
@@ -140,7 +140,7 @@ void EntityStats::load(ConfigNode& config){
 	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 
 	texture=Texture::load(config);
-	hP = config.getInt("hp",100);
+	HP = config.getInt("hp",100);
 	color = config.getInt("color",0xffffffff);
 	if (color > 0x1000000) color += 0xff000000; // Alpha value
 	team = config.getInt("team",1);

@@ -135,7 +135,7 @@ Texture::~Texture(){
 	glDeleteTextures(1, &ID);
 }
 
-bool Texture::loadTexture(std::string fileName, Vector2i frameSize){
+bool Texture::loadTexture(std::string fileName, Vector2i newFrameSize){
 	sf::Image image;
 	if (!image.loadFromFile(dataDirectory + fileName))
 		return false;
@@ -154,6 +154,6 @@ bool Texture::loadTexture(std::string fileName, Vector2i frameSize){
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-	setSize(Vector2i(imgSize.x , imgSize.y), frameSize);
+	setSize(Vector2i(imgSize.x , imgSize.y), newFrameSize);
 	return true;
 }

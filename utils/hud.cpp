@@ -18,8 +18,10 @@ HUD::~HUD(){
 
 void HUD::draw(Player* player){
 	glLoadIdentity();
-	drawBar(player->HP / player->stats->hP, 0.3);
+	glDisable(GL_DEPTH_TEST);
+	drawBar(player->HP / player->stats->HP, 0.3);
 	drawEffects(player);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void HUD::drawEffects(Player* player){

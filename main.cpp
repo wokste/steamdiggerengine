@@ -6,7 +6,7 @@
 #include "screen.h"
 #include "entities/player.h"
 #include "world.h"
-#include "hud.h"
+#include "utils/hud.h"
 #include "utils/assert.h"
 
 std::string dataDirectory;
@@ -34,7 +34,7 @@ int main(){
 	// load resources, initialize the OpenGL states, ...
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH);
-	 glEnable (GL_DEPTH_TEST);
+	glEnable (GL_DEPTH_TEST);
 	//glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
@@ -46,7 +46,7 @@ int main(){
 	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 	//world->spawn("ghost.json",Vector2d(1200,200));
-	HUD * hud = new HUD();
+	HUD* hud = new HUD();
 
 	bool running = true;
 	while (running){
