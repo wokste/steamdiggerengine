@@ -4,16 +4,21 @@
 #include "items/block.h"
 #include "items/itemdefmanager.h"
 #include <iostream>
-#include <math.h>
+#include <cmath>
+#include <stdlib.h>
 
 #include "utils/mapgenerator.h"
 
 constexpr int MAX_LAYERS = 2;
 
 void Map::Tile::setBlock(Block* block){
-	// TODO: random frame using numFrames
-	frame = block->startFrame;
-	blockId = block->ID;
+	if (block == nullptr){
+		frame = -1;
+		blockId = -1;
+	} else {
+		frame = block->startFrame + rand() % block->numFrames;
+		blockId = block->ID;
+	}
 }
 
 Map::Map(int seed, ItemDefManager* newItemDefs) :
@@ -23,7 +28,7 @@ Map::Map(int seed, ItemDefManager* newItemDefs) :
 	tileSet(nullptr),
 	itemDefs(newItemDefs)
 {
-	generator = new MapGenerator(seed);
+	generator = new MapGenerator(seed, itemDefs);
 }
 
 Map::~Map(){
@@ -31,7 +36,7 @@ Map::~Map(){
 	delete generator;
 }
 
-bool Map::generate(){
+void Map::generate(){
 	unloadResources();
 	tileSet = new Texture("tileset.png", tileSize);
 
@@ -39,28 +44,10 @@ bool Map::generate(){
 
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
-			for (int l = 0; l <= 1; l++){
-				auto t = tile(x, y, l);
-				t->blockId = generator->getBlockId(x,y,l);
-				findTileFrame(x, y, l);
+			for (int layer = 0; layer <= 1; layer++){
+				tile(x, y, layer)->setBlock(generator->getBlock(x,y,layer));
 			}
 		}
-	}
-
-	return true;
-}
-
-void Map::findTileFrame(int x, int y, int layer){
-	if (x < 0 || x > mapSize.x || y < 0 || y > mapSize.y || layer < 0 || layer >= MAX_LAYERS)
-		return;
-
-	int tId       = tileNum(x,y, layer);
-	int tBlockId  = tiles[tId].blockId;
-	Block* tBlock = dynamic_cast<Block*>(itemDefs->getItemDef(tBlockId));
-
-	if (tBlock != nullptr){
-		tiles[tId].frame = tBlock->startFrame;
-		if (tiles[tId].blockId == 0) tiles[tId].frame = -1;
 	}
 }
 
@@ -70,24 +57,19 @@ void Map::render(){
 	tileSet->bind(0xFFFFFFFF);
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
-			Tile* frontTile = &tiles[tileNum(x, y, 0)];
+			Tile* frontTile = tile(x, y, 0);
 			if (frontTile->frame != -1){
 				Vector3i pos(x, y, 0);
 				tileSet->drawBlock(pos, frontTile->frame, 255);
 			}
 
-			Tile* backTile = &tiles[tileNum(x, y, 1)];
+			Tile* backTile = tile(x, y, 1);
 			if (backTile->frame != -1){
 				Vector3i pos(x, y, 1);
 				tileSet->drawBlock(pos, backTile->frame, 128);
 			}
 		}
 	}
-}
-
-/// Gives the tilenum of a given tile.
-inline int Map::tileNum(int x, int y, int layer){
-	return (y * mapSize.x + x) * MAX_LAYERS + layer;
 }
 
 
@@ -115,7 +97,7 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 	int y1 = (int)(px1.y);
 	int y2 = (int)(px2.y) + 1;
 
-	if (x1 < 0 || x2 >= mapSize.x || y2 >= mapSize.y)
+	if (x1 < 0 || x2 > mapSize.x || y2 > mapSize.y)
 		return true;
 	if (y1 < 0){
 		y1 = 0;
@@ -123,9 +105,12 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 
 	for(int y = y1; y < y2; y++){
 		for(int x = x1; x < x2; x++){
-			Block* block = dynamic_cast<Block*>(itemDefs->getItemDef(tiles[tileNum(x,y,0)].blockId));
-			if (block->collisionType == colType){
-				return true;
+			auto bId = tile(x,y,0)->blockId;
+			if (bId >= 0){
+				Block* block = itemDefs->getItemDef(bId)->asBlock();
+				if (block != nullptr && block->collisionType == colType){
+					return true;
+				}
 			}
 		}
 	}

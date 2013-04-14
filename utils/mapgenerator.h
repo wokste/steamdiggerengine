@@ -1,14 +1,17 @@
 #pragma once
 
 class PerlinNoise;
+class Block;
+class ItemDefManager;
 
 class MapGenerator{
 public:
-	MapGenerator(int seed);
+	MapGenerator(int seed, ItemDefManager* newItemDefs);
 	~MapGenerator();
-	int getBlockId(int x, int y, int layer);
+	Block* getBlock(int x, int y, int layer);
 private:
 	PerlinNoise* caveNoise;
 	PerlinNoise* groundNoise;
 	PerlinNoise* typeNoise;
+	ItemDefManager* itemDefs;
 };

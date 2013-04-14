@@ -20,12 +20,7 @@ bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	//	return false;
 
 	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
-
-	if (t == nullptr || t->blockId == 0)
-		return false;
-
-	t->blockId = 0;
-	t->frame = -1;
+	t->setBlock(nullptr);
 
 	return true;
 }

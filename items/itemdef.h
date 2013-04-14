@@ -15,4 +15,5 @@ public:
 	int ID;
 	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
 	virtual void load(ConfigNode& config);
+	virtual Block* asBlock(){return nullptr;}
 };

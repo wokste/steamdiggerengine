@@ -35,6 +35,7 @@ ItemDefManager::ItemDefManager(){
 		});
 	});
 }
+
 ItemDef* ItemDefManager::getItemDef(int id){
 	return itemDefs[id];
 }

@@ -28,7 +28,7 @@ public:
 	~Map();
 
 	ItemDefManager* itemDefs;
-	bool generate();
+	void generate();
 	void render();
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
 	Tile* tileRef(int x, int y, int layer);
@@ -39,9 +39,7 @@ private:
 	Tile* tiles;
 	MapGenerator* generator;
 
-	int tileNum(int x, int y, int layer);
 	int32_t seed;
 
 	void unloadResources();
-	void findTileFrame(int x, int y, int layer);
 };

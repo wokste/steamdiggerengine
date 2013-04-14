@@ -20,7 +20,7 @@ bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 
 	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
 
-	if (t == nullptr || t->blockId != 0)
+	if (t == nullptr || t->blockId >= 0)
 		return false;
 
 	if (useFrontLayer && world->areaHasEntity(mousePos, mousePos + Vector2i(1,1)))
