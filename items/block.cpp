@@ -2,7 +2,7 @@
 #include "../entities/player.h"
 
 #include "../world.h"
-#include "../map.h"
+#include "../map/map.h"
 #include "../utils/confignode.h"
 #include "../screen.h"
 

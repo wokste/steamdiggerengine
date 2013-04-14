@@ -1,13 +1,13 @@
 #include "map.h"
-#include "texture.h"
-#include "screen.h"
-#include "items/block.h"
-#include "items/itemdefmanager.h"
+#include "../utils/texture.h"
+#include "../screen.h"
+#include "../items/block.h"
+#include "../items/itemdefmanager.h"
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
 
-#include "utils/mapgenerator.h"
+#include "mapgenerator.h"
 
 constexpr int MAX_LAYERS = 2;
 

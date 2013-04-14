@@ -1,6 +1,6 @@
 #include "hud.h"
-#include "entities/player.h"
-#include "texture.h"
+#include "../entities/player.h"
+#include "../utils/texture.h"
 #include <GL/gl.h>
 
 HUD::HUD(){

@@ -1,8 +1,8 @@
 #include "entity.h"
-#include "../texture.h"
+#include "../utils/texture.h"
 #include "../world.h"
 #include "../attack.h"
-#include "../map.h"
+#include "../map/map.h"
 
 #include <math.h>
 #include <algorithm>

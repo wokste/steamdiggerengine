@@ -5,7 +5,7 @@
 
 #include <GL/gl.h>
 #include <string>
-#include "utils/vector2.h"
+#include "vector2.h"
 
 class ConfigNode;
 

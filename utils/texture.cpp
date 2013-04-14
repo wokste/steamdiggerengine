@@ -1,4 +1,4 @@
-#include "texture.h"
+#include "../utils/texture.h"
 
 #include <windows.h>
 #include <gl/gl.h>
@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include "utils/confignode.h"
+#include "../utils/confignode.h"
 
 extern std::string dataDirectory;
 

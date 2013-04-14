@@ -1,7 +1,7 @@
 #include "world.h"
 #include "entities/entitylist.h"
 #include "entities/entity.h"
-#include "map.h"
+#include "map/map.h"
 #include "entities/entityhandle.h"
 #include "items/itemdefmanager.h"
 #include <stdlib.h>

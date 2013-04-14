@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "utils/vector2.h"
-#include "items/enums.h"
+#include "../utils/vector2.h"
+#include "../items/enums.h"
 
 class Texture;
 class Screen;
