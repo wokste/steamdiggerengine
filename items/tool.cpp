@@ -11,15 +11,34 @@ Tool::Tool(){
 }
 
 bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
-	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
-	int layerNum = useFrontLayer ? 0 : 1;
+	//bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 
-	Vector2i mousePos = Vector2::dToI(screen.mousePos(layerNum));
+	//Vector2i mousePos = Vector2::dToI(screen.mousePos(-1));
+	int itemID = mineAt(world, Vector2::dToI(screen.mousePos(-1)), 1);
+	if (itemID != -1)
+		owner.inventory.add(itemID);
 
-	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
+	return (itemID != -1);
+}
+
+int Tool::mineAt(World* world, Vector2i pos, int layer){
+	auto t = world->map->tileRef(pos.x, pos.y, layer);
+
+	if (t == nullptr || t->blockId < 0)
+		return -1;
+
+	if (layer == 1){
+		// Check if their is a block in fron of this block. In this case mine the block in front.
+		Block* blockFront = world->map->blockRef(pos.x, pos.y, 0);
+		if (blockFront)
+			return mineAt(world, pos, 0);
+
+		if (!world->map->blockAdjacent(pos.x, pos.y, layer, BlockCollisionType::Air))
+			return -1;
+	}
+	int blockId = t->blockId;
 	t->setBlock(nullptr);
-
-	return true;
+	return blockId;
 }
 
 void Tool::load(ConfigNode& config){

@@ -1,5 +1,6 @@
 #include "block.h"
 #include "../entities/player.h"
+#include "itemdefmanager.h"
 
 #include "../world.h"
 #include "../map/map.h"
@@ -11,26 +12,36 @@ Block::Block(){
 
 bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
-	int layerNum = useFrontLayer ? 0 : 1;
+	int layer = (useFrontLayer ? 0 : 1);
 
-	Vector2i mousePos = Vector2::dToI(screen.mousePos(layerNum));
+	if (placeAt(world, Vector2::dToI(screen.mousePos(layer)), layer)){
+		itemStack.count--;
+		return true;
+	}
+	return false;
+}
 
-	auto t = world->map->tileRef(mousePos.x, mousePos.y, layerNum);
+bool Block::placeAt(World* world, Vector2i pos, int layer){
+	auto t = world->map->tileRef(pos.x, pos.y, layer);
 
 	if (t == nullptr || t->blockId >= 0)
 		return false;
 
-	if (useFrontLayer && world->areaHasEntity(mousePos, mousePos + Vector2i(1,1)))
+	if (layer == 0){
+		// Check if their is a block behind this block. Otherway try to place it in the back.
+		Block* blockBack = world->map->blockRef(pos.x, pos.y, 1);
+		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
+			return placeAt(world, pos, 1);
+
+		if (world->areaHasEntity(pos, pos + Vector2i(1,1)))
+			return false;
+	}
+
+	if (!world->map->blockAdjacent(pos.x, pos.y, layer, BlockCollisionType::Solid))
 		return false;
 
-	// TODO: Fix buffer overflows
-	//if (
-	//	(map->tile(x+1,y  )->blockId == 0) && (map->tile(x-1,  y)->blockId == 0) &&
-	//	(map->tile(x  ,y+1)->blockId == 0) && (map->tile(x  ,y-1)->blockId == 0))
-	//	return false;
-
 	t->setBlock(this);
-	itemStack.count--;
+
 	return true;
 }
 

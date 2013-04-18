@@ -91,6 +91,27 @@ void Map::unloadResources(){
 	if (tileSet  != nullptr) delete tileSet;
 }
 
+bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType){
+	// Test all adjacent tiles
+	for (int i = 0 ; i < 4; i++){
+		Block* block = blockRef(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3),layer);
+
+		if (block == nullptr)
+			continue;
+
+		if (block->collisionType == colType)
+			return true;
+	}
+	return false;
+}
+
+Block* Map::blockRef(int x, int y, int layer){
+	Tile* tile = tileRef(x,y,layer);
+	if (tile == nullptr || tile->blockId < 0)
+		return nullptr;
+	return itemDefs->getItemDef(tile->blockId)->asBlock();
+}
+
 bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 	int x1 = (int)(px1.x);
 	int x2 = (int)(px2.x) + 1;
@@ -109,6 +130,9 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 			if (bId >= 0){
 				Block* block = itemDefs->getItemDef(bId)->asBlock();
 				if (block != nullptr && block->collisionType == colType){
+					return true;
+				}
+				if (block == nullptr && colType == BlockCollisionType::Air){
 					return true;
 				}
 			}

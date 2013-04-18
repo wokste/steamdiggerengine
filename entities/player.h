@@ -25,9 +25,9 @@ public:
 	void onMouseWheel(int delta);
 	void selectItem(int nr);
 	void tryJump();
+	Inventory inventory;
 private:
 	int RP = 0;
-	Inventory inventory;
 
 	void checkKeyboardMovement(int timeMs);
 };

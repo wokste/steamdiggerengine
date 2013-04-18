@@ -3,6 +3,8 @@
 #include <string>
 #include "enums.h"
 
+class World;
+
 class Block : public ItemDef{
 public:
 	BlockCollisionType collisionType;
@@ -16,4 +18,6 @@ public:
 	virtual void load(ConfigNode& config);
 
 	virtual Block* asBlock(){return this;}
+private:
+	bool placeAt(World* world, Vector2i pos, int layer);
 };

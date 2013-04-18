@@ -8,10 +8,13 @@
 
 Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	for (int i = 0; i < width * height; ++i){
-		items[i].id = i % 7;
-		items[i].count = 50;
+		items[i].id = 0;
+		items[i].count = 0;
 	}
 	selectedItem=0;
+
+	items[0].id = 4; items[0].count = 1; // Mining tool
+	items[1].id = 6; items[1].count = 1; // Gun
 }
 
 void Inventory::logic(int timeMs, Player& owner, Screen& screen){
@@ -33,4 +36,24 @@ void Inventory::selectItem(int nr, bool relative){
 		selectedItem = (selectedItem + nr + width) % width;
 	else
 		selectedItem = nr;
+}
+
+bool Inventory::add(int itemId, int count){
+	for (int i = 0; i < width * height; ++i){
+		if (items[i].id == itemId){
+			items[i].count += count;
+			return true;
+		}
+	}
+
+	// Find empty slots
+	for (int i = 0; i < width * height; ++i){
+		if (items[i].count <= 0){
+			items[i].id = itemId;
+			items[i].count = count;
+			return true;
+		}
+	}
+
+	return false;
 }

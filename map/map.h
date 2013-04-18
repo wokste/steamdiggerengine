@@ -31,7 +31,9 @@ public:
 	void generate();
 	void render();
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
+	bool blockAdjacent(int x, int y, int layer, BlockCollisionType colType);
 	Tile* tileRef(int x, int y, int layer);
+	Block* blockRef(int x, int y, int layer);
 
 private:
 	Tile* tile(int x, int y, int layer);
