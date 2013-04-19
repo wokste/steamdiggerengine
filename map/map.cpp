@@ -96,8 +96,12 @@ bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType){
 	for (int i = 0 ; i < 4; i++){
 		Block* block = blockRef(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3),layer);
 
-		if (block == nullptr)
+		if (block == nullptr){
+			if (colType == BlockCollisionType::Air)
+				return true;
+
 			continue;
+		}
 
 		if (block->collisionType == colType)
 			return true;
