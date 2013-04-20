@@ -1,7 +1,12 @@
 #pragma once
 
+#include "../utils/vector2.h"
+#include <vector>
+
 class Texture;
+class Screen;
 class Player;
+class HUDElement;
 
 class HUD{
 public:
@@ -9,14 +14,32 @@ public:
 	HUD(const HUD& that) = delete;
 	~HUD();
 
-	void draw(Player* player);
-	void drawEffects(Player* player);
-	void drawBar(double HPPerc, double shieldPerc);
+	void draw(Screen& screen, Player* player);
+	//void add(HUDElement e);
 
 private:
-	int barX;
-	int barY;
-	int barWidth;
-	int barHeight;
+	std::vector<HUDElement*> hudElements;
+};
+
+class HUDElement{
+public:
+	HUDElement(){}
+	HUDElement(const HUDElement& that) = delete;
+	virtual ~HUDElement(){}
+
+	virtual void draw(Player* player) = 0;
+	Vector2i size;
+	Vector2d docking;
+};
+
+class HealthBarHUD : public HUDElement{
+public:
+	HealthBarHUD();
+	HealthBarHUD(const HealthBarHUD& that) = delete;
+	virtual ~HealthBarHUD();
+
+	virtual void draw(Player* player);
+private:
+	Vector2i barSize;
 	Texture* barTexture;
 };

@@ -116,17 +116,13 @@ void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest){
 	double texTop = ((double)src.y / size.y);
 	double texBottom = ((double)(src.y + imgSize.y) / size.y);
 
-	imgSize /= 16; // Quickfix. Remove this
+	//imgSize /= 16; // Quickfix. Remove this
 
 	glBegin(GL_QUADS);
-	glTexCoord2d(texLeft, texTop);
-	glVertex3d(dest.x, dest.y, 10);
-	glTexCoord2d(texLeft, texBottom);
-	glVertex3d(dest.x, dest.y + imgSize.y, 10);
-	glTexCoord2d(texRight, texBottom);
-	glVertex3d(dest.x + imgSize.x, dest.y + imgSize.y, 10);
-	glTexCoord2d(texRight, texTop);
-	glVertex3d(dest.x + imgSize.x, dest.y, 10);
+	glTexCoord2d(texLeft,  texTop);    glVertex2d(dest.x            , dest.y);
+	glTexCoord2d(texLeft,  texBottom); glVertex2d(dest.x            , dest.y + imgSize.y);
+	glTexCoord2d(texRight, texBottom); glVertex2d(dest.x + imgSize.x, dest.y + imgSize.y);
+	glTexCoord2d(texRight, texTop);    glVertex2d(dest.x + imgSize.x, dest.y);
 	glEnd();
 }
 

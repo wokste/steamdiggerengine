@@ -17,7 +17,7 @@ public:
 
 	// Note that openGL uses a different coordinate system than we do.
 	Vector2d mousePos(int layer = -1);
-
+	Vector2i getSize(){return size;}
 protected:
 	Vector2d center;
 	Vector2i size;

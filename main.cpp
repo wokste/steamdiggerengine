@@ -35,17 +35,15 @@ int main(){
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH);
 	glEnable (GL_DEPTH_TEST);
-	//glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	world = new World();
 
 	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
-	//world->spawn("ghost.json",Vector2d(1200,200));
+	//world->spawn("ghost.json",Vector2d(10,-20));
 	HUD* hud = new HUD();
 
 	bool running = true;
@@ -79,7 +77,7 @@ int main(){
 		glPopMatrix();
 
 		if (player != nullptr)
-			hud->draw(player);
+			hud->draw(screen, player);
 		// end the current frame (internally swaps the front and back buffers)
 		window.display();
 	}
