@@ -107,7 +107,7 @@ void EntityList::logic(int timeMs){
 					continue;
 				Entity* entity2 = m_entities[j].m_pEntry;
 				if (entity1->isInArea(entity2->pos - entity2->stats->collision, entity2->pos + entity2->stats->collision)){
-					entity2->onCollision(*entity2);
+					entity1->onCollision(*entity2);
 					entity2->onCollision(*entity1);
 				}
 			}

@@ -4,6 +4,7 @@
 #include "entitylist.h"
 
 #define STATS ((MonsterStats*)(stats))
+#include <iostream>
 
 void MonsterStats::load(ConfigNode& config){
 	EntityStats::load(config);
@@ -44,5 +45,6 @@ void Monster::onCollision(Entity& other){
 	if (other.entityType == EntityType::ET_Player && cooldown.done()){
 		other.takeDamage(STATS->hitAttack, pos);
 		cooldown.set(500);
+		std::cout << "hurts";
 	}
 }
