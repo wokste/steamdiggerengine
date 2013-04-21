@@ -7,8 +7,6 @@
 #include <tuple>
 #include <iostream>
 
-extern std::string dataDirectory;
-
 EntityList::EntityList(){
 	m_entities.resize(256);
 }

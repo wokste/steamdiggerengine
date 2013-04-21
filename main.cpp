@@ -12,12 +12,9 @@
 std::string dataDirectory;
 
 int main(){
-	// create the window
-	dataDirectory = "../../data/"; // TODO: fix this line
 	dataDirectory = "C:/Users/wokste/projects/steamdigger/data/";
-	//dataDirectory += "/.steamdigger/core/";
-	std::cout << dataDirectory;
 
+	// create the window
 	sf::ContextSettings settings;
 	settings.depthBits = 0;
 	settings.stencilBits = 0;
@@ -42,7 +39,7 @@ int main(){
 	glAlphaFunc(GL_GREATER, 0.5);
 	glEnable(GL_ALPHA_TEST);
 
-	world = new World();
+	World* world = new World();
 
 	world->spawn("ghost.json",Vector2d(10,-20));
 	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,-10)));

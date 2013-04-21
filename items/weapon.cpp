@@ -11,7 +11,7 @@ Weapon::Weapon() : projectileName(){
 }
 
 bool Weapon::use(Player& owner, ItemStack& item, Screen& screen){
-	Projectile * shot = dynamic_cast<Projectile*>(world->spawn(projectileName, owner.pos));
+	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(projectileName, owner.pos));
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));

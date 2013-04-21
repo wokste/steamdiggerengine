@@ -14,7 +14,7 @@ bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 	int layer = (useFrontLayer ? 0 : 1);
 
-	if (placeAt(world, Vector2::dToI(screen.mousePos(layer)), layer)){
+	if (placeAt(owner.world, Vector2::dToI(screen.mousePos(layer)), layer)){
 		itemStack.count--;
 		return true;
 	}

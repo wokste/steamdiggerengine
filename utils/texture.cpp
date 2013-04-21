@@ -1,4 +1,4 @@
-#include "../utils/texture.h"
+#include "texture.h"
 
 #include <windows.h>
 #include <gl/gl.h>

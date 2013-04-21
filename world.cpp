@@ -6,8 +6,6 @@
 #include "items/itemdefmanager.h"
 #include <stdlib.h>
 
-World * world;
-
 World::World(){
 	entities = new EntityList();
 	map = new Map(rand(), new ItemDefManager());
@@ -19,15 +17,17 @@ World::~World(){
 	delete map;
 }
 
-Entity * World::spawn(std::string type, Vector2d spawnPos){
+Entity* World::spawn(std::string type, Vector2d spawnPos){
 	return spawn(entities->load(type),spawnPos);
 }
 
-Entity * World::spawn(EntityStats* stats, Vector2d spawnPos){
+Entity* World::spawn(EntityStats* stats, Vector2d spawnPos){
 	if (stats != nullptr){
-		Entity * e = stats->spawn(spawnPos);
-		if (e != nullptr)
+		Entity* e = stats->spawn(spawnPos);
+		if (e != nullptr){
 			entities->addEntity(e);
+			e->world = this;
+		}
 		return e;
 	}
 	return nullptr;

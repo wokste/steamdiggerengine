@@ -14,7 +14,7 @@ bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	//bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 
 	//Vector2i mousePos = Vector2::dToI(screen.mousePos(-1));
-	int itemID = mineAt(world, Vector2::dToI(screen.mousePos(-1)), 1);
+	int itemID = mineAt(owner.world, Vector2::dToI(screen.mousePos(-1)), 1);
 	if (itemID != -1)
 		owner.inventory.add(itemID);
 

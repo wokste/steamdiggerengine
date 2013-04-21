@@ -6,6 +6,7 @@ class Attack;
 class Texture;
 class Entity;
 class ConfigNode;
+class World;
 
 enum class EntityType{
 	ET_FlyingMonster,
@@ -35,12 +36,15 @@ struct EntityStats{
 class Entity{
 public:
 	Vector2d pos;
+	World* world;
+
 	EntityStats* stats;
 	Vector2d speed;
 	double HP;
 	bool flipped;
 	bool bDeleteMe;
 	EntityType entityType;
+
 
 	Entity(Vector2d newPos, EntityStats* stats);
 	bool isInArea(Vector2d px1, Vector2d px2);
