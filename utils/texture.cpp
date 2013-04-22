@@ -40,7 +40,7 @@ void Texture::bind(int color){
 	glBindTexture(GL_TEXTURE_2D, ID);
 	gluErrorString(glGetError());
 
-	glColor4ub((unsigned char)(color >> 24), (unsigned char)(color >> 16), (unsigned char)(color >> 8), (unsigned char)(color));
+	glColor3ub((unsigned char)(color >> 16), (unsigned char)(color >> 8), (unsigned char)(color));
 }
 
 void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){

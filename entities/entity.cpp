@@ -141,7 +141,6 @@ void EntityStats::load(ConfigNode& config){
 
 	texture=Texture::load(config);
 	HP = config.getInt("hp",100);
-	color = config.getInt("color",0xffffffff);
-	if (color > 0x1000000) color += 0xff000000; // Alpha value
+	color = config.getInt("color",0xffffff);
 	team = config.getInt("team",1);
 }
