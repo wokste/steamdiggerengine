@@ -7,6 +7,7 @@ class Texture;
 class Entity;
 class ConfigNode;
 class World;
+class GameSettings;
 
 enum class EntityType{
 	ET_FlyingMonster,
@@ -29,8 +30,10 @@ struct EntityStats{
 
 	EntityStats();
 	virtual ~EntityStats();
-	virtual Entity* spawn(Vector2d pos) = 0;
-	virtual void load(ConfigNode& config);
+	virtual Entity* spawn(World& world, Vector2d pos) = 0;
+	virtual void load(GameSettings& gameSettings, ConfigNode& config);
+
+	static EntityStats* staticLoad(GameSettings& gameSettings, ConfigNode& config);
 };
 
 class Entity{
@@ -45,8 +48,7 @@ public:
 	bool bDeleteMe;
 	EntityType entityType;
 
-
-	Entity(Vector2d newPos, EntityStats* stats);
+	Entity(World& world, Vector2d newPos, EntityStats* stats);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}

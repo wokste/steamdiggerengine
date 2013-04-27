@@ -8,12 +8,9 @@
 #include "world.h"
 #include "utils/hud.h"
 #include "utils/assert.h"
-
-std::string dataDirectory;
+#include "utils/gamesettings.h"
 
 int main(){
-	dataDirectory = "C:/Users/wokste/projects/steamdigger/data/";
-
 	// create the window
 	sf::ContextSettings settings;
 	settings.depthBits = 0;
@@ -38,11 +35,10 @@ int main(){
 
 	glAlphaFunc(GL_GREATER, 0.5);
 	glEnable(GL_ALPHA_TEST);
-
-	World* world = new World();
-
-	world->spawn("ghost.json",Vector2d(10,-20));
-	Player* player = dynamic_cast<Player*>(world->spawn("player.json",Vector2d(20,-10)));
+	GameSettings* gameSettings = new GameSettings();
+	World* world = new World(gameSettings);
+	world->spawn(gameSettings->findResource("ghost.json"),Vector2d(10,-20));
+	Player* player = dynamic_cast<Player*>(world->spawn(gameSettings->findResource("player.json"),Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
 	HUD* hud = new HUD();

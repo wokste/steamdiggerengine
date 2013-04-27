@@ -6,8 +6,9 @@ class ProjectileStats;
 class Weapon : public ItemDef{
 public:
 	Weapon();
+	~Weapon();
 
-	std::string projectileName;
+	ProjectileStats* projectileType;
 	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
 	virtual void load(ConfigNode& config);
 };

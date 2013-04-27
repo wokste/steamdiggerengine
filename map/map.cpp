@@ -113,7 +113,7 @@ Block* Map::blockRef(int x, int y, int layer){
 	Tile* tile = tileRef(x,y,layer);
 	if (tile == nullptr || tile->blockId < 0)
 		return nullptr;
-	return itemDefs->getItemDef(tile->blockId)->asBlock();
+	return (*itemDefs)[tile->blockId]->asBlock();
 }
 
 bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
@@ -132,7 +132,7 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 		for(int x = x1; x < x2; x++){
 			auto bId = tile(x,y,0)->blockId;
 			if (bId >= 0){
-				Block* block = itemDefs->getItemDef(bId)->asBlock();
+				Block* block = (*itemDefs)[bId]->asBlock();
 				if (block != nullptr && block->collisionType == colType){
 					return true;
 				}

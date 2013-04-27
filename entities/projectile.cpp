@@ -6,11 +6,11 @@
 
 #define STATS ((ProjectileStats *)(stats))
 
-Entity * ProjectileStats::spawn(Vector2d pos){
-	return new Projectile(pos, this);
+Entity * ProjectileStats::spawn(World& newWorld, Vector2d pos){
+	return new Projectile(newWorld, pos, this);
 }
 
-Projectile::Projectile(Vector2d newPos, ProjectileStats * stats) : Entity(newPos, stats){
+Projectile::Projectile(World& newWorld, Vector2d newPos, ProjectileStats * stats) : Entity(newWorld, newPos, stats){
 	entityType = EntityType::ET_Projectile;
 }
 
@@ -35,8 +35,8 @@ void Projectile::moveTo(Vector2d newPos){
 	speed = diff / dtot * STATS->speed;
 }
 
-void ProjectileStats::load(ConfigNode& config){
-	EntityStats::load(config);
+void ProjectileStats::load(GameSettings& gameSettings, ConfigNode& config){
+	EntityStats::load(gameSettings, config);
 	speed = config.getInt("speed");
 	ConfigNode onHit = config.getNode("on-hit");
 	hitAttack.load(onHit);

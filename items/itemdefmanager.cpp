@@ -8,12 +8,10 @@
 #include "../utils/assert.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(){
-	std::string fileName = "blocks.json";
-	std::cout << "loading " << fileName << "\n";
+ItemDefManager::ItemDefManager(const std::string& filename){
 	int id = 0;
 
-	ConfigNode::load(fileName, [&] (ConfigNode& configArray){
+	ConfigNode::load(filename, [&] (ConfigNode& configArray){
 		configArray.forEachNode([&] (ConfigNode& config) {
 			ItemDef * stat = nullptr;
 			std::string className = config.getString("class");
@@ -25,7 +23,7 @@ ItemDefManager::ItemDefManager(){
 			OPTION("armour",Armour)
 #undef OPTION
 
-			ASSERT(stat, fileName, "Unknown class " + className);
+			ASSERT(stat, filename, "Unknown class " + className);
 			if (stat != nullptr){
 				stat->ID = id;
 				id++;
@@ -34,8 +32,4 @@ ItemDefManager::ItemDefManager(){
 			}
 		});
 	});
-}
-
-ItemDef* ItemDefManager::getItemDef(int id){
-	return itemDefs[id];
 }

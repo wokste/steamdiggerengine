@@ -7,11 +7,17 @@
 #include "../screen.h"
 #include <iostream>
 
-Weapon::Weapon() : projectileName(){
+Weapon::Weapon() : projectileType(nullptr){
+}
+
+Weapon::~Weapon(){
+	if (projectileType) delete projectileType;
 }
 
 bool Weapon::use(Player& owner, ItemStack& item, Screen& screen){
-	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(projectileName, owner.pos));
+	if (!projectileType)
+		return false;
+	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(projectileType, owner.pos));
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));
@@ -21,5 +27,6 @@ bool Weapon::use(Player& owner, ItemStack& item, Screen& screen){
 
 void Weapon::load(ConfigNode& config){
 	ItemDef::load(config);
-	projectileName = config.getString("projectile-name");
+	//projectileType = ItemDefs.fromConfig(config.getNode("projectile"));
+	//TODO: load projectiles
 }

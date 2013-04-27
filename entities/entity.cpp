@@ -9,6 +9,12 @@
 #include "../utils/confignode.h"
 #include "../utils/vector2.h"
 
+#include "player.h"
+#include "flyingmonster.h"
+#include "projectile.h"
+#include "../utils/assert.h"
+#include "../utils/gamesettings.h"
+
 int floorInt(double);
 
 EntityStats::EntityStats() :
@@ -25,11 +31,12 @@ EntityStats::EntityStats() :
 	collision = Vector2d(1,2);
 }
 
-Entity::Entity(Vector2d newPos, EntityStats * _stats) :
+Entity::Entity(World& newWorld, Vector2d newPos, EntityStats* _stats) :
 	stats(_stats),
 	flipped(false),
 	bDeleteMe(false),
-	entityType(EntityType::ET_Unknown)
+	entityType(EntityType::ET_Unknown),
+	world(&newWorld)
 {
 	pos = newPos;
 	speed = Vector2d(0,0);
@@ -129,7 +136,7 @@ EntityStats::~EntityStats(){
 		delete texture;
 }
 
-void EntityStats::load(ConfigNode& config){
+void EntityStats::load(GameSettings& gameSettings, ConfigNode& config){
 	maxSpeed = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity = config.getBool("gravity",true);
@@ -138,9 +145,23 @@ void EntityStats::load(ConfigNode& config){
 
 	frameOffset =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
-
-	texture=Texture::load(config);
+	const std::string textureName = config.getString("texture");
+	texture = new Texture(gameSettings.findResource(textureName), config.getVector2i("size"));
 	HP = config.getInt("hp",100);
 	color = config.getInt("color",0xffffff);
 	team = config.getInt("team",1);
+}
+
+EntityStats* EntityStats::staticLoad(GameSettings& gameSettings, ConfigNode& config){
+	EntityStats* newStat = nullptr;
+	std::string className = config.getString("class");
+#define OPTION(str,class) if (className == str) {newStat = new class ();}
+	OPTION("player",PlayerStats)
+	OPTION("projectile",ProjectileStats)
+	OPTION("flyingmonster",FlyingMonsterStats)
+#undef OPTION
+	ASSERT(newStat, "", "Unknown class " + className);
+	if (newStat != nullptr)
+		newStat->load(gameSettings, config);
+	return newStat;
 }

@@ -59,27 +59,6 @@ EntityHandle EntityList::addEntity(Entity * pE){
 	return EntityHandle(numEntities, m_entities[numEntities].m_nr);
 }
 
-EntityStats * EntityList::load(std::string fileName){
-	auto it = m_stats.find(fileName);
-	if (it != m_stats.end())
-		return it->second;
-
-	EntityStats * stat = nullptr;
-	ConfigNode::load(fileName, [&] (ConfigNode& config){
-		std::string className = config.getString("class");
-#define OPTION(str,class) if (className == str) {stat = new class ();}
-		OPTION("player",PlayerStats)
-		OPTION("projectile",ProjectileStats)
-		OPTION("flyingmonster",FlyingMonsterStats)
-#undef OPTION
-		ASSERT(stat, fileName, "Unknown class " + className);
-		if (stat != nullptr)
-			stat->load(config);
-	});
-	m_stats[fileName] = stat;
-	return stat;
-}
-
 void EntityList::logic(int timeMs){
 	//std::vector<Entity *> toDelete;
 

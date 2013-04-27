@@ -2,18 +2,21 @@
 #include <SFML/Window.hpp>
 #include "../screen.h"
 #include "../attack.h"
+#include "../world.h"
+#include "../utils/gamesettings.h"
 
 #include "../utils/confignode.h"
 #include "../items/itemdefmanager.h"
 
 #define STATS ((PlayerStats *)(stats))
 
-Entity * PlayerStats::spawn(Vector2d newPos){
-	return new Player(newPos, this);
+Entity * PlayerStats::spawn(World& newWorld, Vector2d newPos){
+	return new Player(newWorld, newPos, this);
 }
 
-Player::Player(Vector2d newPos, PlayerStats * newStats) : Entity(newPos, newStats)
-	, inventory(new ItemDefManager()), RP(0){
+Player::Player(World& newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
+	, inventory(newWorld.gameSettings->itemDefs), RP(0){
+	//TODO: Fix constructor
 	entityType = EntityType::ET_Player;
 }
 
@@ -46,11 +49,10 @@ void Player::checkKeyboardMovement(int timeMs){
 void Player::checkInput(int timeMs, Screen& screen){
 	if (HP > 0){
 		checkKeyboardMovement(timeMs);
-	}
-	else{
+	}else{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-			pos.x = 200;
-			pos.y = 200;
+			pos.x = 2;
+			pos.y = -2;
 			HP = 100;
 		}
 	}
@@ -83,8 +85,8 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void PlayerStats::load(ConfigNode& config){
-	EntityStats::load(config);
+void PlayerStats::load(GameSettings& gameSettings, ConfigNode& config){
+	EntityStats::load(gameSettings, config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");

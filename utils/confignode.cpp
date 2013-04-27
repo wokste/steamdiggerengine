@@ -13,8 +13,7 @@ ConfigNode::~ConfigNode(){
 
 void ConfigNode::load(const std::string& filename, std::function<void (ConfigNode&)> onLoad){
 	json_error_t error;
-	std::string fullName = dataDirectory + filename;
-	json_t* node = json_load_file(fullName.c_str(), 0, &error);
+	json_t* node = json_load_file(filename.c_str(), 0, &error);
 	ASSERT(node, error.source, "Could not load " + filename + "\n" + error.text);
 	auto cnode = ConfigNode(node);
 	onLoad(cnode);
@@ -39,7 +38,7 @@ double ConfigNode::getDouble(const std::string& name, const double defaultValue,
 	return defaultValue;
 }
 
-std::string ConfigNode::getString(const std::string& name, const std::string& defaultValue, const bool useDefault){
+const std::string ConfigNode::getString(const std::string& name, const std::string& defaultValue, const bool useDefault){
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_string(val))
 		return std::string(json_string_value(val));

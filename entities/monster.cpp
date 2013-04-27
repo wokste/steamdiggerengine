@@ -6,13 +6,13 @@
 #define STATS ((MonsterStats*)(stats))
 #include <iostream>
 
-void MonsterStats::load(ConfigNode& config){
-	EntityStats::load(config);
+void MonsterStats::load(GameSettings& gameSettings, ConfigNode& config){
+	EntityStats::load(gameSettings, config);
 	ConfigNode onHit = config.getNode("on-hit");
 	hitAttack.load(onHit);
 }
 
-Monster::Monster(Vector2d newPos, MonsterStats* newStats) : Entity(newPos,newStats) , target(0,0), cooldown(){
+Monster::Monster(World& newWorld, Vector2d newPos, MonsterStats* newStats) : Entity(newWorld, newPos,newStats) , target(0,0), cooldown(){
 
 }
 

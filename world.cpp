@@ -4,11 +4,15 @@
 #include "map/map.h"
 #include "entities/entityhandle.h"
 #include "items/itemdefmanager.h"
+#include "utils/gamesettings.h"
 #include <stdlib.h>
+#include "utils/confignode.h"
 
-World::World(){
+World::World(GameSettings* newSettings) :
+	gameSettings(newSettings)
+{
 	entities = new EntityList();
-	map = new Map(rand(), new ItemDefManager());
+	map = new Map(rand(), gameSettings->itemDefs);
 	map->generate();
 }
 
@@ -18,12 +22,19 @@ World::~World(){
 }
 
 Entity* World::spawn(std::string type, Vector2d spawnPos){
-	return spawn(entities->load(type),spawnPos);
+	EntityStats * stat = nullptr;
+	ConfigNode::load(type, [&] (ConfigNode& config){
+		stat = EntityStats::staticLoad(*gameSettings, config);
+	});
+	if (stat)
+		return spawn(stat,spawnPos);
+	else
+		return nullptr;
 }
 
 Entity* World::spawn(EntityStats* stats, Vector2d spawnPos){
 	if (stats != nullptr){
-		Entity* e = stats->spawn(spawnPos);
+		Entity* e = stats->spawn(*this, spawnPos);
 		if (e != nullptr){
 			entities->addEntity(e);
 			e->world = this;

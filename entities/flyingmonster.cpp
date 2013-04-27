@@ -7,17 +7,17 @@
 
 #define STATS ((FlyingMonsterStats*)(stats))
 
-Entity * FlyingMonsterStats::spawn(Vector2d pos){
-	return new FlyingMonster(pos, this);
+Entity * FlyingMonsterStats::spawn(World& newWorld, Vector2d pos){
+	return new FlyingMonster(newWorld, pos, this);
 }
 
-void FlyingMonsterStats::load(ConfigNode& config){
-	MonsterStats::load(config);
+void FlyingMonsterStats::load(GameSettings& gameSettings, ConfigNode& config){
+	MonsterStats::load(gameSettings, config);
 	accelSpeed = config.getInt("acceleration");
 	bounceSpeed = config.getInt("bounce-speed");
 }
 
-FlyingMonster::FlyingMonster(Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newPos,newStats){
+FlyingMonster::FlyingMonster(World& newWorld, Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newWorld, newPos,newStats){
 	entityType = EntityType::ET_FlyingMonster;
 }
 

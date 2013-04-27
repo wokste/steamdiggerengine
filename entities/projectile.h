@@ -7,13 +7,13 @@ struct ProjectileStats : public EntityStats{
 	double speed;
 
 	ProjectileStats() = default;
-	virtual Entity* spawn(Vector2d newPos);
-	virtual void load(ConfigNode& config);
+	virtual Entity* spawn(World& world, Vector2d pos);
+	virtual void load(GameSettings& gameSettings, ConfigNode& config);
 };
 
 class Projectile : public Entity{
 public:
-	Projectile(Vector2d newPos, ProjectileStats * stats);
+	Projectile(World& world, Vector2d newPos, ProjectileStats * stats);
 	virtual void hitTerrain(bool hitWall);
 	virtual void onCollision(Entity& other);
 	virtual void moveTo(Vector2d point);

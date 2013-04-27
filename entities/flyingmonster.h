@@ -6,13 +6,13 @@ struct FlyingMonsterStats : public MonsterStats{
 	double bounceSpeed;
 
 	FlyingMonsterStats() = default;
-	virtual Entity * spawn(Vector2d);
-	virtual void load(ConfigNode& config);
+	virtual Entity* spawn(World& world, Vector2d pos);
+	virtual void load(GameSettings& gameSettings, ConfigNode& config);
 };
 
 class FlyingMonster : public Monster{
 public:
-	FlyingMonster(Vector2d newPos, FlyingMonsterStats* stats);
+	FlyingMonster(World& world, Vector2d newPos, FlyingMonsterStats* stats);
 	virtual void logic(int timeMs);
 	virtual void hitTerrain(bool hitWall);
 };

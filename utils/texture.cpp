@@ -12,13 +12,6 @@
 
 extern std::string dataDirectory;
 
-Texture* Texture::load(ConfigNode& config){
-	auto fileName = config.getString("texture");
-	std::cout << fileName;
-	Vector2i frameSize = config.getVector2i("size");
-	return new Texture(fileName, frameSize);
-}
-
 Texture::Texture(std::string fileName, Vector2i newFrameSize){
 	if (!loadTexture(fileName, newFrameSize)){
 		ID = 0;
@@ -133,7 +126,7 @@ Texture::~Texture(){
 
 bool Texture::loadTexture(std::string fileName, Vector2i newFrameSize){
 	sf::Image image;
-	if (!image.loadFromFile(dataDirectory + fileName))
+	if (!image.loadFromFile(fileName))
 		return false;
 
 	sf::Vector2u imgSize = image.getSize();

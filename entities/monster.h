@@ -8,13 +8,13 @@ struct MonsterStats : public EntityStats{
 	Attack hitAttack;
 
 	MonsterStats() = default;
-	virtual void load(ConfigNode& config);
+	virtual void load(GameSettings& gameSettings, ConfigNode& config);
 };
 
 class Monster : public Entity{
 public:
 	Cooldown cooldown;
-	Monster(Vector2d newPos, MonsterStats* stats);
+	Monster(World& world, Vector2d newPos, MonsterStats* stats);
 	virtual void logic(int timeMs);
 	virtual void onCollision(Entity& other);
 	virtual void takeDamage(Attack& attack, Vector2d source);

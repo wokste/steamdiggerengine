@@ -25,7 +25,13 @@ void Inventory::logic(int timeMs, Player& owner, Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return;
 
-	if (itemDefs->getItemDef(items[selectedItem].id)->use(owner, items[selectedItem], screen)){
+	if (items[selectedItem].id >= itemDefs->size()){
+		std::cout << "Warning: found and deleted unidentified item " << items[selectedItem].id << "\n";
+		items[selectedItem].count = 0;
+		return;
+	}
+
+	if ((*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen)){
 		cooldown.set(200);
 	}
 }

@@ -1,10 +1,12 @@
 #pragma once
 #include <vector>
+#include <string>
 class ItemDef;
 
 class ItemDefManager{
 	std::vector<ItemDef*> itemDefs;
 public:
-	ItemDefManager();
-	ItemDef* getItemDef(int id);
+	ItemDefManager(const std::string& filename);
+	ItemDef* operator[](int id){return itemDefs[id];}
+	int size() {return itemDefs.size();}
 };
