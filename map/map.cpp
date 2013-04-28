@@ -3,6 +3,7 @@
 #include "../screen.h"
 #include "../items/block.h"
 #include "../items/itemdefmanager.h"
+#include "../utils/gamesettings.h"
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
@@ -21,25 +22,25 @@ void Map::Tile::setBlock(Block* block){
 	}
 }
 
-Map::Map(int seed, ItemDefManager* newItemDefs) :
+Map::Map(int seed, GameSettings* gameSettings) :
 	tiles(nullptr),
 	mapSize(Vector2i(64,64)),
-	tileSize(16,16),
-	tileSet(nullptr),
-	itemDefs(newItemDefs)
+	tileSize(32,32),
+	itemDefs(gameSettings->itemDefs)
 {
+	tileSet = new Texture(gameSettings->findResource("tileset.png"), tileSize);
 	generator = new MapGenerator(seed, itemDefs);
 }
 
 Map::~Map(){
-	unloadResources();
+	if (tiles != nullptr) delete[] tiles;
+	delete tileSet;
 	delete generator;
 }
 
 void Map::generate(){
-	unloadResources();
-	tileSet = new Texture("tileset.png", tileSize);
-
+	if (tiles != nullptr)
+		delete[] tiles;
 	tiles = new Tile[mapSize.x * mapSize.y * MAX_LAYERS];
 
 	for(int y = 0; y < mapSize.y; y++){
@@ -84,11 +85,6 @@ Map::Tile* Map::tileRef(int x, int y, int layer){
 		return nullptr;
 
 	return &tiles[(y * mapSize.x + x) * MAX_LAYERS + layer];
-}
-
-void Map::unloadResources(){
-	if (tiles	!= nullptr) delete[] tiles;
-	if (tileSet  != nullptr) delete tileSet;
 }
 
 bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType){

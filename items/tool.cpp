@@ -7,7 +7,7 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-Tool::Tool(){
+Tool::Tool(ConfigNode& config ) : ItemDef(config){
 }
 
 bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
@@ -39,8 +39,4 @@ int Tool::mineAt(World* world, Vector2i pos, int layer){
 	int blockId = t->blockId;
 	t->setBlock(nullptr);
 	return blockId;
-}
-
-void Tool::load(ConfigNode& config){
-	ItemDef::load(config);
 }

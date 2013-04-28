@@ -13,9 +13,8 @@ public:
 	int numFrames;
 	double timeToMine;
 
-	Block();
+	Block(ConfigNode& config);
 	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
-	virtual void load(ConfigNode& config);
 
 	virtual Block* asBlock(){return this;}
 private:

@@ -5,28 +5,26 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 #include "../screen.h"
+#include "../entities/entity.h"
+#include "../utils/gameSettings.h"
 #include <iostream>
 
-Weapon::Weapon() : projectileType(nullptr){
+Weapon::Weapon(GameSettings& gameSettings, ConfigNode& config) : ItemDef(config){
+	auto childnode = config.getNode("projectile");
+	entitiyType = EntityStats::staticLoad(gameSettings, childnode);
 }
 
 Weapon::~Weapon(){
-	if (projectileType) delete projectileType;
+	if (entitiyType) delete entitiyType;
 }
 
 bool Weapon::use(Player& owner, ItemStack& item, Screen& screen){
-	if (!projectileType)
+	if (!entitiyType)
 		return false;
-	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(projectileType, owner.pos));
+	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(entitiyType, owner.pos));
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));
 	}
 	return true;
-}
-
-void Weapon::load(ConfigNode& config){
-	ItemDef::load(config);
-	//projectileType = ItemDefs.fromConfig(config.getNode("projectile"));
-	//TODO: load projectiles
 }

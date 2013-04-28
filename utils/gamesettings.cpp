@@ -5,7 +5,7 @@
 
 GameSettings::GameSettings(){
 	dataDir = findDataDir();
-	itemDefs = new ItemDefManager(findResource("items.json"));
+	itemDefs = new ItemDefManager(*this, findResource("items.json"));
 }
 
 GameSettings::~GameSettings(){

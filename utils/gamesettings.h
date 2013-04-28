@@ -12,4 +12,5 @@ public:
 private:
 	std::string dataDir;
 	std::string findDataDir();
+
 };

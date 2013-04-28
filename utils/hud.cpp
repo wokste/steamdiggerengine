@@ -2,14 +2,15 @@
 #include "../entities/player.h"
 #include "../utils/texture.h"
 #include "../screen.h"
+#include "../utils/gamesettings.h"
 #include <GL/gl.h>
 
 /* *******
    * HUD *
    ******* */
 
-HUD::HUD(){
-	hudElements.push_back(new HealthBarHUD());
+HUD::HUD(GameSettings* gameSettings){
+	hudElements.push_back(new HealthBarHUD(gameSettings));
 }
 
 HUD::~HUD(){
@@ -44,10 +45,9 @@ void HUD::draw(Screen& screen, Player* player){
    * HealthBarHUD *
    **************** */
 
-HealthBarHUD::HealthBarHUD(){
+HealthBarHUD::HealthBarHUD(GameSettings* gameSettings){
 	barSize = Vector2i(256, 24);
-	barTexture = new Texture("healthbar.png",barSize);
-	// TODO: Fix
+	barTexture = new Texture(gameSettings->findResource("healthbar.png"),barSize);
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);

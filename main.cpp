@@ -41,7 +41,7 @@ int main(){
 	Player* player = dynamic_cast<Player*>(world->spawn(gameSettings->findResource("player.json"),Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
-	HUD* hud = new HUD();
+	HUD* hud = new HUD(gameSettings);
 
 	bool running = true;
 	while (running){

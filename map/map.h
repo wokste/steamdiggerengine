@@ -6,6 +6,7 @@
 class Texture;
 class Screen;
 class ItemDefManager;
+class GameSettings;
 class Block;
 class MapGenerator;
 
@@ -24,7 +25,7 @@ public:
 	double    gravity = 25;
 
 public:
-	Map(int seed, ItemDefManager* newItemDefs);
+	Map(int seed, GameSettings* settings);
 	~Map();
 
 	ItemDefManager* itemDefs;

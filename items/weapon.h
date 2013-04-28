@@ -1,14 +1,13 @@
 #pragma once
 #include "itemdef.h"
 #include <string>
-class ProjectileStats;
+class EntityStats;
 
 class Weapon : public ItemDef{
 public:
-	Weapon();
+	Weapon(GameSettings& gameSettings, ConfigNode& config);
 	~Weapon();
 
-	ProjectileStats* projectileType;
+	EntityStats* entitiyType;
 	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
-	virtual void load(ConfigNode& config);
 };

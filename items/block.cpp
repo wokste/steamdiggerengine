@@ -7,8 +7,14 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-Block::Block(){
+Block::Block(ConfigNode& config) : ItemDef(config){
+	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
+	materialType = getBlockMaterialType(config.getString("material", "None"));
+	startFrame = config.getInt("frame-start", -1);
+	numFrames = config.getInt("frame-count", 1);
+	timeToMine = config.getDouble("time-to-mine", -1);
 }
+
 
 bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
@@ -43,14 +49,4 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 	t->setBlock(this);
 
 	return true;
-}
-
-void Block::load(ConfigNode& config){
-	ItemDef::load(config);
-
-	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
-	materialType = getBlockMaterialType(config.getString("material", "None"));
-	startFrame = config.getInt("frame-start", -1);
-	numFrames = config.getInt("frame-count", 1);
-	timeToMine = config.getDouble("time-to-mine", -1);
 }

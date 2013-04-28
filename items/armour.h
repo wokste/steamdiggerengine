@@ -4,6 +4,5 @@
 
 class Armour : public ItemDef{
 public:
-	Armour();
-	virtual void load(ConfigNode& config);
+	Armour(ConfigNode& config);
 };

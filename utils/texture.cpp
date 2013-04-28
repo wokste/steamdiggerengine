@@ -13,13 +13,13 @@
 extern std::string dataDirectory;
 
 Texture::Texture(std::string fileName, Vector2i newFrameSize){
-	if (!loadTexture(fileName, newFrameSize)){
-		ID = 0;
-		setSize(newFrameSize, newFrameSize);
-		std::cout<<"error loading texture " << fileName << '\n';
+	if (loadTexture(fileName, newFrameSize)){
+		std::cout<<"loaded texture " << fileName << " as " << ID<<'\n';
 		return;
 	}
-	std::cout<<"loaded texture " << fileName << " as " << ID<<'\n';
+	ID = 0;
+	setSize(newFrameSize, newFrameSize);
+	std::cout<<"error loading texture " << fileName << '\n';
 }
 
 void Texture::setSize(Vector2i imgSize, Vector2i newFrameSize){

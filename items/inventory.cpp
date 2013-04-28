@@ -13,8 +13,8 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 	}
 	selectedItem=0;
 
-	items[0].id = 4; items[0].count = 1; // Mining tool
-	items[1].id = 6; items[1].count = 1; // Gun
+	items[0].id = 2; items[0].count = 1; // Mining tool
+	items[1].id = 3; items[1].count = 1; // Gun
 }
 
 void Inventory::logic(int timeMs, Player& owner, Screen& screen){

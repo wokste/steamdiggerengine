@@ -2,7 +2,7 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-void ItemDef::load(ConfigNode& config){
+ItemDef::ItemDef(ConfigNode& config){
 
 }
 

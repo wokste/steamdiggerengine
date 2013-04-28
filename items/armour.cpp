@@ -5,9 +5,5 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-Armour::Armour(){
-}
-
-void Armour::load(ConfigNode& config){
-	ItemDef::load(config);
+Armour::Armour(ConfigNode& config) : ItemDef(config){
 }

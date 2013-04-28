@@ -12,7 +12,7 @@ World::World(GameSettings* newSettings) :
 	gameSettings(newSettings)
 {
 	entities = new EntityList();
-	map = new Map(rand(), gameSettings->itemDefs);
+	map = new Map(rand(), gameSettings);
 	map->generate();
 }
 

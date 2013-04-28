@@ -6,28 +6,30 @@
 
 #include "../utils/confignode.h"
 #include "../utils/assert.h"
+#include "../utils/texture.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(const std::string& filename){
+ItemDefManager::ItemDefManager(GameSettings& gameSettings, const std::string& configFileName){
 	int id = 0;
 
-	ConfigNode::load(filename, [&] (ConfigNode& configArray){
+	ConfigNode::load(configFileName, [&] (ConfigNode& configArray){
 		configArray.forEachNode([&] (ConfigNode& config) {
 			ItemDef * stat = nullptr;
 			std::string className = config.getString("class");
 
-#define OPTION(str,class) if (className == str) {stat = new class ();}
-			OPTION("block",Block)
-			OPTION("tool",Tool)
-			OPTION("weapon",Weapon)
-			OPTION("armour",Armour)
-#undef OPTION
+			if (className == "block")
+				stat = new Block (config);
+			if (className == "tool")
+				stat = new Tool (config);
+			if (className == "weapon")
+				stat = new Weapon (gameSettings, config);
+			if (className == "armour")
+				stat = new Armour (config);
 
-			ASSERT(stat, filename, "Unknown class " + className);
+			ASSERT(stat, configFileName, "Unknown class " + className);
 			if (stat != nullptr){
 				stat->ID = id;
 				id++;
-				stat->load(config);
 				itemDefs.push_back(stat);
 			}
 		});
