@@ -7,18 +7,28 @@
 #include <tuple>
 #include <iostream>
 
+ListItem::ListItem(unsigned int newNr, Entity* newEntity){
+	nr = newNr;
+	entity = newEntity;
+}
+
 EntityList::EntityList(){
-	m_entities.resize(256);
 }
 
 EntityList::~EntityList(){
-	for (auto e : m_entities){
-		if (e.exists()){
-			delete e.m_pEntry;
+	foreach([&](int id, ListItem& item) {
+		delete item.entity;
+		item.entity = nullptr;
+		item.nr = 0;
+	});
+}
+
+void EntityList::foreach(std::function<void (int id, ListItem& e)> func){
+	auto numEntities = entities.size();
+	for (unsigned int i = 0 ; i < numEntities; ++i){
+		if (entities[i].exists()){
+			func(i, entities[i]);
 		}
-	}
-	for (auto s : m_stats){
-		delete s.second;
 	}
 }
 
@@ -26,87 +36,71 @@ EntityHandle EntityList::findMax(std::function<double (const Entity&)> func){
 	double curMax = 0;
 	EntityHandle curHandle(0,0);
 
-	auto numEntities = m_entities.size();
-	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (m_entities[i].exists()){
-			double eMax = func(*m_entities[i].m_pEntry);
-			if (eMax > curMax){
-				curMax = eMax;
-				curHandle.m_index = i;
-				curHandle.m_nr = m_entities[i].m_nr;
-			}
+	foreach([&](int id, const ListItem& item) {
+		double eMax = func(*item.entity);
+		if (eMax > curMax){
+			curMax = eMax;
+			curHandle.index = id;
+			curHandle.nr = item.nr;
 		}
-	}
+	});
 	return curHandle;
 }
 
-EntityHandle EntityList::addEntity(Entity * pE){
+EntityHandle EntityList::addEntity(Entity* pE){
 	static int autoIncrementNumber = 1;
 
-	auto numEntities = m_entities.size();
+	auto numEntities = entities.size();
 	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (!m_entities[i].exists()){
-			m_entities[i].m_pEntry = pE;
-			m_entities[i].m_nr = ++autoIncrementNumber;
-			return EntityHandle(i, m_entities[i].m_nr);
+		if (!entities[i].exists()){
+			entities[i].entity = pE;
+			entities[i].nr = ++autoIncrementNumber;
+			return EntityHandle(i, entities[i].nr);
 		}
 	}
-
-	ListItem listItem;
-	listItem.m_nr = ++autoIncrementNumber;
-	listItem.m_pEntry = pE;
-	m_entities.push_back(listItem);
-	return EntityHandle(numEntities, m_entities[numEntities].m_nr);
+	int nr = ++autoIncrementNumber;
+	entities.push_back(ListItem(nr, pE));
+	return EntityHandle(numEntities, nr);
 }
 
 void EntityList::logic(int timeMs){
 	//std::vector<Entity *> toDelete;
 
 	// == Basic Logic ==
-	auto numEntities = m_entities.size();
-	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (m_entities[i].exists()){
-			m_entities[i].m_pEntry->logic(timeMs);
-			if (m_entities[i].m_pEntry->bDeleteMe){
-				delete m_entities[i].m_pEntry;
-				m_entities[i].m_pEntry = nullptr;
-				m_entities[i].m_nr = 0;
-			}
+	foreach([&](int id, ListItem& item) {
+		item.entity->logic(timeMs);
+		if (item.entity->bDeleteMe){
+			delete item.entity;
+			item.entity = nullptr;
+			item.nr = 0;
 		}
-	}
+	});
 
 	// == Check Collisions ==
-	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (m_entities[i].exists()){
-			Entity* entity1 = m_entities[i].m_pEntry;
-			for (unsigned int j = i + 1 ; j < numEntities; ++j){
-				if (!m_entities[j].exists())
-					continue;
-				Entity* entity2 = m_entities[j].m_pEntry;
-				if (entity1->isInArea(entity2->pos - entity2->stats->collision, entity2->pos + entity2->stats->collision)){
-					entity1->onCollision(*entity2);
-					entity2->onCollision(*entity1);
-				}
+	foreach([&](int, ListItem& item1) {
+		Entity* entity1 = item1.entity;
+		foreach([&](int, ListItem& item2) {
+			Entity* entity2 = item2.entity;
+			if (entity1->isInArea(entity2->pos - entity2->stats->collision, entity2->pos + entity2->stats->collision)){
+				entity1->onCollision(*entity2);
+				entity2->onCollision(*entity1);
 			}
-		}
-	}
+		});
+	});
 }
 
 bool EntityList::areaHasEntity(Vector2i px1, Vector2i px2){
-	auto numEntities = m_entities.size();
-	for (unsigned int i = 0 ; i < numEntities; ++i){
-		if (m_entities[i].exists() && m_entities[i].m_pEntry->isInArea(Vector2::iToD(px1), Vector2::iToD(px2))){
-			return true;
+	bool hasEntity = false;
+	foreach([&](int, ListItem& item) {
+		if (item.entity->isInArea(Vector2::iToD(px1), Vector2::iToD(px2))){
+			hasEntity = true;
 		}
-	}
-	return false;
+	});
+	return hasEntity;
 }
 
 void EntityList::render(){
-	for (auto entity : m_entities){
-		if (entity.exists()){
-			entity.m_pEntry->render();
-		}
-	}
+	foreach([&](int, ListItem& item) {
+		item.entity->render();
+	});
 }
-

@@ -9,8 +9,8 @@ class EntityList;
 
 struct EntityHandle{
 	EntityHandle();
-	EntityHandle(unsigned int nr, unsigned int index);
-	unsigned int m_nr;
-	unsigned int m_index;
+	EntityHandle(unsigned int newNr, unsigned int newIndex);
+	unsigned int nr;
+	unsigned int index;
 	Entity* get(EntityList& list);
 };

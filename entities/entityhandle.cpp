@@ -2,19 +2,19 @@
 #include "entitylist.h"
 
 EntityHandle::EntityHandle(){
-	m_nr = 0;
-	m_index = 0;
+	nr = 0;
+	index = 0;
 }
 
-EntityHandle::EntityHandle(unsigned int nr, unsigned int index){
-	m_nr = nr;
-	m_index = index;
+EntityHandle::EntityHandle(unsigned int newNr, unsigned int newIndex){
+	nr = newNr;
+	index = newIndex;
 }
 
 Entity* EntityHandle::get(EntityList& list){
-	ListItem &info = list.m_entities[m_index];
-	if ( m_nr == info.m_nr ){
-		return info.m_pEntry;
+	ListItem &info = list.entities[index];
+	if ( nr == info.nr ){
+		return info.entity;
 	}
 	else{
 		return nullptr;

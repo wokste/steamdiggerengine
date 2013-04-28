@@ -47,6 +47,7 @@ void HUD::draw(Screen& screen, Player* player){
 HealthBarHUD::HealthBarHUD(){
 	barSize = Vector2i(256, 24);
 	barTexture = new Texture("healthbar.png",barSize);
+	// TODO: Fix
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);
