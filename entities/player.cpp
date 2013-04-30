@@ -58,7 +58,7 @@ void Player::checkInput(int timeMs, Screen& screen){
 	}
 
 	if (HP > 0){
-		inventory.logic(timeMs, *this, screen);
+		inventory.logic(timeMs);
 	}
 }
 
@@ -72,6 +72,10 @@ void Player::onMouseWheel(int delta){
 
 void Player::selectItem(int nr){
 	inventory.selectItem(nr, false);
+}
+
+bool Player::useItem(Screen& screen){
+	return inventory.use(*this, screen);
 }
 
 void Player::tryJump(){

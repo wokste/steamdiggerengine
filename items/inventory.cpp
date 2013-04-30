@@ -16,24 +16,19 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 	items[0].id = 2; items[0].count = 1; // Mining tool
 	items[1].id = 3; items[1].count = 1; // Gun
 }
-
-void Inventory::logic(int timeMs, Player& owner, Screen& screen){
-	cooldown -= timeMs;
-	if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-		return;
-
+bool Inventory::use(Player& owner, Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
-		return;
-
-	if (items[selectedItem].id >= itemDefs->size()){
-		std::cout << "Warning: found and deleted unidentified item " << items[selectedItem].id << "\n";
-		items[selectedItem].count = 0;
-		return;
+		return false;
+	int timeMs = (*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen);
+	if (timeMs > 0){
+		cooldown.set(timeMs);
+		return true;
 	}
+	return false;
+}
 
-	if ((*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen)){
-		cooldown.set(200);
-	}
+void Inventory::logic(int timeMs){
+	cooldown -= timeMs;
 }
 
 void Inventory::selectItem(int nr, bool relative){

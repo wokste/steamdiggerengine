@@ -9,5 +9,5 @@ public:
 	~Weapon();
 
 	EntityStats* entitiyType;
-	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
+	virtual int use(Player& owner, ItemStack& item, Screen& screen);
 };

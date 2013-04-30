@@ -18,7 +18,7 @@ HUD::~HUD(){
 		delete elem;
 }
 
-void HUD::draw(Screen& screen, Player* player){
+void HUD::draw(Screen& screen, Player& player){
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -41,6 +41,34 @@ void HUD::draw(Screen& screen, Player* player){
 	glPopMatrix();
 }
 
+void HUD::escapePressed(){
+
+}
+
+bool HUD::onMousePressed(Screen& screen, Player& player, sf::Mouse::Button& button, Vector2i mousePos){
+	for (int i = hudElements.size() - 1; i >= 0; --i){
+		auto& elem = hudElements[i];
+		Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
+		pos.x *= elem->docking.x;
+		pos.y *= elem->docking.y;
+		Vector2i relativeMousePos = mousePos - Vector2::dToI(pos);
+		if (relativeMousePos.x < 0 || relativeMousePos.y < 0 || relativeMousePos.x >= elem->size.x || relativeMousePos.y >= elem->size.y)
+			continue;
+
+		if (elem->onMousePressed(player, button, relativeMousePos))
+			return true;
+	}
+	return false;
+}
+
+/* ***************
+   * Hud Element *
+   *************** */
+
+bool HUDElement::onMousePressed(Player& player, sf::Mouse::Button& button, Vector2i mousePos){
+	return true;
+}
+
 /* ****************
    * HealthBarHUD *
    **************** */
@@ -58,8 +86,8 @@ HealthBarHUD::~HealthBarHUD(){
 		delete barTexture;
 }
 
-void HealthBarHUD::draw(Player* player){
-	double HPPerc = player->HP / player->stats->HP;
+void HealthBarHUD::draw(Player& player){
+	double HPPerc = player.HP / player.stats->HP;
 	double ShieldPerc = 0.2;
 
 	int widthHP	 = std::max<int>((int) barSize.x * HPPerc, 0);

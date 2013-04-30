@@ -14,7 +14,7 @@ public:
 	double timeToMine;
 
 	Block(ConfigNode& config);
-	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
+	virtual int use(Player& owner, ItemStack& item, Screen& screen);
 
 	virtual Block* asBlock(){return this;}
 private:

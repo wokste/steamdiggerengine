@@ -6,6 +6,6 @@ ItemDef::ItemDef(ConfigNode& config){
 
 }
 
-bool ItemDef::use(Player& owner, ItemStack& itemStack, Screen& screen){
-	return false;
+int ItemDef::use(Player& owner, ItemStack& itemStack, Screen& screen){
+	return 0;
 }

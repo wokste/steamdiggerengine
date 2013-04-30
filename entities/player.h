@@ -24,6 +24,7 @@ public:
 
 	void onMouseWheel(int delta);
 	void selectItem(int nr);
+	bool useItem(Screen& screen);
 	void tryJump();
 	Inventory inventory;
 private:

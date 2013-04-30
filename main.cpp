@@ -62,6 +62,16 @@ int main(){
 					player->tryJump();
 				else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
 					player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
+			} else if (event.type == sf::Event::MouseButtonPressed){
+				Vector2i mousePos(event.mouseButton.x,event.mouseButton.y);
+				if (hud->onMousePressed(screen, *player, event.mouseButton.button, mousePos))
+					break;
+
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					player->useItem(screen);
+				} else if (event.mouseButton.button == sf::Mouse::Right){
+					//TODO: events on the map.
+				}
 			}
 		}
 		glClearColor(0.2f, 0.0f, 0.4f, 1.0f);
@@ -74,7 +84,7 @@ int main(){
 		glPopMatrix();
 
 		if (player != nullptr)
-			hud->draw(screen, player);
+			hud->draw(screen, *player);
 		// end the current frame (internally swaps the front and back buffers)
 		window.display();
 	}

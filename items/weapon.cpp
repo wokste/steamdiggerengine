@@ -18,13 +18,13 @@ Weapon::~Weapon(){
 	if (entitiyType) delete entitiyType;
 }
 
-bool Weapon::use(Player& owner, ItemStack& item, Screen& screen){
+int Weapon::use(Player& owner, ItemStack& item, Screen& screen){
 	if (!entitiyType)
-		return false;
+		return 0;
 	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(entitiyType, owner.pos));
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));
 	}
-	return true;
+	return 250;
 }

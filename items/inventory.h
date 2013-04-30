@@ -23,7 +23,8 @@ class Inventory{
 	Cooldown cooldown;
 public:
 	Inventory(ItemDefManager* newItemDefs);
-	void logic(int timeMs, Player& owner, Screen& screen);
+	void logic(int timeMs);
+	bool use(Player& owner, Screen& screen);
 	void selectItem(int delta, bool relative = false);
 	bool add(int itemId, int count = 1);
 };

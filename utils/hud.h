@@ -2,6 +2,7 @@
 
 #include "../utils/vector2.h"
 #include <vector>
+#include <SFML/Window.hpp>
 
 class Texture;
 class Screen;
@@ -15,8 +16,9 @@ public:
 	HUD(const HUD& that) = delete;
 	~HUD();
 
-	void draw(Screen& screen, Player* player);
-	//void add(HUDElement e);
+	void draw(Screen& screen, Player& player);
+	void escapePressed();
+	bool onMousePressed(Screen& screen, Player& player, sf::Mouse::Button& button, Vector2i mousePos);
 
 private:
 	std::vector<HUDElement*> hudElements;
@@ -28,7 +30,8 @@ public:
 	HUDElement(const HUDElement& that) = delete;
 	virtual ~HUDElement(){}
 
-	virtual void draw(Player* player) = 0;
+	virtual void draw(Player& player) = 0;
+	virtual bool onMousePressed(Player& player, sf::Mouse::Button& button, Vector2i mousePos);
 	Vector2i size;
 	Vector2d docking;
 };
@@ -39,7 +42,7 @@ public:
 	HealthBarHUD(const HealthBarHUD& that) = delete;
 	virtual ~HealthBarHUD();
 
-	virtual void draw(Player* player);
+	virtual void draw(Player& player);
 private:
 	Vector2i barSize;
 	Texture* barTexture;

@@ -7,20 +7,20 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-Tool::Tool(ConfigNode& config ) : ItemDef(config){
+Tool::Tool(ConfigNode& config) : ItemDef(config){
 }
 
-bool Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
-	//bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
-
-	//Vector2i mousePos = Vector2::dToI(screen.mousePos(-1));
+int Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	int itemID = mineAt(owner.world, Vector2::dToI(screen.mousePos(-1)), 1);
-	if (itemID != -1)
+	if (itemID != -1){
 		owner.inventory.add(itemID);
-
-	return (itemID != -1);
+		return 500;
+		// TODO: Mining speed
+	}
+	return 0;
 }
 
+//TODO: return a Block* instead of an int
 int Tool::mineAt(World* world, Vector2i pos, int layer){
 	auto t = world->map->tileRef(pos.x, pos.y, layer);
 

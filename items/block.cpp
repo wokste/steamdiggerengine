@@ -16,15 +16,16 @@ Block::Block(ConfigNode& config) : ItemDef(config){
 }
 
 
-bool Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
+int Block::use(Player& owner, ItemStack& itemStack, Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 	int layer = (useFrontLayer ? 0 : 1);
 
 	if (placeAt(owner.world, Vector2::dToI(screen.mousePos(layer)), layer)){
 		itemStack.count--;
-		return true;
+		return 250;
+		// TODO: configurable time to mine
 	}
-	return false;
+	return 0;
 }
 
 bool Block::placeAt(World* world, Vector2i pos, int layer){

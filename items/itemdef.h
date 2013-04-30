@@ -15,6 +15,6 @@ class ItemDef{
 public:
 	int ID;
 	ItemDef(ConfigNode& config);
-	virtual bool use(Player& owner, ItemStack& item, Screen& screen);
+	virtual int use(Player& owner, ItemStack& item, Screen& screen);
 	virtual Block* asBlock(){return nullptr;}
 };
