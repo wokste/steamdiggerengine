@@ -7,7 +7,7 @@ struct FlyingMonsterStats : public MonsterStats{
 
 	FlyingMonsterStats() = default;
 	virtual Entity* spawn(World& world, Vector2d pos);
-	virtual void load(GameSettings& gameSettings, ConfigNode& config);
+	virtual void load(Game& game, ConfigNode& config);
 };
 
 class FlyingMonster : public Monster{

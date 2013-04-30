@@ -5,7 +5,7 @@ class EntityStats;
 
 class Weapon : public ItemDef{
 public:
-	Weapon(GameSettings& gameSettings, ConfigNode& config);
+	Weapon(Game& game, ConfigNode& config);
 	~Weapon();
 
 	EntityStats* entitiyType;

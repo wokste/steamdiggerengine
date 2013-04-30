@@ -9,7 +9,7 @@
 #include "../utils/texture.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(GameSettings& gameSettings, const std::string& configFileName){
+ItemDefManager::ItemDefManager(Game& game, const std::string& configFileName){
 	int id = 0;
 
 	ConfigNode::load(configFileName, [&] (ConfigNode& configArray){
@@ -22,7 +22,7 @@ ItemDefManager::ItemDefManager(GameSettings& gameSettings, const std::string& co
 			if (className == "tool")
 				stat = new Tool (config);
 			if (className == "weapon")
-				stat = new Weapon (gameSettings, config);
+				stat = new Weapon (game, config);
 			if (className == "armour")
 				stat = new Armour (config);
 

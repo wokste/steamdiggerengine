@@ -7,7 +7,7 @@ class Texture;
 class Entity;
 class ConfigNode;
 class World;
-class GameSettings;
+class Game;
 
 enum class EntityType{
 	ET_FlyingMonster,
@@ -31,9 +31,9 @@ struct EntityStats{
 	EntityStats();
 	virtual ~EntityStats();
 	virtual Entity* spawn(World& world, Vector2d pos) = 0;
-	virtual void load(GameSettings& gameSettings, ConfigNode& config);
+	virtual void load(Game& game, ConfigNode& config);
 
-	static EntityStats* staticLoad(GameSettings& gameSettings, ConfigNode& config);
+	static EntityStats* staticLoad(Game& game, ConfigNode& config);
 };
 
 class Entity{

@@ -9,10 +9,10 @@
 #include "world.h"
 #include "utils/hud.h"
 #include "utils/assert.h"
-#include "utils/gamesettings.h"
+#include "game.h"
 
 std::unique_ptr<Screen> screen;
-std::unique_ptr<GameSettings> gameSettings;
+std::unique_ptr<Game> game;
 std::unique_ptr<World> world;
 std::unique_ptr<HUD> hud;
 Player* player;
@@ -65,13 +65,13 @@ int main(){
 	screen.reset(new Screen());
 	initGL();
 
-	gameSettings.reset(new GameSettings());
-	world.reset(new World(gameSettings.get()));
-	world->spawn(gameSettings->findResource("ghost.json"),Vector2d(10,-20));
-	player = dynamic_cast<Player*>(world->spawn(gameSettings->findResource("player.json"),Vector2d(20,-10)));
+	game.reset(new Game());
+	world.reset(new World(game.get()));
+	world->spawn(game->fileSystem.fullpath("ghost.json"),Vector2d(10,-20));
+	player = dynamic_cast<Player*>(world->spawn(game->fileSystem.fullpath("player.json"),Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
-	hud.reset(new HUD(gameSettings.get()));
+	hud.reset(new HUD(game.get()));
 
 	bool running = true;
 	while (running){

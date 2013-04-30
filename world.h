@@ -7,14 +7,14 @@ class Map;
 class Entity;
 class EntityList;
 class EntityStats;
-class GameSettings;
+class Game;
 
 class World{
 
 public:
 	Map * map;
 	EntityList * entities;
-	World(GameSettings* newSettings);
+	World(Game* newSettings);
 	World(const World& that) = delete;
 	~World();
 
@@ -25,5 +25,5 @@ public:
 	//bool validPos(int x1Px, int x2Px, int y1Px, int y2Px);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
-	GameSettings* gameSettings;
+	Game* game;
 };

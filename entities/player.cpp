@@ -3,7 +3,7 @@
 #include "../screen.h"
 #include "../attack.h"
 #include "../world.h"
-#include "../utils/gamesettings.h"
+#include "../game.h"
 
 #include "../utils/confignode.h"
 #include "../items/itemdefmanager.h"
@@ -15,7 +15,7 @@ Entity * PlayerStats::spawn(World& newWorld, Vector2d newPos){
 }
 
 Player::Player(World& newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(newWorld.gameSettings->itemDefs), RP(0){
+	, inventory(newWorld.game->itemDefs), RP(0){
 	//TODO: Fix constructor
 	entityType = EntityType::ET_Player;
 }
@@ -89,8 +89,8 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void PlayerStats::load(GameSettings& gameSettings, ConfigNode& config){
-	EntityStats::load(gameSettings, config);
+void PlayerStats::load(Game& game, ConfigNode& config){
+	EntityStats::load(game, config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");

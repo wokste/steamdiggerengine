@@ -6,12 +6,12 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 #include "../entities/entity.h"
-#include "../utils/gameSettings.h"
+#include "../game.h"
 #include <iostream>
 
-Weapon::Weapon(GameSettings& gameSettings, ConfigNode& config) : ItemDef(config){
+Weapon::Weapon(Game& game, ConfigNode& config) : ItemDef(config){
 	auto childnode = config.getNode("projectile");
-	entitiyType = EntityStats::staticLoad(gameSettings, childnode);
+	entitiyType = EntityStats::staticLoad(game, childnode);
 }
 
 Weapon::~Weapon(){

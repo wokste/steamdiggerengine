@@ -9,7 +9,7 @@ class Armour;
 class Tool;
 class ConfigNode;
 class Screen;
-class GameSettings;
+class Game;
 
 class ItemDef{
 public:

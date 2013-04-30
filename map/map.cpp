@@ -3,7 +3,7 @@
 #include "../screen.h"
 #include "../items/block.h"
 #include "../items/itemdefmanager.h"
-#include "../utils/gamesettings.h"
+#include "../game.h"
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
@@ -22,13 +22,13 @@ void Map::Tile::setBlock(Block* block){
 	}
 }
 
-Map::Map(int seed, GameSettings* gameSettings) :
+Map::Map(int seed, Game* game) :
 	tiles(nullptr),
 	mapSize(Vector2i(64,64)),
 	tileSize(32,32),
-	itemDefs(gameSettings->itemDefs)
+	itemDefs(game->itemDefs)
 {
-	tileSet = new Texture(gameSettings->findResource("tileset.png"), tileSize);
+	tileSet = new Texture(game->fileSystem.fullpath("tileset.png"), tileSize);
 	generator = new MapGenerator(seed, itemDefs);
 }
 

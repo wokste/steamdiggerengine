@@ -35,8 +35,6 @@ void Screen::startScene(){
 	double blocksX = sqrt(blocksOnScreen * size.x / size.y);
 	double blocksY = sqrt(blocksOnScreen * size.y / size.x);
 	glFrustum(-blocksX/2, blocksX/2, blocksY/2, -blocksY/2, nearPlane, farPlane);
-	//glFrustum(-size.x / 2,size.x / 2,size.y / 2,-size.y / 2,0.1, 9001);
-	//gluPerspective(65.0, 1.5, 0.0, 9001.1337);
 	gluLookAt(0,0,1,0,0,0,0,1,0);
 	glMatrixMode(GL_MODELVIEW);
 

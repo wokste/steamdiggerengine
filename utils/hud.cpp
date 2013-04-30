@@ -2,15 +2,15 @@
 #include "../entities/player.h"
 #include "../utils/texture.h"
 #include "../screen.h"
-#include "../utils/gamesettings.h"
+#include "../game.h"
 #include <GL/gl.h>
 
 /* *******
    * HUD *
    ******* */
 
-HUD::HUD(GameSettings* gameSettings){
-	hudElements.push_back(new HealthBarHUD(gameSettings));
+HUD::HUD(Game* game){
+	hudElements.push_back(new HealthBarHUD(game));
 }
 
 HUD::~HUD(){
@@ -73,9 +73,9 @@ bool HUDElement::onMousePressed(Player& player, sf::Mouse::Button& button, Vecto
    * HealthBarHUD *
    **************** */
 
-HealthBarHUD::HealthBarHUD(GameSettings* gameSettings){
+HealthBarHUD::HealthBarHUD(Game* game){
 	barSize = Vector2i(256, 24);
-	barTexture = new Texture(gameSettings->findResource("healthbar.png"),barSize);
+	barTexture = new Texture(game->fileSystem.fullpath("healthbar.png"),barSize);
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);

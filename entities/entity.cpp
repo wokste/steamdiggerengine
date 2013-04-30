@@ -13,7 +13,7 @@
 #include "flyingmonster.h"
 #include "projectile.h"
 #include "../utils/assert.h"
-#include "../utils/gamesettings.h"
+#include "../game.h"
 
 int floorInt(double);
 
@@ -136,7 +136,7 @@ EntityStats::~EntityStats(){
 		delete texture;
 }
 
-void EntityStats::load(GameSettings& gameSettings, ConfigNode& config){
+void EntityStats::load(Game& game, ConfigNode& config){
 	maxSpeed = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity = config.getBool("gravity",true);
@@ -146,13 +146,13 @@ void EntityStats::load(GameSettings& gameSettings, ConfigNode& config){
 	frameOffset =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
-	texture = new Texture(gameSettings.findResource(textureName), config.getVector2i("size"));
+	texture = new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size"));
 	HP = config.getInt("hp",100);
 	color = config.getInt("color",0xffffff);
 	team = config.getInt("team",1);
 }
 
-EntityStats* EntityStats::staticLoad(GameSettings& gameSettings, ConfigNode& config){
+EntityStats* EntityStats::staticLoad(Game& game, ConfigNode& config){
 	EntityStats* newStat = nullptr;
 	std::string className = config.getString("class");
 #define OPTION(str,class) if (className == str) {newStat = new class ();}
@@ -162,6 +162,6 @@ EntityStats* EntityStats::staticLoad(GameSettings& gameSettings, ConfigNode& con
 #undef OPTION
 	ASSERT(newStat, "", "Unknown class " + className);
 	if (newStat != nullptr)
-		newStat->load(gameSettings, config);
+		newStat->load(game, config);
 	return newStat;
 }
