@@ -12,9 +12,18 @@ constexpr double farPlane = eyedist + 3;
 
 int floorInt(double);
 
-Screen::Screen(sf::Window* newWindow){
-	window = newWindow;
-	center = Vector2d(79.8,59.992);
+Screen::Screen(){
+	sf::ContextSettings settings;
+	settings.depthBits = 0;
+	settings.stencilBits = 0;
+	settings.antialiasingLevel = 0;
+	settings.majorVersion = 1;
+	settings.minorVersion = 1;
+
+	window.reset(new sf::Window(sf::VideoMode(800, 600), "Steamdigger", sf::Style::Default, settings));
+	window->setVerticalSyncEnabled(true);
+
+	center = Vector2d(0,0);
 	size = Vector2::uToI(window->getSize());
 	glViewport(0, 0, size.x, size.y);
 }

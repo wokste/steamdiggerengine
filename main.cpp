@@ -1,5 +1,6 @@
 #include <iostream>
 #include <time.h>
+#include <memory>
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 
@@ -10,88 +11,87 @@
 #include "utils/assert.h"
 #include "utils/gamesettings.h"
 
-int main(){
-	// create the window
-	sf::ContextSettings settings;
-	settings.depthBits = 0;
-	settings.stencilBits = 0;
-	settings.antialiasingLevel = 0;
-	settings.majorVersion = 1;
-	settings.minorVersion = 1;
+std::unique_ptr<Screen> screen;
+std::unique_ptr<GameSettings> gameSettings;
+std::unique_ptr<World> world;
+std::unique_ptr<HUD> hud;
+Player* player;
 
-	sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, settings);
-	window.setVerticalSyncEnabled(true);
-	Screen screen(&window);
+void doWindowEvents(){
+	sf::Event event;
+	while (screen->window->pollEvent(event)){
+		if (event.type == sf::Event::EventType::Closed){
+			exit(0); // TODO: make this nicer.
+		} else if (event.type == sf::Event::EventType::Resized){
+			screen->resize(Vector2::uToI(screen->window->getSize()));
+		} else if (event.type == sf::Event::EventType::MouseWheelMoved) {
+			player->onMouseWheel(event.mouseWheel.delta);
+		} else if (event.type == sf::Event::EventType::KeyPressed){
+			if (event.key.code == sf::Keyboard::Key::Space)
+				player->tryJump();
+			else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
+				player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
+		} else if (event.type == sf::Event::MouseButtonPressed){
+			Vector2i mousePos(event.mouseButton.x,event.mouseButton.y);
+			if (hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos))
+				break;
 
-	srand(time(nullptr));
+			if (event.mouseButton.button == sf::Mouse::Left) {
+				player->useItem(*screen.get());
+			} else if (event.mouseButton.button == sf::Mouse::Right){
+				//TODO: events on the map.
+			}
+		}
+	}
+}
 
-	// load resources, initialize the OpenGL states, ...
+void initGL(){
 	glEnable(GL_TEXTURE_2D);
-	//glEnable(GL_DEPTH);
 	glEnable (GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glAlphaFunc(GL_GREATER, 0.5);
 	glEnable(GL_ALPHA_TEST);
-	GameSettings* gameSettings = new GameSettings();
-	World* world = new World(gameSettings);
+}
+
+void draw(){
+
+}
+
+int main(){
+	// create the window
+	srand(time(nullptr));
+	screen.reset(new Screen());
+	initGL();
+
+	gameSettings.reset(new GameSettings());
+	world.reset(new World(gameSettings.get()));
 	world->spawn(gameSettings->findResource("ghost.json"),Vector2d(10,-20));
-	Player* player = dynamic_cast<Player*>(world->spawn(gameSettings->findResource("player.json"),Vector2d(20,-10)));
+	player = dynamic_cast<Player*>(world->spawn(gameSettings->findResource("player.json"),Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
-	HUD* hud = new HUD(gameSettings);
+	hud.reset(new HUD(gameSettings.get()));
 
 	bool running = true;
 	while (running){
-		if (player != nullptr)
-			player->checkInput(10,screen);
+		player->checkInput(10,*screen.get());
 		world->logic(10);
 
-		sf::Event event;
-		while (window.pollEvent(event)){
-			if (event.type == sf::Event::EventType::Closed){
-				running = false;
-			} else if (event.type == sf::Event::EventType::Resized){
-				screen.resize(Vector2::uToI(window.getSize()));
-			} else if (event.type == sf::Event::EventType::MouseWheelMoved) {
-				player->onMouseWheel(event.mouseWheel.delta);
-			} else if (event.type == sf::Event::EventType::KeyPressed){
-				if (event.key.code == sf::Keyboard::Key::Space)
-					player->tryJump();
-				else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
-					player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
-			} else if (event.type == sf::Event::MouseButtonPressed){
-				Vector2i mousePos(event.mouseButton.x,event.mouseButton.y);
-				if (hud->onMousePressed(screen, *player, event.mouseButton.button, mousePos))
-					break;
+		doWindowEvents();
 
-				if (event.mouseButton.button == sf::Mouse::Left) {
-					player->useItem(screen);
-				} else if (event.mouseButton.button == sf::Mouse::Right){
-					//TODO: events on the map.
-				}
-			}
-		}
 		glClearColor(0.2f, 0.0f, 0.4f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		screen.startScene();
+		screen->startScene();
 		glPushMatrix();
-		screen.centerOn(player);
-		world->render();
+			screen->centerOn(player);
+			world->render();
 		glPopMatrix();
 
-		if (player != nullptr)
-			hud->draw(screen, *player);
-		// end the current frame (internally swaps the front and back buffers)
-		window.display();
+		hud->draw(*screen.get(), *player);
+		screen->window->display();
 	}
-
-	// release resources...
-	delete world;
-	delete hud;
 	return 0;
 }
 

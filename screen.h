@@ -1,5 +1,6 @@
 #pragma once
 #include "utils/vector2.h"
+#include <memory>
 
 namespace sf{
 class Window;
@@ -9,8 +10,8 @@ class Entity;
 
 class Screen{
 public:
-	sf::Window* window;
-	Screen(sf::Window* newWindow);
+	std::unique_ptr<sf::Window> window;
+	Screen();
 	void startScene();
 	void resize(Vector2i newPos);
 	void centerOn(Entity * player);
