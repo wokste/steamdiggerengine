@@ -36,7 +36,7 @@ void Texture::bind(int color){
 	glColor3ub((unsigned char)(color >> 16), (unsigned char)(color >> 8), (unsigned char)(color));
 }
 
-void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){
+void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum) const{
 	double texLeft = (tileNum % framesPerRow) * sizeGL.x;
 	double texRight = texLeft + sizeGL.x;
 	double texTop = (tileNum / framesPerRow) * sizeGL.y;
@@ -56,7 +56,7 @@ void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum){
 	glEnd();
 }
 
-void Texture::drawBlock(Vector3i pos, int tileNum, int light){
+void Texture::drawBlock(Vector3i pos, int tileNum, int light) const{
 	unsigned char lightUC = light > 255? (unsigned char)255: (unsigned char)light;
 	glColor3ub(lightUC, lightUC, lightUC);
 
@@ -103,7 +103,7 @@ void Texture::drawBlock(Vector3i pos, int tileNum, int light){
 	glEnd();
 }
 
-void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest){
+void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const{
 	double texLeft = ((double)src.x / size.x);
 	double texRight = ((double)(src.x + imgSize.x) / size.x);
 	double texTop = ((double)src.y / size.y);

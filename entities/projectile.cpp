@@ -35,10 +35,10 @@ void Projectile::moveTo(Vector2d newPos){
 	speed = diff / dtot * STATS->speed;
 }
 
-void ProjectileStats::load(Game& game, ConfigNode& config){
+void ProjectileStats::load(const Game& game, const ConfigNode& config){
 	EntityStats::load(game, config);
 	speed = config.getInt("speed");
-	ConfigNode onHit = config.getNode("on-hit");
+	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 	//TODO: on-hit-wall
 }

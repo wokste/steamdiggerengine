@@ -19,16 +19,16 @@ private:
 	//bool bAlpha;
 
 public:
-	static Texture* load(ConfigNode& config);
+	static Texture* load(const ConfigNode& config);
 	Texture(std::string fileName, Vector2i frameSize);
 	~Texture();
 	bool loadTexture(std::string fileName, Vector2i frameSize);
 	void bind(int color);
 
 	void setSize(Vector2i imgSize, Vector2i frameSize);
-	void drawTile(Vector2d pos, Vector2i tileSize, int tileNum);
-	void drawBlock(Vector3i pos, int tileNum, int light);
-	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest);
+	void drawTile(Vector2d pos, Vector2i tileSize, int tileNum) const;
+	void drawBlock(Vector3i pos, int tileNum, int light) const;
+	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const;
 };
 
 #endif // TEXTURE_H

@@ -136,7 +136,7 @@ EntityStats::~EntityStats(){
 		delete texture;
 }
 
-void EntityStats::load(Game& game, ConfigNode& config){
+void EntityStats::load(const Game& game, const ConfigNode& config){
 	maxSpeed = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity = config.getBool("gravity",true);
@@ -152,7 +152,7 @@ void EntityStats::load(Game& game, ConfigNode& config){
 	team = config.getInt("team",1);
 }
 
-EntityStats* EntityStats::staticLoad(Game& game, ConfigNode& config){
+EntityStats* EntityStats::staticLoad(const Game& game, const ConfigNode& config){
 	EntityStats* newStat = nullptr;
 	std::string className = config.getString("class");
 #define OPTION(str,class) if (className == str) {newStat = new class ();}

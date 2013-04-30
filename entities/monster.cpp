@@ -6,9 +6,9 @@
 #define STATS ((MonsterStats*)(stats))
 #include <iostream>
 
-void MonsterStats::load(Game& game, ConfigNode& config){
+void MonsterStats::load(const Game& game, const ConfigNode& config){
 	EntityStats::load(game, config);
-	ConfigNode onHit = config.getNode("on-hit");
+	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 }
 

@@ -23,7 +23,7 @@ FileSystem::FileSystem(){
 #endif
 }
 
-std::string FileSystem::fullpath(const std::string& resourcename){
+std::string FileSystem::fullpath(const std::string& resourcename) const{
 	std::cout << dataDir << " + " << resourcename << " \n";
 	return dataDir + resourcename;
 }

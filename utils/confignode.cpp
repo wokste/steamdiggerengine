@@ -20,7 +20,7 @@ void ConfigNode::load(const std::string& filename, std::function<void (ConfigNod
 	json_decref(node);
 }
 
-int ConfigNode::getInt(const std::string& name, const int defaultValue, const bool useDefault){
+int ConfigNode::getInt(const std::string& name, const int defaultValue, const bool useDefault) const{
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_integer(val))
 		return json_integer_value(val);
@@ -28,7 +28,7 @@ int ConfigNode::getInt(const std::string& name, const int defaultValue, const bo
 	return defaultValue;
 }
 
-double ConfigNode::getDouble(const std::string& name, const double defaultValue, const bool useDefault){
+double ConfigNode::getDouble(const std::string& name, const double defaultValue, const bool useDefault) const{
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_real(val))
 		return json_real_value(val);
@@ -38,7 +38,7 @@ double ConfigNode::getDouble(const std::string& name, const double defaultValue,
 	return defaultValue;
 }
 
-const std::string ConfigNode::getString(const std::string& name, const std::string& defaultValue, const bool useDefault){
+const std::string ConfigNode::getString(const std::string& name, const std::string& defaultValue, const bool useDefault) const{
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_string(val))
 		return std::string(json_string_value(val));
@@ -46,7 +46,7 @@ const std::string ConfigNode::getString(const std::string& name, const std::stri
 	return defaultValue;
 }
 
-bool ConfigNode::getBool(const std::string& name, const bool defaultValue, const bool useDefault){
+bool ConfigNode::getBool(const std::string& name, const bool defaultValue, const bool useDefault) const{
 	json_t* val = json_object_get(m_Node, name.c_str());
 	if (json_is_boolean(val))
 		return (bool)json_integer_value(val);
@@ -54,7 +54,7 @@ bool ConfigNode::getBool(const std::string& name, const bool defaultValue, const
 	return defaultValue;
 }
 
-Vector2i ConfigNode::getVector2i(const std::string& name, int vecNr){
+Vector2i ConfigNode::getVector2i(const std::string& name, int vecNr) const{
 	vecNr *= 2;
 
 	json_t* arr = json_object_get(m_Node, name.c_str());
@@ -67,7 +67,7 @@ Vector2i ConfigNode::getVector2i(const std::string& name, int vecNr){
 	return Vector2i(16, 16);
 }
 
-Vector2d ConfigNode::getVector2d(const std::string& name, int vecNr){
+Vector2d ConfigNode::getVector2d(const std::string& name, int vecNr) const{
 	vecNr *= 2;
 
 	json_t* arr = json_object_get(m_Node, name.c_str());
@@ -81,6 +81,10 @@ Vector2d ConfigNode::getVector2d(const std::string& name, int vecNr){
 }
 
 ConfigNode ConfigNode::getNode(const std::string& name){
+	return ConfigNode(json_object_get(m_Node, name.c_str()));
+}
+
+const ConfigNode ConfigNode::getNodeConst(const std::string& name) const{
 	return ConfigNode(json_object_get(m_Node, name.c_str()));
 }
 

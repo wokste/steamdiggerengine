@@ -71,7 +71,7 @@ int main(){
 	player = dynamic_cast<Player*>(world->spawn(game->fileSystem.fullpath("player.json"),Vector2d(20,-10)));
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
-	hud.reset(new HUD(game.get()));
+	hud.reset(new HUD(*game.get()));
 
 	bool running = true;
 	while (running){

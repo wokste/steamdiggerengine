@@ -14,7 +14,7 @@ class Game;
 class ItemDef{
 public:
 	int ID;
-	ItemDef(ConfigNode& config);
-	virtual int use(Player& owner, ItemStack& item, Screen& screen);
+	ItemDef(const ConfigNode& config);
+	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
 	virtual Block* asBlock(){return nullptr;}
 };

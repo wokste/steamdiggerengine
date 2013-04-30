@@ -6,7 +6,7 @@ struct Attack{
 	int push;
 	int type;
 
-	void load(ConfigNode& config);
+	void load(const ConfigNode& config);
 
 	Attack();
 	Attack(const Attack& that) = delete;

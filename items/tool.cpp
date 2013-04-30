@@ -7,10 +7,10 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-Tool::Tool(ConfigNode& config) : ItemDef(config){
+Tool::Tool(const ConfigNode& config) : ItemDef(config){
 }
 
-int Tool::use(Player& owner, ItemStack& itemStack, Screen& screen){
+int Tool::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 	int itemID = mineAt(owner.world, Vector2::dToI(screen.mousePos(-1)), 1);
 	if (itemID != -1){
 		owner.inventory.add(itemID);

@@ -5,5 +5,5 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-Armour::Armour(ConfigNode& config) : ItemDef(config){
+Armour::Armour(const ConfigNode& config) : ItemDef(config){
 }

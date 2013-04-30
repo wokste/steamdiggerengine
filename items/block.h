@@ -13,8 +13,8 @@ public:
 	int numFrames;
 	double timeToMine;
 
-	Block(ConfigNode& config);
-	virtual int use(Player& owner, ItemStack& item, Screen& screen);
+	Block(const ConfigNode& config);
+	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
 
 	virtual Block* asBlock(){return this;}
 private:

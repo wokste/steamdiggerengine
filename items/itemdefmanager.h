@@ -8,7 +8,7 @@ class Game;
 class ItemDefManager{
 	std::vector<ItemDef*> itemDefs;
 public:
-	ItemDefManager(Game& game, const std::string& configFileName);
+	ItemDefManager(const Game& game, const std::string& configFileName);
 	ItemDef* operator[](int id){return itemDefs[id];}
 	int size() {return itemDefs.size();}
 	Texture* textureSet;

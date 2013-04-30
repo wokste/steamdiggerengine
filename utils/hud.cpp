@@ -9,7 +9,7 @@
    * HUD *
    ******* */
 
-HUD::HUD(Game* game){
+HUD::HUD(const Game& game){
 	hudElements.push_back(new HealthBarHUD(game));
 }
 
@@ -18,7 +18,7 @@ HUD::~HUD(){
 		delete elem;
 }
 
-void HUD::draw(Screen& screen, Player& player){
+void HUD::draw(const Screen& screen, const Player& player){
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -45,7 +45,7 @@ void HUD::escapePressed(){
 
 }
 
-bool HUD::onMousePressed(Screen& screen, Player& player, sf::Mouse::Button& button, Vector2i mousePos){
+bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos){
 	for (int i = hudElements.size() - 1; i >= 0; --i){
 		auto& elem = hudElements[i];
 		Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
@@ -65,7 +65,7 @@ bool HUD::onMousePressed(Screen& screen, Player& player, sf::Mouse::Button& butt
    * Hud Element *
    *************** */
 
-bool HUDElement::onMousePressed(Player& player, sf::Mouse::Button& button, Vector2i mousePos){
+bool HUDElement::onMousePressed(Player& player, const sf::Mouse::Button& button, const Vector2i mousePos){
 	return true;
 }
 
@@ -73,9 +73,9 @@ bool HUDElement::onMousePressed(Player& player, sf::Mouse::Button& button, Vecto
    * HealthBarHUD *
    **************** */
 
-HealthBarHUD::HealthBarHUD(Game* game){
+HealthBarHUD::HealthBarHUD(const Game& game){
 	barSize = Vector2i(256, 24);
-	barTexture = new Texture(game->fileSystem.fullpath("healthbar.png"),barSize);
+	barTexture = new Texture(game.fileSystem.fullpath("healthbar.png"),barSize);
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);
@@ -86,7 +86,7 @@ HealthBarHUD::~HealthBarHUD(){
 		delete barTexture;
 }
 
-void HealthBarHUD::draw(Player& player){
+void HealthBarHUD::draw(const Player& player){
 	double HPPerc = player.HP / player.stats->HP;
 	double ShieldPerc = 0.2;
 

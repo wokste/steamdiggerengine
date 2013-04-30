@@ -89,7 +89,7 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void PlayerStats::load(Game& game, ConfigNode& config){
+void PlayerStats::load(const Game& game, const ConfigNode& config){
 	EntityStats::load(game, config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");

@@ -7,9 +7,9 @@ class World;
 
 class Tool : public ItemDef{
 public:
-	Tool(ConfigNode& config);
+	Tool(const ConfigNode& config);
 
-	virtual int use(Player& owner, ItemStack& item, Screen& screen);
+	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
 private:
 	int mineAt(World* world, Vector2i pos, int layer);
 };

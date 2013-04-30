@@ -31,9 +31,9 @@ struct EntityStats{
 	EntityStats();
 	virtual ~EntityStats();
 	virtual Entity* spawn(World& world, Vector2d pos) = 0;
-	virtual void load(Game& game, ConfigNode& config);
+	virtual void load(const Game& game, const ConfigNode& config);
 
-	static EntityStats* staticLoad(Game& game, ConfigNode& config);
+	static EntityStats* staticLoad(const Game& game, const ConfigNode& config);
 };
 
 class Entity{

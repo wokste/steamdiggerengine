@@ -11,7 +11,7 @@ struct PlayerStats : public EntityStats{
 	double walkSpeed;
 	PlayerStats() = default;
 	virtual Entity* spawn(World& world, Vector2d pos);
-	virtual void load(Game& game, ConfigNode& config);
+	virtual void load(const Game& game, const ConfigNode& config);
 };
 
 class Player : public Entity{

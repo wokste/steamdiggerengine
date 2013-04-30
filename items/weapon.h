@@ -5,9 +5,9 @@ class EntityStats;
 
 class Weapon : public ItemDef{
 public:
-	Weapon(Game& game, ConfigNode& config);
+	Weapon(const Game& game, const ConfigNode& config);
 	~Weapon();
 
 	EntityStats* entitiyType;
-	virtual int use(Player& owner, ItemStack& item, Screen& screen);
+	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
 };

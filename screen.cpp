@@ -66,7 +66,7 @@ constexpr double zBufferForLayer(int layer){
 	+ 1.0 ) / 2.0;
 }
 
-Vector2d Screen::mousePos(int layer){
+Vector2d Screen::mousePos(const int layer) const{
 	auto mouse = sf::Mouse::getPosition(*window);
 
     GLint viewport[4];

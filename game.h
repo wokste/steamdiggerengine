@@ -9,7 +9,7 @@ class FileSystem{
 public:
 	FileSystem();
 
-	std::string fullpath(const std::string& resourcename);
+	std::string fullpath(const std::string& resourcename) const;
 private:
 	std::string dataDir;
 };

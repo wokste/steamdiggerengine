@@ -18,7 +18,7 @@ MapGenerator::~MapGenerator(){
 	delete typeNoise;
 }
 
-Block* MapGenerator::getBlock(int x, int y, int layer){
+Block* MapGenerator::getBlock(int x, int y, int layer) const{
 	double caveVal = caveNoise->noiseSum(x, y);
 	double groundVal = groundNoise->noiseSum(x, y) + 0.4 * (y - 15);
 	double typeVal = typeNoise->noiseSum(x, y);

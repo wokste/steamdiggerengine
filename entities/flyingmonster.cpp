@@ -11,7 +11,7 @@ Entity * FlyingMonsterStats::spawn(World& newWorld, Vector2d pos){
 	return new FlyingMonster(newWorld, pos, this);
 }
 
-void FlyingMonsterStats::load(Game& game, ConfigNode& config){
+void FlyingMonsterStats::load(const Game& game, const ConfigNode& config){
 	MonsterStats::load(game, config);
 	accelSpeed = config.getInt("acceleration");
 	bounceSpeed = config.getInt("bounce-speed");

@@ -9,8 +9,8 @@
 #include "../game.h"
 #include <iostream>
 
-Weapon::Weapon(Game& game, ConfigNode& config) : ItemDef(config){
-	auto childnode = config.getNode("projectile");
+Weapon::Weapon(const Game& game, const ConfigNode& config) : ItemDef(config){
+	auto childnode = config.getNodeConst("projectile");
 	entitiyType = EntityStats::staticLoad(game, childnode);
 }
 
@@ -18,7 +18,7 @@ Weapon::~Weapon(){
 	if (entitiyType) delete entitiyType;
 }
 
-int Weapon::use(Player& owner, ItemStack& item, Screen& screen){
+int Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (!entitiyType)
 		return 0;
 	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(entitiyType, owner.pos));

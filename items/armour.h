@@ -4,5 +4,5 @@
 
 class Armour : public ItemDef{
 public:
-	Armour(ConfigNode& config);
+	Armour(const ConfigNode& config);
 };

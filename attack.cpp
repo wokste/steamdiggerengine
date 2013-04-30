@@ -7,7 +7,7 @@ Attack::Attack() :
 	type(0){
 }
 
-void Attack::load(ConfigNode& config){
+void Attack::load(const ConfigNode& config){
 	damage = config.getInt("damage");
 	push = config.getInt("push",0);
 	type = config.getInt("type",0);

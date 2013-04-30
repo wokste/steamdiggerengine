@@ -12,13 +12,13 @@ class Game;
 
 class HUD{
 public:
-	HUD(Game* game);
+	HUD(const Game& game);
 	HUD(const HUD& that) = delete;
 	~HUD();
 
-	void draw(Screen& screen, Player& player);
+	void draw(const Screen& screen, const Player& player);
 	void escapePressed();
-	bool onMousePressed(Screen& screen, Player& player, sf::Mouse::Button& button, Vector2i mousePos);
+	bool onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
 
 private:
 	std::vector<HUDElement*> hudElements;
@@ -30,19 +30,19 @@ public:
 	HUDElement(const HUDElement& that) = delete;
 	virtual ~HUDElement(){}
 
-	virtual void draw(Player& player) = 0;
-	virtual bool onMousePressed(Player& player, sf::Mouse::Button& button, Vector2i mousePos);
+	virtual void draw(const Player& player) = 0;
+	virtual bool onMousePressed(Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
 	Vector2i size;
 	Vector2d docking;
 };
 
 class HealthBarHUD : public HUDElement{
 public:
-	HealthBarHUD(Game* game);
+	HealthBarHUD(const Game& game);
 	HealthBarHUD(const HealthBarHUD& that) = delete;
 	virtual ~HealthBarHUD();
 
-	virtual void draw(Player& player);
+	virtual void draw(const Player& player);
 private:
 	Vector2i barSize;
 	Texture* barTexture;

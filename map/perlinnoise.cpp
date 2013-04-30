@@ -10,7 +10,7 @@ PerlinNoise::PerlinNoise(int newSeed, int newOctaves, double newPersistence, dou
 {
 }
 
-double PerlinNoise::rnd2D(int x,int y){
+double PerlinNoise::rnd2D(int x,int y) const{
 	int n=x+y*57;
 	n *= seed;
 	n ^= n<<13;
@@ -18,18 +18,18 @@ double PerlinNoise::rnd2D(int x,int y){
 	return 1.0-((double)nn/1073741824.0);
 }
 
-double PerlinNoise::interpolate(double a,double b,double x){
+double PerlinNoise::interpolate(double a,double b,double x) const{
 	double ft=x * 3.1415927;
 	double f=(1.0-std::cos(ft))* 0.5;
 	return a*(1.0-f)+b*f;
 }
 
-int PerlinNoise::int_floor(double x){
+int PerlinNoise::int_floor(double x) const{
   int i = (int)x; /* truncate */
   return i - ( i > x ); /* convert trunc to floor */
 }
 
-double PerlinNoise::noise2d(double x,double y){
+double PerlinNoise::noise2d(double x,double y) const{
 	int xI=int_floor(x);//This is kinda a cheap way to floor a double integer.
 	int yI=int_floor(y);
 	double s,t,u,v;
@@ -42,7 +42,7 @@ double PerlinNoise::noise2d(double x,double y){
 	return interpolate(int1,int2,y-yI);
 }
 
-double PerlinNoise::noiseSum(double x, double y){
+double PerlinNoise::noiseSum(double x, double y) const{
 	x *= scale;
 	y *= scale;
 	double sum =0;

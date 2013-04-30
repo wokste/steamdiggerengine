@@ -9,7 +9,7 @@
 #include "../utils/texture.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(Game& game, const std::string& configFileName){
+ItemDefManager::ItemDefManager(const Game& game, const std::string& configFileName){
 	int id = 0;
 
 	ConfigNode::load(configFileName, [&] (ConfigNode& configArray){

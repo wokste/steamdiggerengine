@@ -16,7 +16,7 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 	items[0].id = 2; items[0].count = 1; // Mining tool
 	items[1].id = 3; items[1].count = 1; // Gun
 }
-bool Inventory::use(Player& owner, Screen& screen){
+bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
 	int timeMs = (*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen);

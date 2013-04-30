@@ -8,7 +8,7 @@ struct MonsterStats : public EntityStats{
 	Attack hitAttack;
 
 	MonsterStats() = default;
-	virtual void load(Game& game, ConfigNode& config);
+	virtual void load(const Game& game, const ConfigNode& config);
 };
 
 class Monster : public Entity{

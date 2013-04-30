@@ -2,10 +2,10 @@
 #include "../utils/confignode.h"
 #include "../screen.h"
 
-ItemDef::ItemDef(ConfigNode& config){
+ItemDef::ItemDef(const ConfigNode& config){
 
 }
 
-int ItemDef::use(Player& owner, ItemStack& itemStack, Screen& screen){
+int ItemDef::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 	return 0;
 }

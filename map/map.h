@@ -30,14 +30,14 @@ public:
 
 	ItemDefManager* itemDefs;
 	void generate();
-	void render();
-	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType);
-	bool blockAdjacent(int x, int y, int layer, BlockCollisionType colType);
-	Tile* tileRef(int x, int y, int layer);
-	Block* blockRef(int x, int y, int layer);
+	void render() const;
+	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType) const;
+	bool blockAdjacent(int x, int y, int layer, BlockCollisionType colType) const;
+	Tile* tileRef(int x, int y, int layer) const;
+	Block* blockRef(int x, int y, int layer) const;
 
 private:
-	Tile* tile(int x, int y, int layer);
+	Tile* tile(int x, int y, int layer) const;
 	Texture* tileSet;
 	Tile* tiles;
 	MapGenerator* generator;

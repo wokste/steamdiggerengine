@@ -52,7 +52,7 @@ void Map::generate(){
 	}
 }
 
-void Map::render(){
+void Map::render() const{
 	if(tileSet == nullptr) return;
 
 	tileSet->bind(0xFFFFFFFF);
@@ -75,19 +75,19 @@ void Map::render(){
 
 
 /// Gives the tiledata of a given tile.
-Map::Tile* Map::tile(int x, int y, int layer){
+Map::Tile* Map::tile(int x, int y, int layer) const{
 	return &tiles[(y * mapSize.x + x) * MAX_LAYERS + layer];
 }
 
 /// Gives the tiledata of a given tileor nullptr if it is not a valid tile.
-Map::Tile* Map::tileRef(int x, int y, int layer){
+Map::Tile* Map::tileRef(int x, int y, int layer) const{
 	if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
 		return nullptr;
 
 	return &tiles[(y * mapSize.x + x) * MAX_LAYERS + layer];
 }
 
-bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType){
+bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType) const{
 	// Test all adjacent tiles
 	for (int i = 0 ; i < 4; i++){
 		Block* block = blockRef(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3),layer);
@@ -105,14 +105,14 @@ bool Map::blockAdjacent(int x, int y, int layer, BlockCollisionType colType){
 	return false;
 }
 
-Block* Map::blockRef(int x, int y, int layer){
+Block* Map::blockRef(int x, int y, int layer) const{
 	Tile* tile = tileRef(x,y,layer);
 	if (tile == nullptr || tile->blockId < 0)
 		return nullptr;
 	return (*itemDefs)[tile->blockId]->asBlock();
 }
 
-bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
+bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType) const{
 	int x1 = (int)(px1.x);
 	int x2 = (int)(px2.x) + 1;
 	int y1 = (int)(px1.y);
