@@ -1,42 +1,57 @@
 #include "world.h"
-#include "entities/entitylist.h"
 #include "entities/entity.h"
 #include "map/map.h"
-#include "entities/entityhandle.h"
 #include "items/itemdefmanager.h"
 #include "game.h"
 #include <stdlib.h>
 #include "utils/confignode.h"
+#include "entities/player.h"
+#include "entities/projectile.h"
+#include "entities/monster.h"
+#include "entities/flyingmonster.h"
 
 World::World(Game* newSettings) :
 	game(newSettings)
 {
-	entities = new EntityList();
+	//entities = new EntityList();
 	map = new Map(rand(), game);
 	map->generate();
 }
 
 World::~World(){
-	delete entities;
+	//delete entities;
 	delete map;
 }
 
-Entity* World::spawn(std::string type, Vector2d spawnPos){
-	EntityStats * stat = nullptr;
-	ConfigNode::load(type, [&] (ConfigNode& config){
-		stat = EntityStats::staticLoad(*game, config);
-	});
-	if (stat)
-		return spawn(stat,spawnPos);
-	else
-		return nullptr;
+Player* World::spawn(PlayerStats* stats, Vector2d spawnPos){
+	if (stats != nullptr){
+		Player* e = stats->spawn(*this, spawnPos);
+		if (e != nullptr){
+			players.push_back(std::unique_ptr<Player>(e));
+			e->world = this;
+		}
+		return e;
+	}
+	return nullptr;
 }
 
-Entity* World::spawn(EntityStats* stats, Vector2d spawnPos){
+Projectile* World::spawn(ProjectileStats* stats, Vector2d spawnPos){
 	if (stats != nullptr){
-		Entity* e = stats->spawn(*this, spawnPos);
+		Projectile* e = stats->spawn(*this, spawnPos);
 		if (e != nullptr){
-			entities->addEntity(e);
+			projectiles.push_back(std::unique_ptr<Projectile>(e));
+			e->world = this;
+		}
+		return e;
+	}
+	return nullptr;
+}
+
+Monster* World::spawn(FlyingMonsterStats* stats, Vector2d spawnPos){
+	if (stats != nullptr){
+		Monster* e = stats->spawn(*this, spawnPos);
+		if (e != nullptr){
+			monsters.push_back(std::unique_ptr<Monster>(e));
 			e->world = this;
 		}
 		return e;
@@ -45,12 +60,26 @@ Entity* World::spawn(EntityStats* stats, Vector2d spawnPos){
 }
 
 void World::logic(int timeMs){
-	entities->logic(timeMs);
+	for (auto& projectile : projectiles)
+		projectile->logic(timeMs);
+	for (auto& player : players)
+		player->logic(timeMs);
+	for (auto& monster : monsters)
+		monster->logic(timeMs);
+
+	// TODO: Removal of entities
+	// TODO: Collisions
 }
 
 void World::render(){
 	map->render();
-	entities->render();
+
+	for (auto& player : players)
+		player->render();
+	for (auto& monster : monsters)
+		monster->render();
+	for (auto& projectile : projectiles)
+		projectile->render();
 }
 
 bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
@@ -58,5 +87,11 @@ bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType
 }
 
 bool World::areaHasEntity(Vector2i px1, Vector2i px2){
-	return entities->areaHasEntity(px1,px2);
+	Vector2d px1d = Vector2::iToD(px1);
+	Vector2d px2d = Vector2::iToD(px2);
+	for (auto& player : players)
+		if (player->isInArea(px1d, px2d)) return true;
+	for (auto& monster : monsters)
+		if (monster->isInArea(px1d, px2d)) return true;
+	return false;
 }

@@ -3,11 +3,12 @@
 #include <math.h>
 
 #include <math.h>
+#include "player.h"
 #include "../utils/confignode.h"
 
 #define STATS ((FlyingMonsterStats*)(stats))
 
-Entity * FlyingMonsterStats::spawn(World& newWorld, Vector2d pos){
+Monster* FlyingMonsterStats::spawn(World& newWorld, Vector2d pos){
 	return new FlyingMonster(newWorld, pos, this);
 }
 
@@ -18,20 +19,17 @@ void FlyingMonsterStats::load(const Game& game, const ConfigNode& config){
 }
 
 FlyingMonster::FlyingMonster(World& newWorld, Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newWorld, newPos,newStats){
-	entityType = EntityType::ET_FlyingMonster;
 }
 
 void FlyingMonster::logic(int timeMs){
 	Monster::logic(timeMs);
 	double timeS = timeMs / 1000.0;
 
-	Entity* pTarget = target.get(*world->entities);
-
-	if (pTarget != nullptr){
+	if (target != nullptr){
 		double t = 1;
 
-		double dx = (pTarget->pos.x + pTarget->speed.x * t) - (pos.x + speed.x * t);
-		double dy = (pTarget->pos.y + pTarget->speed.y * t) - (pos.y + speed.y * t);
+		double dx = (target->pos.x + target->speed.x * t) - (pos.x + speed.x * t);
+		double dy = (target->pos.y + target->speed.y * t) - (pos.y + speed.y * t);
 		double dtot = std::max(sqrt(dx * dx + dy * dy), 0.1);
 
 		speed.x += (dx / dtot) * timeS * STATS->accelSpeed;

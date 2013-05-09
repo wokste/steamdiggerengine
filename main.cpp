@@ -10,6 +10,7 @@
 #include "utils/hud.h"
 #include "utils/assert.h"
 #include "game.h"
+#include "utils/confignode.h"
 
 std::unique_ptr<Screen> screen;
 std::unique_ptr<Game> game;
@@ -67,8 +68,14 @@ int main(){
 
 	game.reset(new Game());
 	world.reset(new World(game.get()));
-	world->spawn(game->fileSystem.fullpath("ghost.json"),Vector2d(10,-20));
-	player = dynamic_cast<Player*>(world->spawn(game->fileSystem.fullpath("player.json"),Vector2d(20,-10)));
+	//world->spawn(game->fileSystem.fullpath("ghost.json"),Vector2d(10,-20));
+	std::unique_ptr<PlayerStats> stats;
+	stats.reset(new PlayerStats());
+	ConfigNode::load(game->fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
+		stats->load(*(game.get()), config);
+		player = world->spawn(stats.get(),Vector2d(20,-10));
+	});
+
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
 	hud.reset(new HUD(*game.get()));

@@ -2,7 +2,8 @@
 #include "entity.h"
 #include "../attack.h"
 #include "../cooldown.h"
-#include "entityhandle.h"
+
+class Player;
 
 struct MonsterStats : public EntityStats{
 	Attack hitAttack;
@@ -16,8 +17,8 @@ public:
 	Cooldown cooldown;
 	Monster(World& world, Vector2d newPos, MonsterStats* stats);
 	virtual void logic(int timeMs);
-	virtual void onCollision(Entity& other);
+	virtual void onCollision(Player& other);
 	virtual void takeDamage(Attack& attack, Vector2d source);
 protected:
-	EntityHandle target;
+	Player* target;
 };

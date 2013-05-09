@@ -35,7 +35,6 @@ Entity::Entity(World& newWorld, Vector2d newPos, EntityStats* _stats) :
 	stats(_stats),
 	flipped(false),
 	bDeleteMe(false),
-	entityType(EntityType::ET_Unknown),
 	world(&newWorld)
 {
 	pos = newPos;
@@ -110,10 +109,6 @@ bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	   (pos.y - stats->collision.y < px2.y));
 }
 
-void Entity::onCollision(Entity& other){
-
-}
-
 void Entity::hitTerrain(bool hitWall){
 	if (hitWall)
 		speed.x = 0;
@@ -150,18 +145,4 @@ void EntityStats::load(const Game& game, const ConfigNode& config){
 	HP = config.getInt("hp",100);
 	color = config.getInt("color",0xffffff);
 	team = config.getInt("team",1);
-}
-
-EntityStats* EntityStats::staticLoad(const Game& game, const ConfigNode& config){
-	EntityStats* newStat = nullptr;
-	std::string className = config.getString("class");
-#define OPTION(str,class) if (className == str) {newStat = new class ();}
-	OPTION("player",PlayerStats)
-	OPTION("projectile",ProjectileStats)
-	OPTION("flyingmonster",FlyingMonsterStats)
-#undef OPTION
-	ASSERT(newStat, "", "Unknown class " + className);
-	if (newStat != nullptr)
-		newStat->load(game, config);
-	return newStat;
 }

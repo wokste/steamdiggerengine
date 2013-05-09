@@ -6,7 +6,7 @@ struct FlyingMonsterStats : public MonsterStats{
 	double bounceSpeed;
 
 	FlyingMonsterStats() = default;
-	virtual Entity* spawn(World& world, Vector2d pos);
+	virtual Monster* spawn(World& world, Vector2d pos);
 	virtual void load(const Game& game, const ConfigNode& config);
 };
 

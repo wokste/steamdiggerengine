@@ -11,20 +11,22 @@
 
 Weapon::Weapon(const Game& game, const ConfigNode& config) : ItemDef(config){
 	auto childnode = config.getNodeConst("projectile");
-	entitiyType = EntityStats::staticLoad(game, childnode);
+	projectile = new ProjectileStats();
+	projectile->load(game, childnode);
 }
 
 Weapon::~Weapon(){
-	if (entitiyType) delete entitiyType;
+	if (projectile) delete projectile;
 }
 
 int Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
-	if (!entitiyType)
+	if (!projectile)
 		return 0;
-	Projectile * shot = dynamic_cast<Projectile*>(owner.world->spawn(entitiyType, owner.pos));
+	Projectile* shot = owner.world->spawn(projectile, owner.pos);
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));
+		return 250;
 	}
-	return 250;
+	return 0;
 }

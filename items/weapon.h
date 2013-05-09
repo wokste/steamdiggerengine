@@ -1,13 +1,13 @@
 #pragma once
 #include "itemdef.h"
 #include <string>
-class EntityStats;
+class ProjectileStats;
 
 class Weapon : public ItemDef{
 public:
 	Weapon(const Game& game, const ConfigNode& config);
 	~Weapon();
 
-	EntityStats* entitiyType;
+	ProjectileStats* projectile;
 	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
 };

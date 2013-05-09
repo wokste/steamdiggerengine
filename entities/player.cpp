@@ -10,14 +10,13 @@
 
 #define STATS ((PlayerStats *)(stats))
 
-Entity * PlayerStats::spawn(World& newWorld, Vector2d newPos){
+Player* PlayerStats::spawn(World& newWorld, Vector2d newPos){
 	return new Player(newWorld, newPos, this);
 }
 
 Player::Player(World& newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
 	, inventory(newWorld.game->itemDefs), RP(0){
 	//TODO: Fix constructor
-	entityType = EntityType::ET_Player;
 }
 
 Player::~Player(){

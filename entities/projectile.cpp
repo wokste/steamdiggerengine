@@ -6,19 +6,26 @@
 
 #define STATS ((ProjectileStats *)(stats))
 
-Entity * ProjectileStats::spawn(World& newWorld, Vector2d pos){
+Projectile* ProjectileStats::spawn(World& newWorld, Vector2d pos){
 	return new Projectile(newWorld, pos, this);
 }
 
 Projectile::Projectile(World& newWorld, Vector2d newPos, ProjectileStats * stats) : Entity(newWorld, newPos, stats){
-	entityType = EntityType::ET_Projectile;
 }
 
 void Projectile::hitTerrain(bool hitWall){
 	bDeleteMe = true;
 }
 
-void Projectile::onCollision(Entity& other){
+void Projectile::onCollision(Player& other){
+	if (other.stats->team != stats->team){
+		std::cout << "boom";
+		other.takeDamage(STATS->hitAttack, pos);
+		bDeleteMe = true;
+	}
+}
+
+void Projectile::onCollision(Monster& other){
 	if (other.stats->team != stats->team){
 		std::cout << "boom";
 		other.takeDamage(STATS->hitAttack, pos);
