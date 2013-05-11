@@ -10,13 +10,13 @@ struct PlayerStats : public EntityStats{
 	double accelSpeed;
 	double walkSpeed;
 	PlayerStats() = default;
-	virtual Player* spawn(World& world, Vector2d pos);
+	virtual Player* spawn(World* world, Vector2d pos);
 	virtual void load(const Game& game, const ConfigNode& config);
 };
 
 class Player : public Entity{
 public:
-	Player(World& world, Vector2d newPos, PlayerStats * stats);
+	Player(World* world, Vector2d newPos, PlayerStats* stats);
 	virtual ~Player();
 	virtual void logic(int timeMs);
 	virtual void checkInput(int timeMs, Screen& screen);

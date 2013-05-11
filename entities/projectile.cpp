@@ -2,33 +2,53 @@
 #include <math.h>
 #include "projectile.h"
 #include "../attack.h"
+#include "../world.h"
 #include "../utils/confignode.h"
 
 #define STATS ((ProjectileStats *)(stats))
 
-Projectile* ProjectileStats::spawn(World& newWorld, Vector2d pos){
-	return new Projectile(newWorld, pos, this);
+Projectile* ProjectileStats::spawn(World* world, Vector2d pos){
+	if (!validPos(*world, pos))
+		return nullptr;
+
+	auto projectile = new Projectile(world, pos, this);
+	world->projectiles.push_back(std::unique_ptr<Projectile>(projectile));
+	return projectile;
 }
 
-Projectile::Projectile(World& newWorld, Vector2d newPos, ProjectileStats * stats) : Entity(newWorld, newPos, stats){
-}
+Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats * stats) :
+	Entity(newWorld, newPos, stats),
+	state(ProjectileState::Flying)
+{}
+
+void Projectile::logic(int timeMs){
+	Entity::logic(timeMs);
+
+	// Check for collisions
+	if (state == ProjectileState::Flying){
+		Rect4d rect = getRect();
+		if (targetType == ProjectileTargetType::TargetPlayer){
+			for (auto& player : world->players){
+				if (rect.intersects(player->getRect()))
+					hitCreature(*(player.get()));
+			}
+		}
+		if (targetType == ProjectileTargetType::TargetMonster){
+			for (auto& monster : world->monsters){
+				if (rect.intersects(monster->getRect()))
+					hitCreature(*(monster.get()));
+			}
+		}
+	};
+};
 
 void Projectile::hitTerrain(bool hitWall){
-	bDeleteMe = true;
+	state = ProjectileState::DeleteMe;
 }
 
-void Projectile::hitPlayer(Player& other){
-	if (other.stats->team != stats->team){
-		other.takeDamage(STATS->hitAttack, pos);
-		bDeleteMe = true;
-	}
-}
-
-void Projectile::hitMonster(Monster& other){
-	if (other.stats->team != stats->team){
-		other.takeDamage(STATS->hitAttack, pos);
-		bDeleteMe = true;
-	}
+void Projectile::hitCreature(Entity& other){
+	other.takeDamage(STATS->hitAttack, pos);
+	state = ProjectileState::DeleteMe;
 }
 
 void Projectile::moveTo(Vector2d newPos){

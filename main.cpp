@@ -73,7 +73,7 @@ int main(){
 	stats.reset(new PlayerStats());
 	ConfigNode::load(game->fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
 		stats->load(*(game.get()), config);
-		player = world->spawn(stats.get(),Vector2d(20,-10));
+		player = stats->spawn(world.get(),Vector2d(20,-10));
 	});
 
 	ASSERT(player != nullptr, "Main", "player = NULL");

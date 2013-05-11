@@ -29,9 +29,6 @@ public:
 
 	void logic(int timeMs);
 	void render();
-	Player* spawn(PlayerStats* stats, Vector2d spawnPos);
-	Projectile* spawn(ProjectileStats* stats, Vector2d spawnPos);
-	Monster* spawn(FlyingMonsterStats* stats, Vector2d spawnPos);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
 	Game* game;

@@ -7,24 +7,29 @@
 class Projectile;
 class Player;
 class Monster;
+enum class ProjectileState {Flying, Exploding, DeleteMe};
+enum class ProjectileTargetType {TargetPlayer, TargetMonster};
 
 struct ProjectileStats : public EntityStats{
 	Attack hitAttack;
 	double speed;
-	bool playerProjectile;
 
 	ProjectileStats() = default;
-	Projectile* spawn(World& world, Vector2d pos);
+	Projectile* spawn(World* world, Vector2d pos);
 	virtual void load(const Game& game, const ConfigNode& config);
 };
 
 class Projectile : public Entity{
 public:
-	Projectile(World& world, Vector2d newPos, ProjectileStats * stats);
+	Projectile(World* world, Vector2d newPos, ProjectileStats * stats);
 	virtual void hitTerrain(bool hitWall);
-	void hitPlayer(Player& other);
-	void hitMonster(Monster& other);
-	virtual void moveTo(Vector2d point);
+	virtual void logic(int timeMs);
+
+	ProjectileState state;
+	ProjectileTargetType targetType;
+	void moveTo(Vector2d point);
+
 private:
+	void hitCreature(Entity& other);
 	void damage(Entity& other);
 };

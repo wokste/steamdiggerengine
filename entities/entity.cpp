@@ -31,11 +31,9 @@ EntityStats::EntityStats() :
 	collision = Vector2d(1,2);
 }
 
-Entity::Entity(World& newWorld, Vector2d newPos, EntityStats* _stats) :
-	stats(_stats),
-	flipped(false),
-	bDeleteMe(false),
-	world(&newWorld)
+Entity::Entity(World* newWorld, Vector2d newPos, EntityStats* newStats) :
+	stats(newStats),
+	world(newWorld)
 {
 	pos = newPos;
 	speed = Vector2d(0,0);
@@ -61,17 +59,11 @@ void Entity::logic(int timeMs){
 
 /// Rendering function
 void Entity::render(){
-	if (speed.x > 0.5) flipped = false;
-	if (speed.x < -0.5) flipped = true;
-
 	if (stats->texture != nullptr){
 		stats->texture->bind(stats->color);
 		int frame = 0;
 
-		//if (flipped)
-		//	stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x + stats->size.x / 16.0, pos.y + stats->frameOffset.y), Vector2i(-stats->size.x, stats->size.y), frame);
-		//else
-			stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
+		stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
 	}
 }
 
@@ -86,23 +78,23 @@ void Entity::startAnim(std::string animName){
 
 /// Moves the entity. Checks for collision in the process.
 void Entity::move(Vector2d movement){
-	if (validPos(Vector2d(pos.x, pos.y + movement.y))){
+	if (stats->validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
 		pos.y += movement.y;
 	}else{
 		hitTerrain(false); // Hit no wall
 	}
 
-	if (validPos(Vector2d(pos.x + movement.x, pos.y))){
+	if (stats->validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
 		pos.x += movement.x;
 	}else{
 		hitTerrain(true); // Hit a wall
 	}
 }
 
-bool Entity::validPos(Vector2d newPos){
-	if (!stats->bMapCollision)
+bool EntityStats::validPos(World& world, Vector2d newPos){
+	if (!bMapCollision)
 		return true;
-	return !world->areaHasBlocks(Vector2::dToI(newPos - stats->collision), Vector2::dToI(newPos + stats->collision));
+	return !world.areaHasBlocks(Vector2::dToI(newPos - collision), Vector2::dToI(newPos + collision));
 }
 
 bool Entity::isInArea(Vector2d px1, Vector2d px2){

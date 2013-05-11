@@ -42,7 +42,7 @@ bool MonsterSpawner::trySpawn(World* world, Player* player){
 	double distance = 12 + (double)rand() / RAND_MAX;
 	double direction = (double)rand() / RAND_MAX * 6.283184;
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
-	Monster* spawned = world->spawn(typeToSpawn, spawnPos);
+	Monster* spawned = typeToSpawn->spawn(world, spawnPos);
 
 	if (spawned)
 		spawned->target = player;

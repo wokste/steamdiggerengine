@@ -24,6 +24,7 @@ struct EntityStats{
 	EntityStats();
 	virtual ~EntityStats();
 	virtual void load(const Game& game, const ConfigNode& config);
+	bool validPos(World& world, Vector2d newPos);
 };
 
 class Entity{
@@ -34,10 +35,8 @@ public:
 	EntityStats* stats;
 	Vector2d speed;
 	double HP;
-	bool flipped;
-	bool bDeleteMe;
 
-	Entity(World& world, Vector2d newPos, EntityStats* stats);
+	Entity(World* world, Vector2d newPos, EntityStats* stats);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}
@@ -45,7 +44,6 @@ public:
 	void render();
 	void startAnim(std::string animName);
 	void move(Vector2d change);
-	bool validPos(Vector2d newPos);
 	void push(Vector2d dir, double force);
 	Rect4d getRect() const;
 

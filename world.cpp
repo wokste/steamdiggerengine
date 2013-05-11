@@ -24,33 +24,6 @@ World::~World(){
 	delete map;
 }
 
-Player* World::spawn(PlayerStats* stats, Vector2d spawnPos){
-	Player* e = stats->spawn(*this, spawnPos);
-	if (e != nullptr){
-		players.push_back(std::unique_ptr<Player>(e));
-		e->world = this;
-	}
-	return e;
-}
-
-Projectile* World::spawn(ProjectileStats* stats, Vector2d spawnPos){
-	Projectile* e = stats->spawn(*this, spawnPos);
-	if (e != nullptr){
-		projectiles.push_back(std::unique_ptr<Projectile>(e));
-		e->world = this;
-	}
-	return e;
-}
-
-Monster* World::spawn(FlyingMonsterStats* stats, Vector2d spawnPos){
-	Monster* e = stats->spawn(*this, spawnPos);
-	if (e != nullptr){
-		monsters.push_back(std::unique_ptr<Monster>(e));
-		e->world = this;
-	}
-	return e;
-}
-
 void World::logic(int timeMs){
 	for (auto& projectile : projectiles)
 		projectile->logic(timeMs);
@@ -60,11 +33,14 @@ void World::logic(int timeMs){
 		monster->logic(timeMs);
 
 	// == Removal of entities ==
+	#define REMOVE_FROM_LIST(v,f) v.erase(std::remove_if (v.begin(), v.end(), f), v.end())
 
-	std::remove_if (monsters.begin(), monsters.end(), [&](std::unique_ptr<Monster>& monster){
+	REMOVE_FROM_LIST(monsters, [&](std::unique_ptr<Monster>& monster){
 		return monster->HP <= 0;
 	});
-	// TODO: projectiles
+	REMOVE_FROM_LIST(projectiles, [&](std::unique_ptr<Projectile>& projectile){
+		return projectile->state == ProjectileState::DeleteMe;
+	});
 
 	monsterSpawner.logic(this, timeMs);
 }

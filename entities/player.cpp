@@ -10,12 +10,17 @@
 
 #define STATS ((PlayerStats *)(stats))
 
-Player* PlayerStats::spawn(World& newWorld, Vector2d newPos){
-	return new Player(newWorld, newPos, this);
+Player* PlayerStats::spawn(World* world, Vector2d pos){
+	if (!validPos(*world, pos))
+		return nullptr;
+
+	auto player = new Player(world, pos, this);
+	world->players.push_back(std::unique_ptr<Player>(player));
+	return player;
 }
 
-Player::Player(World& newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(newWorld.game->itemDefs), RP(0){
+Player::Player(World* newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
+	, inventory(newWorld->game->itemDefs), RP(0){
 	//TODO: Fix constructor
 }
 
@@ -78,7 +83,7 @@ bool Player::useItem(Screen& screen){
 }
 
 void Player::tryJump(){
-	if (!validPos(Vector2d(pos.x, pos.y + 0.1))){
+	if (!STATS->validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
 		speed.y = -STATS->jumpHeight;
 	}
 }

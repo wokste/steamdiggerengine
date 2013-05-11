@@ -12,16 +12,13 @@ void MonsterStats::load(const Game& game, const ConfigNode& config){
 	hitAttack.load(onHit);
 }
 
-Monster::Monster(World& newWorld, Vector2d newPos, MonsterStats* newStats) : Entity(newWorld, newPos,newStats) , target(nullptr), cooldown(){
+Monster::Monster(World* newWorld, Vector2d newPos, MonsterStats* newStats) : Entity(newWorld, newPos,newStats) , target(nullptr), cooldown(){
 
 }
 
 void Monster::takeDamage(Attack& attack,Vector2d source){
 	HP -= attack.damage;
 	push(pos - source, attack.push);
-
-	if (HP <= 0)
-		bDeleteMe = true;
 }
 
 void Monster::logic(int timeMs){

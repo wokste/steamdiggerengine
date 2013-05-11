@@ -15,7 +15,7 @@ struct MonsterStats : public EntityStats{
 class Monster : public Entity{
 public:
 	Cooldown cooldown;
-	Monster(World& world, Vector2d newPos, MonsterStats* stats);
+	Monster(World* world, Vector2d newPos, MonsterStats* stats);
 	virtual void logic(int timeMs);
 	virtual void hitPlayer(Player& other);
 	virtual void takeDamage(Attack& attack, Vector2d source);

@@ -22,7 +22,8 @@ Weapon::~Weapon(){
 int Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (!projectile)
 		return 0;
-	Projectile* shot = owner.world->spawn(projectile, owner.pos);
+	Projectile* shot = projectile->spawn(owner.world, owner.pos);
+	shot->targetType = ProjectileTargetType::TargetMonster;
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));

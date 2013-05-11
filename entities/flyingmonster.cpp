@@ -8,8 +8,13 @@
 
 #define STATS ((FlyingMonsterStats*)(stats))
 
-Monster* FlyingMonsterStats::spawn(World& newWorld, Vector2d pos){
-	return new FlyingMonster(newWorld, pos, this);
+Monster* FlyingMonsterStats::spawn(World* world, Vector2d pos){
+	if (!validPos(*world, pos))
+		return nullptr;
+
+	auto mob = new FlyingMonster(world, pos, this);
+	world->monsters.push_back(std::unique_ptr<Monster>(mob));
+	return mob;
 }
 
 void FlyingMonsterStats::load(const Game& game, const ConfigNode& config){
@@ -18,7 +23,7 @@ void FlyingMonsterStats::load(const Game& game, const ConfigNode& config){
 	bounceSpeed = config.getInt("bounce-speed");
 }
 
-FlyingMonster::FlyingMonster(World& newWorld, Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newWorld, newPos,newStats){
+FlyingMonster::FlyingMonster(World* newWorld, Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newWorld, newPos,newStats){
 }
 
 void FlyingMonster::logic(int timeMs){
