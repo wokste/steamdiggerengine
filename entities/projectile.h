@@ -22,8 +22,8 @@ class Projectile : public Entity{
 public:
 	Projectile(World& world, Vector2d newPos, ProjectileStats * stats);
 	virtual void hitTerrain(bool hitWall);
-	void onCollision(Player& other);
-	void onCollision(Monster& other);
+	void hitPlayer(Player& other);
+	void hitMonster(Monster& other);
 	virtual void moveTo(Vector2d point);
 private:
 	void damage(Entity& other);

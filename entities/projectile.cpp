@@ -17,17 +17,15 @@ void Projectile::hitTerrain(bool hitWall){
 	bDeleteMe = true;
 }
 
-void Projectile::onCollision(Player& other){
+void Projectile::hitPlayer(Player& other){
 	if (other.stats->team != stats->team){
-		std::cout << "boom";
 		other.takeDamage(STATS->hitAttack, pos);
 		bDeleteMe = true;
 	}
 }
 
-void Projectile::onCollision(Monster& other){
+void Projectile::hitMonster(Monster& other){
 	if (other.stats->team != stats->team){
-		std::cout << "boom";
 		other.takeDamage(STATS->hitAttack, pos);
 		bDeleteMe = true;
 	}

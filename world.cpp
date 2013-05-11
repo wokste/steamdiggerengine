@@ -11,7 +11,8 @@
 #include "entities/flyingmonster.h"
 
 World::World(Game* newSettings) :
-	game(newSettings)
+	game(newSettings),
+	monsterSpawner(*game)
 {
 	//entities = new EntityList();
 	map = new Map(rand(), game);
@@ -24,39 +25,30 @@ World::~World(){
 }
 
 Player* World::spawn(PlayerStats* stats, Vector2d spawnPos){
-	if (stats != nullptr){
-		Player* e = stats->spawn(*this, spawnPos);
-		if (e != nullptr){
-			players.push_back(std::unique_ptr<Player>(e));
-			e->world = this;
-		}
-		return e;
+	Player* e = stats->spawn(*this, spawnPos);
+	if (e != nullptr){
+		players.push_back(std::unique_ptr<Player>(e));
+		e->world = this;
 	}
-	return nullptr;
+	return e;
 }
 
 Projectile* World::spawn(ProjectileStats* stats, Vector2d spawnPos){
-	if (stats != nullptr){
-		Projectile* e = stats->spawn(*this, spawnPos);
-		if (e != nullptr){
-			projectiles.push_back(std::unique_ptr<Projectile>(e));
-			e->world = this;
-		}
-		return e;
+	Projectile* e = stats->spawn(*this, spawnPos);
+	if (e != nullptr){
+		projectiles.push_back(std::unique_ptr<Projectile>(e));
+		e->world = this;
 	}
-	return nullptr;
+	return e;
 }
 
 Monster* World::spawn(FlyingMonsterStats* stats, Vector2d spawnPos){
-	if (stats != nullptr){
-		Monster* e = stats->spawn(*this, spawnPos);
-		if (e != nullptr){
-			monsters.push_back(std::unique_ptr<Monster>(e));
-			e->world = this;
-		}
-		return e;
+	Monster* e = stats->spawn(*this, spawnPos);
+	if (e != nullptr){
+		monsters.push_back(std::unique_ptr<Monster>(e));
+		e->world = this;
 	}
-	return nullptr;
+	return e;
 }
 
 void World::logic(int timeMs){
@@ -67,8 +59,14 @@ void World::logic(int timeMs){
 	for (auto& monster : monsters)
 		monster->logic(timeMs);
 
-	// TODO: Removal of entities
-	// TODO: Collisions
+	// == Removal of entities ==
+
+	std::remove_if (monsters.begin(), monsters.end(), [&](std::unique_ptr<Monster>& monster){
+		return monster->HP <= 0;
+	});
+	// TODO: projectiles
+
+	monsterSpawner.logic(this, timeMs);
 }
 
 void World::render(){

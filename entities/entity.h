@@ -47,6 +47,7 @@ public:
 	void move(Vector2d change);
 	bool validPos(Vector2d newPos);
 	void push(Vector2d dir, double force);
+	Rect4d getRect() const;
 
 	virtual void hitTerrain(bool hitWall);
 	virtual void takeDamage(Attack& attack, Vector2d source);

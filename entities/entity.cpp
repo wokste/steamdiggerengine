@@ -75,6 +75,10 @@ void Entity::render(){
 	}
 }
 
+Rect4d Entity::getRect() const{
+	return Rect4d(pos - stats->collision, stats->collision + stats->collision);
+}
+
 /// Starts an animation
 void Entity::startAnim(std::string animName){
 	//animation.start(entityType->getAnimation(animName));

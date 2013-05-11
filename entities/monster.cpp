@@ -27,23 +27,17 @@ void Monster::takeDamage(Attack& attack,Vector2d source){
 void Monster::logic(int timeMs){
 	cooldown -= timeMs;
 	Entity::logic(timeMs);
-	target = world->players[0].get();
-	// TODO: Fix
-	// TODO: this does not have to be calculated every frame
-	/*target = world->players->findMax([this](const Entity& val){
-		if (val.entityType == EntityType::ET_Player && val.HP > 0)
-			return 10000000.0;
 
-		return 0.0;
-		//auto dx = x - val.x;
-		//auto dy = y - val.y;
-		//return 160000.0 - dx * dx + dy * dy; // 400 PX sight radius
-	});*/
+	if (cooldown.done()){
+		Rect4d rect = getRect();
+		for (auto& player : world->players){
+			if (rect.intersects(player->getRect()))
+				hitPlayer(*(player.get()));
+		}
+	}
 }
 
-void Monster::onCollision(Player& other){
-	if (cooldown.done()){
-		other.takeDamage(STATS->hitAttack, pos);
-		cooldown.set(500);
-	}
+void Monster::hitPlayer(Player& other){
+	other.takeDamage(STATS->hitAttack, pos);
+	cooldown.set(500);
 }
