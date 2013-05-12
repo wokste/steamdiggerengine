@@ -13,11 +13,11 @@
 Tool::Tool(const ConfigNode& config) : ItemDef(config){
 }
 
-int Tool::use(Player& owner, ItemStack& itemStack, const Screen& screen){
+double Tool::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 	Block* block = mineAt(owner.world, Vector2::dToI(screen.mousePos(-1)), 1);
 	if (block != nullptr){
 		owner.inventory.add(block->ID);
-		return (int)(block->timeToMine * 1000);
+		return block->timeToMine;
 	}
 	return 0;
 }

@@ -1,10 +1,10 @@
 #pragma once
 
 class Cooldown{
-	int timeMs;
+	double time;
 public:
 	Cooldown();
-	void operator-=(int timeMsDelta);
-	void set(int newTime);
+	void operator-=(double timeDelta);
+	void set(double newTime);
 	bool done();
 };

@@ -16,7 +16,7 @@ class Monster : public Entity{
 public:
 	Cooldown cooldown;
 	Monster(World* world, Vector2d newPos, MonsterStats* stats);
-	virtual void logic(int timeMs);
+	virtual void logic(double time);
 	virtual void hitPlayer(Player& other);
 	virtual void takeDamage(Attack& attack, Vector2d source);
 	Player* target;

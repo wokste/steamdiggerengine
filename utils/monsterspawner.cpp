@@ -24,13 +24,13 @@ SpawnConfig::SpawnConfig(Game& game){
 	});
 
 	newWaveChance = 0.4;
-	msDelayWaves = 15000;
-	msDelaySpawns = 1000;
+	delayWaves = 15;
+	delaySpawns = 1;
 	maxMonsters = 5;
 }
 
-void MonsterSpawner::logic(World* world, int timeMs){
-	cooldown -= timeMs;
+void MonsterSpawner::logic(World* world, double time){
+	cooldown -= time;
 	std::poisson_distribution<> poisson(1);
 
 	if (cooldown.done()){
@@ -51,9 +51,9 @@ void MonsterSpawner::logic(World* world, int timeMs){
 			}
 		}
 		if (std::bernoulli_distribution(spawnConfig.newWaveChance)(world->game->rnd))
-			cooldown.set(poisson(world->game->rnd) * spawnConfig.msDelayWaves);
+			cooldown.set(poisson(world->game->rnd) * spawnConfig.delayWaves);
 		else
-			cooldown.set(poisson(world->game->rnd) * spawnConfig.msDelaySpawns);
+			cooldown.set(poisson(world->game->rnd) * spawnConfig.delaySpawns);
 	}
 }
 

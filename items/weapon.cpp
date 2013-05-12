@@ -19,7 +19,7 @@ Weapon::~Weapon(){
 	if (projectile) delete projectile;
 }
 
-int Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
+double Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (!projectile)
 		return 0;
 	Projectile* shot = projectile->spawn(owner.world, owner.pos);
@@ -27,7 +27,7 @@ int Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
 
 	if (shot != nullptr){
 		shot->moveTo(screen.mousePos(0));
-		return 250;
+		return 0.250;
 	}
 	return 0;
 }

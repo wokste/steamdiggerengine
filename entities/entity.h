@@ -40,7 +40,7 @@ public:
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}
-	void logic(int timeMs);
+	void logic(double time);
 	void render();
 	void startAnim(std::string animName);
 	void move(Vector2d change);

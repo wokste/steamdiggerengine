@@ -11,8 +11,8 @@ public:
 	SpawnConfig(Game& game);
 	FlyingMonsterStats* getMonsterType();
 	double newWaveChance;
-	int msDelayWaves;
-	int msDelaySpawns;
+	int delayWaves;
+	int delaySpawns;
 	int maxMonsters;
 private:
 	std::unique_ptr<FlyingMonsterStats> prototype;
@@ -21,7 +21,7 @@ private:
 class MonsterSpawner{
 public:
 	MonsterSpawner(Game& game);
-	void logic(World* world, int timeMs);
+	void logic(World* world, double time);
 
 private:
 	Cooldown cooldown;

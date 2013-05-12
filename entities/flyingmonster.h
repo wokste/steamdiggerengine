@@ -13,6 +13,6 @@ struct FlyingMonsterStats : public MonsterStats{
 class FlyingMonster : public Monster{
 public:
 	FlyingMonster(World* world, Vector2d newPos, FlyingMonsterStats* stats);
-	virtual void logic(int timeMs);
+	virtual void logic(double time);
 	virtual void hitTerrain(bool hitWall);
 };

@@ -28,21 +28,21 @@ Player::~Player(){
 
 }
 
-void Player::logic(int timeMs){
-	Entity::logic(timeMs);
+void Player::logic(double time){
+	Entity::logic(time);
 }
 
-void Player::checkKeyboardMovement(int timeMs){
+void Player::checkKeyboardMovement(double time){
 	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 	bool slowDown = !(keyLeft ^ keyRight);
 	bool moveRight = speed.x > 0;
 
 	if ((keyLeft && !keyRight) || (slowDown && moveRight)){
-		speed.x -= ((STATS->accelSpeed * timeMs) / 1000);
+		speed.x -= (STATS->accelSpeed * time);
 	}
 	if ((keyRight && !keyLeft) || (slowDown && !moveRight)){
-		speed.x += ((STATS->accelSpeed * timeMs) / 1000);
+		speed.x += (STATS->accelSpeed * time);
 	}
 
 	if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
@@ -50,9 +50,9 @@ void Player::checkKeyboardMovement(int timeMs){
 	if (speed.x < 0.5 && speed.x > -0.5 && slowDown) speed.x = 0;
 }
 
-void Player::checkInput(int timeMs, Screen& screen){
+void Player::checkInput(double time, Screen& screen){
 	if (HP > 0){
-		checkKeyboardMovement(timeMs);
+		checkKeyboardMovement(time);
 	}else{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 			pos.x = 2;
@@ -62,7 +62,7 @@ void Player::checkInput(int timeMs, Screen& screen){
 	}
 
 	if (HP > 0){
-		inventory.logic(timeMs);
+		inventory.logic(time);
 	}
 }
 

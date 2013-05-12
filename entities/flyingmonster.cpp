@@ -26,9 +26,8 @@ void FlyingMonsterStats::load(const Game& game, const ConfigNode& config){
 FlyingMonster::FlyingMonster(World* newWorld, Vector2d newPos, FlyingMonsterStats* newStats) : Monster(newWorld, newPos,newStats){
 }
 
-void FlyingMonster::logic(int timeMs){
-	Monster::logic(timeMs);
-	double timeS = timeMs / 1000.0;
+void FlyingMonster::logic(double time){
+	Monster::logic(time);
 
 	if (target != nullptr){
 		double t = 1;
@@ -37,8 +36,8 @@ void FlyingMonster::logic(int timeMs){
 		double dy = (target->pos.y + target->speed.y * t) - (pos.y + speed.y * t);
 		double dtot = std::max(sqrt(dx * dx + dy * dy), 0.1);
 
-		speed.x += (dx / dtot) * timeS * STATS->accelSpeed;
-		speed.y += (dy / dtot) * timeS * STATS->accelSpeed;
+		speed.x += (dx / dtot) * time * STATS->accelSpeed;
+		speed.y += (dy / dtot) * time * STATS->accelSpeed;
 	}
 }
 

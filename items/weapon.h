@@ -9,5 +9,5 @@ public:
 	~Weapon();
 
 	ProjectileStats* projectile;
-	virtual int use(Player& owner, ItemStack& item, const Screen& screen);
+	virtual double use(Player& owner, ItemStack& item, const Screen& screen);
 };

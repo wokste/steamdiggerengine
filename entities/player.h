@@ -18,8 +18,8 @@ class Player : public Entity{
 public:
 	Player(World* world, Vector2d newPos, PlayerStats* stats);
 	virtual ~Player();
-	virtual void logic(int timeMs);
-	virtual void checkInput(int timeMs, Screen& screen);
+	virtual void logic(double time);
+	virtual void checkInput(double time, Screen& screen);
 	virtual void takeDamage(Attack& attack, Vector2d source);
 
 	void onMouseWheel(int delta);
@@ -30,5 +30,5 @@ public:
 private:
 	int RP = 0;
 
-	void checkKeyboardMovement(int timeMs);
+	void checkKeyboardMovement(double time);
 };

@@ -23,7 +23,7 @@ class Projectile : public Entity{
 public:
 	Projectile(World* world, Vector2d newPos, ProjectileStats * stats);
 	virtual void hitTerrain(bool hitWall);
-	virtual void logic(int timeMs);
+	virtual void logic(double time);
 
 	ProjectileState state;
 	ProjectileTargetType targetType;

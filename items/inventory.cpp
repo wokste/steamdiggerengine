@@ -19,16 +19,16 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
-	int timeMs = (*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen);
-	if (timeMs > 0){
-		cooldown.set(timeMs);
+	double time = (*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen);
+	if (time > 0){
+		cooldown.set(time);
 		return true;
 	}
 	return false;
 }
 
-void Inventory::logic(int timeMs){
-	cooldown -= timeMs;
+void Inventory::logic(double time){
+	cooldown -= time;
 }
 
 void Inventory::selectItem(int nr, bool relative){

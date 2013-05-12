@@ -21,9 +21,9 @@ void Monster::takeDamage(Attack& attack,Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void Monster::logic(int timeMs){
-	cooldown -= timeMs;
-	Entity::logic(timeMs);
+void Monster::logic(double time){
+	cooldown -= time;
+	Entity::logic(time);
 
 	if (cooldown.done()){
 		Rect4d rect = getRect();

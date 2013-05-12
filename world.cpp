@@ -24,13 +24,13 @@ World::~World(){
 	delete map;
 }
 
-void World::logic(int timeMs){
+void World::logic(double time){
 	for (auto& projectile : projectiles)
-		projectile->logic(timeMs);
+		projectile->logic(time);
 	for (auto& player : players)
-		player->logic(timeMs);
+		player->logic(time);
 	for (auto& monster : monsters)
-		monster->logic(timeMs);
+		monster->logic(time);
 
 	// == Removal of entities ==
 	#define REMOVE_FROM_LIST(v,f) v.erase(std::remove_if (v.begin(), v.end(), f), v.end())
@@ -42,7 +42,7 @@ void World::logic(int timeMs){
 		return projectile->state == ProjectileState::DeleteMe;
 	});
 
-	monsterSpawner.logic(this, timeMs);
+	monsterSpawner.logic(this, time);
 }
 
 void World::render(){

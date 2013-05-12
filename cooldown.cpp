@@ -1,19 +1,19 @@
 #include "cooldown.h"
 
 Cooldown::Cooldown(){
-	timeMs = 0;
+	time = 0;
 }
 
-void Cooldown::operator-=(int timeMsDelta){
-	timeMs -= timeMsDelta;
-	if (timeMs < 0)
-		timeMs = 0;
+void Cooldown::operator-=(double timeDelta){
+	time -= timeDelta;
+	if (time < 0)
+		time = 0;
 }
 
-void Cooldown::set(int newTime){
-	timeMs = newTime;
+void Cooldown::set(double newTime){
+	time = newTime;
 }
 
 bool Cooldown::done(){
-	return timeMs == 0;
+	return time == 0;
 }

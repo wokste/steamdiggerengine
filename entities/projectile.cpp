@@ -21,8 +21,8 @@ Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats * stats
 	state(ProjectileState::Flying)
 {}
 
-void Projectile::logic(int timeMs){
-	Entity::logic(timeMs);
+void Projectile::logic(double time){
+	Entity::logic(time);
 
 	// Check for collisions
 	if (state == ProjectileState::Flying){

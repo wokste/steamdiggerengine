@@ -79,12 +79,13 @@ int main(){
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
 	hud.reset(new HUD(*game.get()));
+	sf::Clock clock;
 
 	bool running = true;
 	while (running){
-		int timeMs = 1000 / 60;
-		player->checkInput(timeMs,*screen.get());
-		world->logic(timeMs);
+		double time = clock.restart().asSeconds();
+		player->checkInput(time,*screen.get());
+		world->logic(time);
 
 		doWindowEvents();
 

@@ -40,20 +40,18 @@ Entity::Entity(World* newWorld, Vector2d newPos, EntityStats* newStats) :
 	HP = stats->HP;
 }
 
-void Entity::logic(int timeMs){
-	double timeS = timeMs / 1000.0;
-
+void Entity::logic(double time){
 	if (stats->bGravity)
-		speed.y += world->map->gravity * timeS;
+		speed.y += world->map->gravity * time;
 
 	if (speed.x < -stats->maxSpeed) speed.x = -stats->maxSpeed;
 	if (speed.x > stats->maxSpeed) speed.x = stats->maxSpeed;
 	if (speed.y < -stats->maxSpeed) speed.y = -stats->maxSpeed;
 	if (speed.y > stats->maxSpeed) speed.y = stats->maxSpeed;
 
-	move(speed * timeS);
+	move(speed * time);
 
-	//if (animation.animate(timeMs))
+	//if (animation.animate(time))
 	//	onAnimEnd();
 }
 
