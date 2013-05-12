@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <random>
 class ItemDefManager;
 class World;
 
@@ -19,6 +20,6 @@ public:
 	Game();
 	~Game();
 	ItemDefManager* itemDefs;
-	//World* world;
 	FileSystem fileSystem;
+	std::mt19937 rnd;
 };

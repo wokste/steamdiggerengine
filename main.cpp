@@ -82,8 +82,9 @@ int main(){
 
 	bool running = true;
 	while (running){
-		player->checkInput(10,*screen.get());
-		world->logic(10);
+		int timeMs = 1000 / 60;
+		player->checkInput(timeMs,*screen.get());
+		world->logic(timeMs);
 
 		doWindowEvents();
 

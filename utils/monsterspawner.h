@@ -6,6 +6,18 @@
 class World;
 class Player;
 
+class SpawnConfig{
+public:
+	SpawnConfig(Game& game);
+	FlyingMonsterStats* getMonsterType();
+	double newWaveChance;
+	int msDelayWaves;
+	int msDelaySpawns;
+	int maxMonsters;
+private:
+	std::unique_ptr<FlyingMonsterStats> prototype;
+};
+
 class MonsterSpawner{
 public:
 	MonsterSpawner(Game& game);
@@ -13,7 +25,6 @@ public:
 
 private:
 	Cooldown cooldown;
-	std::unique_ptr<FlyingMonsterStats> prototype;
-
+	SpawnConfig basicSpawnConfig;
 	bool trySpawn(World* world, Player* player);
 };
