@@ -8,10 +8,6 @@
 #include <algorithm>
 #include "../utils/confignode.h"
 #include "../utils/vector2.h"
-
-#include "player.h"
-#include "flyingmonster.h"
-#include "projectile.h"
 #include "../utils/assert.h"
 #include "../game.h"
 

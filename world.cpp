@@ -8,7 +8,6 @@
 #include "entities/player.h"
 #include "entities/projectile.h"
 #include "entities/monster.h"
-#include "entities/flyingmonster.h"
 
 World::World(Game* newSettings) :
 	game(newSettings),

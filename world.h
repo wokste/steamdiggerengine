@@ -8,11 +8,8 @@
 
 class Map;
 class Entity;
-//class EntityList;
-//class EntityStats;
 class PlayerStats;
 class MonsterStats;
-class FlyingMonsterStats;
 class ProjectileStats;
 class Player;
 class Monster;

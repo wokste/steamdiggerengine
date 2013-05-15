@@ -35,3 +35,6 @@ ItemDefManager::ItemDefManager(const Game& game, const std::string& configFileNa
 		});
 	});
 }
+
+ItemDefManager::~ItemDefManager(){
+}

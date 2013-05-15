@@ -1,21 +1,23 @@
 #pragma once
 #include "../cooldown.h"
-#include "../entities/flyingmonster.h"
 #include <memory>
 
+class Game;
 class World;
 class Player;
+class Monster;
+class MonsterStats;
 
 class SpawnConfig{
 public:
 	SpawnConfig(Game& game);
-	FlyingMonsterStats* getMonsterType();
+	MonsterStats* getMonsterType();
 	double newWaveChance;
 	int delayWaves;
 	int delaySpawns;
 	int maxMonsters;
 private:
-	std::unique_ptr<FlyingMonsterStats> prototype;
+	std::unique_ptr<MonsterStats> prototype;
 };
 
 class MonsterSpawner{

@@ -1,14 +1,22 @@
 #pragma once
 #include "entity.h"
+//#include "movementtype.h"
 #include "../attack.h"
 #include "../cooldown.h"
+#include <memory>
 
+class Monster;
 class Player;
+class MovementType;
 
 struct MonsterStats : public EntityStats{
-	Attack hitAttack;
+	MonsterStats();
+	~MonsterStats();
 
-	MonsterStats() = default;
+	Attack hitAttack;
+	std::unique_ptr<MovementType> movementType;
+
+	Monster* spawn(World* world, Vector2d pos);
 	virtual void load(const Game& game, const ConfigNode& config);
 };
 
@@ -20,4 +28,5 @@ public:
 	virtual void hitPlayer(Player& other);
 	virtual void takeDamage(Attack& attack, Vector2d source);
 	Player* target;
+	virtual void hitTerrain(bool hitWall);
 };

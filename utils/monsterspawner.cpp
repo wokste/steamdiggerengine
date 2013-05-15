@@ -2,7 +2,6 @@
 
 #include "../entities/monster.h"
 #include "../entities/player.h"
-#include "../entities/flyingmonster.h"
 #include "../world.h"
 #include "../game.h"
 #include <cmath>
@@ -12,13 +11,13 @@ MonsterSpawner::MonsterSpawner(Game& game) : basicSpawnConfig(game)
 {
 }
 
-FlyingMonsterStats* SpawnConfig::getMonsterType(){
+MonsterStats* SpawnConfig::getMonsterType(){
 	return prototype.get();
 }
 
 SpawnConfig::SpawnConfig(Game& game){
 	ConfigNode::load(game.fileSystem.fullpath("ghost.json"),[&] (ConfigNode& config){
-		auto stats = new FlyingMonsterStats();
+		auto stats = new MonsterStats();
 		stats->load(game, config);
 		prototype.reset(stats);
 	});
@@ -63,7 +62,7 @@ bool MonsterSpawner::trySpawn(World* world, Player* player){
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 
 	// TODO: randomly chosen biome dependant mobs
-	FlyingMonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType();
+	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType();
 	Monster* spawned = typeToSpawn->spawn(world, spawnPos);
 
 	if (spawned)

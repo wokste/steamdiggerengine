@@ -1,8 +1,7 @@
 #include <iostream>
 #include "confignode.h"
 #include "assert.h"
-
-extern std::string dataDirectory;
+#include "../../external/jansson-2.4/src/jansson.h"
 
 ConfigNode::ConfigNode(json_t* node) :
 	m_Node(node){}
