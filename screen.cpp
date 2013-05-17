@@ -5,8 +5,8 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 
-constexpr double eyedist = 8;
-constexpr double blocksOnScreen = 50;
+constexpr double eyedist = 10;
+constexpr double blocksOnScreen = 200;
 constexpr double nearPlane = eyedist - 3;
 constexpr double farPlane = eyedist + 3;
 

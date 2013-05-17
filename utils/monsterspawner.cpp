@@ -30,9 +30,8 @@ SpawnConfig::SpawnConfig(Game& game){
 
 void MonsterSpawner::logic(World* world, double time){
 	cooldown -= time;
-	std::poisson_distribution<> poisson(1);
-
 	if (cooldown.done()){
+		std::poisson_distribution<> poisson(1);
 		// TODO: Have a different spawn config for day and night
 		SpawnConfig& spawnConfig = basicSpawnConfig;
 		for(auto& player: world->players){
@@ -57,8 +56,10 @@ void MonsterSpawner::logic(World* world, double time){
 }
 
 bool MonsterSpawner::trySpawn(World* world, Player* player){
-	double distance = 12 + (double)rand() / RAND_MAX;
-	double direction = (double)rand() / RAND_MAX * 6.283184;
+	std::uniform_real_distribution<> distanceRandomizer(28,32);
+	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
+	double distance = distanceRandomizer(world->game->rnd);
+	double direction = directionRandomizer(world->game->rnd);
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 
 	// TODO: randomly chosen biome dependant mobs
