@@ -6,11 +6,12 @@
 #include "../cooldown.h"
 #include "../screen.h"
 
+ItemStack::ItemStack(){
+	id = 0;
+	count = 0;
+}
+
 Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), cooldown(){
-	for (int i = 0; i < width * height; ++i){
-		items[i].id = 0;
-		items[i].count = 0;
-	}
 	selectedItem=0;
 
 	items[0].id = 2; items[0].count = 1; // Mining tool

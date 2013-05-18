@@ -26,6 +26,7 @@ public:
 
 public:
 	Map(int seed, Game* settings);
+	Map(const Map&) = delete;
 	~Map();
 
 	ItemDefManager* itemDefs;

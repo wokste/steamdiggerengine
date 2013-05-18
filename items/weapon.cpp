@@ -23,6 +23,8 @@ double Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (!projectile)
 		return 0;
 	Projectile* shot = projectile->spawn(owner.world, owner.pos);
+	if (shot == nullptr)
+		return 0;
 	shot->targetType = ProjectileTargetType::TargetMonster;
 
 	if (shot != nullptr){

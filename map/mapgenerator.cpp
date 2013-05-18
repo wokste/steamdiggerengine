@@ -7,15 +7,12 @@
 MapGenerator::MapGenerator(int seed, ItemDefManager* newItemDefs) :
 	itemDefs(newItemDefs)
 {
-	caveNoise = new PerlinNoise(seed + 1, 5, 0.5, 0.5);
-	groundNoise = new PerlinNoise(seed + 2, 5, 0.5, 0.6);
-	typeNoise = new PerlinNoise(seed + 3, 2, 0.5);
+	caveNoise.reset(new PerlinNoise(seed + 1, 5, 0.5, 0.5));
+	groundNoise.reset(new PerlinNoise(seed + 2, 5, 0.5, 0.6));
+	typeNoise.reset(new PerlinNoise(seed + 3, 2, 0.5));
 }
 
 MapGenerator::~MapGenerator(){
-	delete caveNoise;
-	delete groundNoise;
-	delete typeNoise;
 }
 
 Block* MapGenerator::getBlock(int x, int y, int layer) const{

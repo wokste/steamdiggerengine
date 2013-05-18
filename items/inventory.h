@@ -9,6 +9,7 @@ class ItemDefManager;
 class Screen;
 
 struct ItemStack{
+	ItemStack();
 	int id;
 	int count;
 };

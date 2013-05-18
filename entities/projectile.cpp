@@ -19,7 +19,9 @@ Projectile* ProjectileStats::spawn(World* world, Vector2d pos){
 Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats * stats) :
 	Entity(newWorld, newPos, stats),
 	state(ProjectileState::Flying)
-{}
+{
+	targetType = ProjectileTargetType::TargetPlayer;
+}
 
 void Projectile::logic(double time){
 	Entity::logic(time);
