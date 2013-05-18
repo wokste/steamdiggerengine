@@ -9,6 +9,7 @@
 #include "../game.h"
 #include "itemdefmanager.h"
 #include "block.h"
+#include "../map/mapnode.h"
 
 Tool::Tool(const ConfigNode& config) : ItemDef(config){
 }
@@ -24,21 +25,22 @@ double Tool::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 
 //TODO: return a Block* instead of an int
 Block* Tool::mineAt(World* world, Vector2i pos, int layer){
-	auto t = world->map->tileRef(pos.x, pos.y, layer);
+	auto t = world->map->getMapNode(pos.x, pos.y);
 
-	if (t == nullptr || t->blockId < 0)
+	if (t == nullptr || !t->isset(layer))
 		return nullptr;
 
 	if (layer == 1){
 		// Check if their is a block in fron of this block. In this case mine the block in front.
-		Block* blockFront = world->map->blockRef(pos.x, pos.y, 0);
+		Block* blockFront = t->getBlock(world->game->itemDefs, 0);
 		if (blockFront)
 			return mineAt(world, pos, 0);
 
-		if (!world->map->blockAdjacent(pos.x, pos.y, layer, BlockCollisionType::Air))
+		if (!world->map->blockAdjacent(pos.x, pos.y, layer,
+				[](const Block* block){return (block == nullptr) || (block->collisionType == BlockCollisionType::Air);}))
 			return nullptr;
 	}
-	Block* block = (*world->game->itemDefs)[t->blockId]->asBlock();
-	t->setBlock(nullptr);
+	Block* block = t->getBlock(world->game->itemDefs, layer);
+	t->setBlock(nullptr, layer);
 	return block;
 }

@@ -6,6 +6,8 @@
 #include "../map/map.h"
 #include "../utils/confignode.h"
 #include "../screen.h"
+#include "../map/mapnode.h"
+#include "../game.h"
 
 Block::Block(const ConfigNode& config) : ItemDef(config){
 	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
@@ -29,14 +31,14 @@ double Block::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 }
 
 bool Block::placeAt(World* world, Vector2i pos, int layer){
-	auto t = world->map->tileRef(pos.x, pos.y, layer);
+	auto t = world->map->getMapNode(pos.x, pos.y);
 
-	if (t == nullptr || t->blockId >= 0)
+	if (t == nullptr || t->isset(layer)) // TODO: optimize
 		return false;
 
 	if (layer == 0){
 		// Check if their is a block behind this block. Otherway try to place it in the back.
-		Block* blockBack = world->map->blockRef(pos.x, pos.y, 1);
+		Block* blockBack = t->getBlock(world->game->itemDefs, 1);
 		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
 			return placeAt(world, pos, 1);
 
@@ -44,10 +46,11 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 			return false;
 	}
 
-	if (!world->map->blockAdjacent(pos.x, pos.y, layer, BlockCollisionType::Solid))
+	if (!world->map->blockAdjacent(pos.x, pos.y, layer,
+			[](const Block* block){return (block != nullptr) && (block->collisionType == BlockCollisionType::Solid);}))
 		return false;
 
-	t->setBlock(this);
+	t->setBlock(this, layer);
 
 	return true;
 }

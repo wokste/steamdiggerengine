@@ -2,6 +2,7 @@
 #include <string>
 #include "../utils/vector2.h"
 #include "../items/enums.h"
+#include <functional>
 
 class Texture;
 class Screen;
@@ -9,17 +10,12 @@ class ItemDefManager;
 class Game;
 class Block;
 class MapGenerator;
+class MapNode;
+
+typedef int Color;
 
 class Map{
 public:
-	class Tile{
-	public:
-		int frame;
-		int blockId;
-
-		void setBlock(Block* block);
-	};
-
 	Vector2i  mapSize;
 	Vector2i  tileSize;
 	double    gravity = 25;
@@ -32,15 +28,12 @@ public:
 	ItemDefManager* itemDefs;
 	void generate();
 	void render() const;
-	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType) const;
-	bool blockAdjacent(int x, int y, int layer, BlockCollisionType colType) const;
-	Tile* tileRef(int x, int y, int layer) const;
-	Block* blockRef(int x, int y, int layer) const;
-
+	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)>);
+	bool blockAdjacent(int x, int y, int layer, std::function<bool(Block*)>);
+	MapNode* getMapNode(int x, int y) const;
 private:
-	Tile* tile(int x, int y, int layer) const;
 	Texture* tileSet;
-	Tile* tiles;
+	MapNode* nodes;
 	MapGenerator* generator;
 
 	int32_t seed;
