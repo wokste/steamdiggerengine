@@ -1,6 +1,7 @@
 #pragma once
 #include "../cooldown.h"
 #include <memory>
+#include <vector>
 
 class Game;
 class World;
@@ -11,13 +12,13 @@ class MonsterStats;
 class SpawnConfig{
 public:
 	SpawnConfig(Game& game);
-	MonsterStats* getMonsterType();
+	MonsterStats* getMonsterType(Game& game);
 	double newWaveChance;
 	int delayWaves;
 	int delaySpawns;
 	int maxMonsters;
 private:
-	std::unique_ptr<MonsterStats> prototype;
+	std::vector<std::unique_ptr<MonsterStats>> prototypes;
 };
 
 class MonsterSpawner{

@@ -11,15 +11,22 @@ MonsterSpawner::MonsterSpawner(Game& game) : basicSpawnConfig(game)
 {
 }
 
-MonsterStats* SpawnConfig::getMonsterType(){
-	return prototype.get();
+MonsterStats* SpawnConfig::getMonsterType(Game& game){
+	std::discrete_distribution<> monsterOdds({40, 10});
+	unsigned int index = monsterOdds(game.rnd);
+	if (index >= prototypes.size())
+		return nullptr;
+
+	return prototypes[index].get();
 }
 
 SpawnConfig::SpawnConfig(Game& game){
-	ConfigNode::load(game.fileSystem.fullpath("ghost.json"),[&] (ConfigNode& config){
-		auto stats = new MonsterStats();
-		stats->load(game, config);
-		prototype.reset(stats);
+	ConfigNode::load(game.fileSystem.fullpath("monsters.json"),[&] (ConfigNode& configFile){
+		configFile.forEachNode([&] (ConfigNode& monsterConfig) {
+			auto stats = new MonsterStats();
+			stats->load(game, monsterConfig);
+			prototypes.push_back(std::move(std::unique_ptr<MonsterStats>(stats)));
+		});
 	});
 
 	newWaveChance = 0.4;
@@ -63,7 +70,8 @@ bool MonsterSpawner::trySpawn(World* world, Player* player){
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 
 	// TODO: randomly chosen biome dependant mobs
-	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType();
+	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType(*world->game);
+	if (typeToSpawn == nullptr) return false;
 	Monster* spawned = typeToSpawn->spawn(world, spawnPos);
 
 	if (spawned)
