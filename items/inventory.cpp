@@ -16,6 +16,7 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 
 	items[0].id = 2; items[0].count = 1; // Mining tool
 	items[1].id = 3; items[1].count = 1; // Gun
+	items[2].id = 4; items[2].count = 5; // Lanterns
 }
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
