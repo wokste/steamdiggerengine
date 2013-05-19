@@ -7,6 +7,7 @@
 
 #include "../utils/confignode.h"
 #include "../items/itemdefmanager.h"
+#include <iostream>
 
 #define STATS ((PlayerStats *)(stats))
 
@@ -38,16 +39,15 @@ void Player::checkKeyboardMovement(double time){
 	bool slowDown = !(keyLeft ^ keyRight);
 	bool moveRight = speed.x > 0;
 
-	if ((keyLeft && !keyRight) || (slowDown && moveRight)){
+	if (keyLeft && !keyRight){
 		speed.x -= (STATS->accelSpeed * time);
-	}
-	if ((keyRight && !keyLeft) || (slowDown && !moveRight)){
+		if (speed.x < -STATS->walkSpeed) speed.x = -STATS->walkSpeed;
+	} else if (keyRight && !keyLeft){
 		speed.x += (STATS->accelSpeed * time);
+		if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
+	} else {
+		speed.x = 0;
 	}
-
-	if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
-	if (speed.x < -STATS->walkSpeed) speed.x = -STATS->walkSpeed;
-	if (speed.x < 0.5 && speed.x > -0.5 && slowDown) speed.x = 0;
 }
 
 void Player::checkInput(double time, Screen& screen){

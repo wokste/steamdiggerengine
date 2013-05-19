@@ -112,7 +112,6 @@ void Entity::push(Vector2d dir , double force){
 	double dTot = sqrt(dir.x * dir.x + dir.y * dir.y);
 	if (dTot < 0.01)
 		return; // Push too close
-
 	speed += force * dir / dTot;
 }
 
