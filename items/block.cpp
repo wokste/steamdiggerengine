@@ -54,7 +54,6 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 		return false;
 
 	t->setBlock(this, layer);
-	if (layer == 0)
-		LightingEngine::recalcAreaAround(*world->map, pos);
+	LightingEngine::recalcAreaAround(*world->map, pos);
 	return true;
 }

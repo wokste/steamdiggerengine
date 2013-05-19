@@ -30,7 +30,7 @@ Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
 }
 
 void MapNode::render(Texture& tileSet, Vector2i pos){
-	sf::Color currentLight = light[0];
+	sf::Color currentLight = light[0] + light[1] * sf::Color(32,32,64);
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
 	if (frame[0] != -1){
 		Vector3i pos3(pos.x, pos.y, 0);

@@ -10,6 +10,7 @@
 
 #include "mapgenerator.h"
 #include "mapnode.h"
+#include "lightingengine.h"
 
 Map::Map(int seed, Game* game) :
 	nodes(nullptr),
@@ -39,6 +40,7 @@ void Map::generate(){
 			}
 		}
 	}
+	LightingEngine::recalcArea(*this,Vector2i(0,0), mapSize);
 }
 
 void Map::render() const{

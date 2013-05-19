@@ -13,10 +13,11 @@ namespace LightingEngine{
 
 	void applyLight(Map& map, const Vector2i& pos, const sf::Color& light, int lightType);
 	void copyLight(Map& map, const Vector2i& pos1, const Vector2i& pos2);
+	sf::Color airColor = sf::Color(192,192,192);
 };
 
 sf::Color LightingEngine::getBlockedLight(const Block* block){
-	return block ? sf::Color(100,100,100) : sf::Color(10,10,10);
+	return (block && block->lightColor == sf::Color::Black) ? sf::Color(100,100,100) : sf::Color(20,20,20);
 }
 
 sf::Color LightingEngine::makeColor(const std::string& str){
@@ -98,9 +99,13 @@ void LightingEngine::copyLight(Map& map, const Vector2i& pos1, const Vector2i& p
 }
 
 void LightingEngine::recalcAreaAround(Map& map, const Vector2i& pos) {
-	int lightRadius = 255 / 10 + 1;
-	for (int x = pos.x - lightRadius; x <= pos.x + lightRadius; x++){
-		for (int y = pos.y - lightRadius; y <= pos.y + lightRadius; y++){
+	int lightRadius = 255 / 20 + 1;
+	recalcArea(map, Vector2i(pos.x - lightRadius, pos.y - lightRadius),Vector2i(pos.x + lightRadius, pos.y + lightRadius));
+}
+
+void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& pos2) {
+	for (int x = pos1.x; x <= pos2.x; x++){
+		for (int y = pos1.y; y <= pos2.y; y++){
 			MapNode* node = map.getMapNode(x, y);
 			if (node == nullptr)
 				continue;
@@ -111,8 +116,8 @@ void LightingEngine::recalcAreaAround(Map& map, const Vector2i& pos) {
 	}
 
 	// == Re-add lights in area
-	for (int x = pos.x - lightRadius; x <= pos.x + lightRadius; x++){
-		for (int y = pos.y - lightRadius; y <= pos.y + lightRadius; y++){
+	for (int x = pos1.x; x <= pos2.x; x++){
+		for (int y = pos1.y; y <= pos2.y; y++){
 			MapNode* node = map.getMapNode(x, y);
 			if (node == nullptr)
 				continue;
@@ -121,19 +126,24 @@ void LightingEngine::recalcAreaAround(Map& map, const Vector2i& pos) {
 			if (frontBlock != nullptr && frontBlock->lightColor != sf::Color::Black){
 				applyLight(map, Vector2i(x,y), frontBlock->lightColor, 0);
 			}
+
+			Block* backBlock = node->getBlock(map.itemDefs, 1);
+			if (backBlock == nullptr){
+				applyLight(map, Vector2i(x,y), airColor, 1);
+			}
 		}
 	}
 
 	// Add lighting from top and bottom borders
-	for (int x = pos.x - lightRadius; x <= pos.x + lightRadius; x++){
+	for (int x = pos1.x; x <= pos2.x; x++){
 		// top
-		copyLight(map, Vector2i(x, pos.y - lightRadius - 1), Vector2i(x, pos.y - lightRadius));
-		copyLight(map, Vector2i(x, pos.y + lightRadius + 1), Vector2i(x, pos.y + lightRadius));
+		copyLight(map, Vector2i(x, pos1.y - 1), Vector2i(x, pos1.y));
+		copyLight(map, Vector2i(x, pos2.y + 1), Vector2i(x, pos2.y));
 	}
 
 	// Add lighting from left and right borders
-	for (int y = pos.y - lightRadius; y <= pos.y + lightRadius; y++){
-		copyLight(map, Vector2i(pos.x - lightRadius - 1, y), Vector2i(pos.x - lightRadius, y));
-		copyLight(map, Vector2i(pos.x + lightRadius + 1, y), Vector2i(pos.x + lightRadius, y));
+	for (int y = pos1.y; y <= pos2.y; y++){
+		copyLight(map, Vector2i(pos1.x - 1, y), Vector2i(pos1.x, y));
+		copyLight(map, Vector2i(pos2.x + 1, y), Vector2i(pos2.x, y));
 	}
 }

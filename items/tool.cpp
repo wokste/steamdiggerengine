@@ -44,7 +44,6 @@ Block* Tool::mineAt(World* world, Vector2i pos, int layer){
 	}
 	Block* block = t->getBlock(world->game->itemDefs, layer);
 	t->setBlock(nullptr, layer);
-	if (layer == 0)
-		LightingEngine::recalcAreaAround(*world->map, pos);
+	LightingEngine::recalcAreaAround(*world->map, pos);
 	return block;
 }
