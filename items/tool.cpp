@@ -2,14 +2,16 @@
 #include "../entities/player.h"
 #include "../entities/projectile.h"
 
-#include "../map/map.h"
 #include "../world.h"
 #include "../utils/confignode.h"
 #include "../screen.h"
 #include "../game.h"
 #include "itemdefmanager.h"
 #include "block.h"
+
+#include "../map/map.h"
 #include "../map/mapnode.h"
+#include "../map/lightingengine.h"
 
 Tool::Tool(const ConfigNode& config) : ItemDef(config){
 }
@@ -42,5 +44,7 @@ Block* Tool::mineAt(World* world, Vector2i pos, int layer){
 	}
 	Block* block = t->getBlock(world->game->itemDefs, layer);
 	t->setBlock(nullptr, layer);
+	if (layer == 0)
+		LightingEngine::recalcAreaAround(*world->map, pos);
 	return block;
 }

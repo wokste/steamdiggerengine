@@ -2,6 +2,7 @@
 #include "itemdef.h"
 #include <string>
 #include "enums.h"
+#include <SFML/Graphics/Color.hpp>
 
 class World;
 
@@ -12,7 +13,7 @@ public:
 	int startFrame;
 	int numFrames;
 	double timeToMine;
-
+	sf::Color lightColor;
 	Block(const ConfigNode& config);
 	virtual double use(Player& owner, ItemStack& item, const Screen& screen);
 

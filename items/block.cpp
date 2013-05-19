@@ -3,11 +3,13 @@
 #include "itemdefmanager.h"
 
 #include "../world.h"
-#include "../map/map.h"
 #include "../utils/confignode.h"
 #include "../screen.h"
-#include "../map/mapnode.h"
 #include "../game.h"
+
+#include "../map/map.h"
+#include "../map/mapnode.h"
+#include "../map/lightingengine.h"
 
 Block::Block(const ConfigNode& config) : ItemDef(config){
 	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
@@ -15,6 +17,7 @@ Block::Block(const ConfigNode& config) : ItemDef(config){
 	startFrame = config.getInt("frame-start", -1);
 	numFrames = config.getInt("frame-count", 1);
 	timeToMine = config.getDouble("time-to-mine", -1);
+	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
 }
 
 
@@ -51,6 +54,7 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 		return false;
 
 	t->setBlock(this, layer);
-
+	if (layer == 0)
+		LightingEngine::recalcAreaAround(*world->map, pos);
 	return true;
 }

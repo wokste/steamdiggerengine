@@ -47,10 +47,10 @@ const std::string ConfigNode::getString(const std::string& name, const std::stri
 
 bool ConfigNode::getBool(const std::string& name, const bool defaultValue, const bool useDefault) const{
 	json_t* val = json_object_get(m_Node, name.c_str());
-	if (json_is_boolean(val))
-		return (bool)json_integer_value(val);
-	ASSERT(useDefault, "??", "Boolean " + name + " undefined");
-	return defaultValue;
+	if (defaultValue)
+		return !json_is_false(val);
+	else
+		return json_is_true(val);
 }
 
 Vector2i ConfigNode::getVector2i(const std::string& name, int vecNr) const{

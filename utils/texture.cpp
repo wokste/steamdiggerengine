@@ -56,10 +56,7 @@ void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum) const{
 	glEnd();
 }
 
-void Texture::drawBlock(Vector3i pos, int tileNum, int light) const{
-	unsigned char lightUC = light > 255? (unsigned char)255: (unsigned char)light;
-	glColor3ub(lightUC, lightUC, lightUC);
-
+void Texture::drawBlock(Vector3i pos, int tileNum) const{
 	double x = pos.x;
 	double y = pos.y;
 	double z = pos.z;
