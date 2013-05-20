@@ -32,15 +32,16 @@ void doWindowEvents(){
 				player->tryJump();
 			else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
 				player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
-		} else if (event.type == sf::Event::MouseButtonPressed){
-			Vector2i mousePos(event.mouseButton.x,event.mouseButton.y);
-			if (hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos))
-				break;
+		}
+	}
 
-			if (event.mouseButton.button == sf::Mouse::Left) {
+	Vector2i mousePos = sf::Mouse::getPosition(*screen->window);
+	Vector2i windowSize = Vector2::uToI(screen->window->getSize());
+	if (mousePos.x >= 0 && mousePos.x < windowSize.x && mousePos.y >= 0 && mousePos.y < windowSize.y){
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
+			bool handled = hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos);
+			if (!handled){
 				player->useItem(*screen.get());
-			} else if (event.mouseButton.button == sf::Mouse::Right){
-				//TODO: events on the map.
 			}
 		}
 	}
