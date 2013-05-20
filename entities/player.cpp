@@ -36,8 +36,6 @@ void Player::logic(double time){
 void Player::checkKeyboardMovement(double time){
 	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-	bool slowDown = !(keyLeft ^ keyRight);
-	bool moveRight = speed.x > 0;
 
 	if (keyLeft && !keyRight){
 		speed.x -= (STATS->accelSpeed * time);
