@@ -29,11 +29,9 @@ void Texture::setSize(Vector2i imgSize, Vector2i newFrameSize){
 	framesPerRow = (size.x / frameSize.x);
 }
 
-void Texture::bind(int color){
+void Texture::bind(){
 	glBindTexture(GL_TEXTURE_2D, ID);
 	gluErrorString(glGetError());
-
-	glColor3ub((unsigned char)(color >> 16), (unsigned char)(color >> 8), (unsigned char)(color));
 }
 
 void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum) const{

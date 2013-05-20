@@ -29,8 +29,12 @@ Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
 	return (*itemDefs)[blockId[layer]]->asBlock();
 }
 
+sf::Color MapNode::getLight(){
+	return light[0] + light[1] * sf::Color(32,32,64);
+}
+
 void MapNode::render(Texture& tileSet, Vector2i pos){
-	sf::Color currentLight = light[0] + light[1] * sf::Color(32,32,64);
+	sf::Color currentLight = getLight();
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
 	if (frame[0] != -1){
 		Vector3i pos3(pos.x, pos.y, 0);

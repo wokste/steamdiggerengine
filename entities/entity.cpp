@@ -10,6 +10,7 @@
 #include "../utils/vector2.h"
 #include "../utils/assert.h"
 #include "../game.h"
+#include <SFML/Graphics/Color.hpp>
 
 int floorInt(double);
 
@@ -19,7 +20,6 @@ EntityStats::EntityStats() :
 	bGravity(true),
 	texture(nullptr),
 	HP(0),
-	color(0xffffff),
 	team(0)
 {
 	size = Vector2i(16,32);
@@ -54,7 +54,10 @@ void Entity::logic(double time){
 /// Rendering function
 void Entity::render(){
 	if (stats->texture != nullptr){
-		stats->texture->bind(stats->color);
+		stats->texture->bind();
+
+		sf::Color color = world->map->getColor(pos);
+		glColor3ub(color.r,color.g,color.b);
 		int frame = 0;
 
 		stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
@@ -124,14 +127,11 @@ void EntityStats::load(const Game& game, const ConfigNode& config){
 	maxSpeed = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity = config.getBool("gravity",true);
-
 	size = config.getVector2i("size");
-
 	frameOffset =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
 	texture = new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size"));
 	HP = config.getInt("hp",100);
-	color = config.getInt("color",0xffffff);
 	team = config.getInt("team",1);
 }

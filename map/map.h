@@ -3,6 +3,9 @@
 #include "../utils/vector2.h"
 #include "../items/enums.h"
 #include <functional>
+namespace sf{
+	class Color;
+}
 
 class Texture;
 class Screen;
@@ -31,6 +34,8 @@ public:
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)>);
 	bool blockAdjacent(int x, int y, int layer, std::function<bool(Block*)>);
 	MapNode* getMapNode(int x, int y) const;
+
+	sf::Color getColor(Vector2d pos);
 private:
 	Texture* tileSet;
 	MapNode* nodes;

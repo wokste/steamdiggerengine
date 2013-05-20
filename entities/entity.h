@@ -18,7 +18,6 @@ struct EntityStats{
 	Vector2d collision;
 	Texture * texture= nullptr;
 	int HP = 0;
-	int color = 0xffffff;
 	int team = 0;
 
 	EntityStats();

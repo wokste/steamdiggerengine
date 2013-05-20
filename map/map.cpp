@@ -46,7 +46,7 @@ void Map::generate(){
 void Map::render() const{
 	if(tileSet == nullptr) return;
 
-	tileSet->bind(0xFFFFFFFF);
+	tileSet->bind();
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
 			MapNode* node = getMapNode(x, y);
@@ -60,6 +60,11 @@ MapNode* Map::getMapNode(int x, int y) const{
 		return nullptr;
 
 	return &nodes[(y * mapSize.x + x)];
+}
+
+sf::Color Map::getColor(Vector2d pos){
+	MapNode* node = getMapNode((int)pos.x, (int)pos.y);
+	return node ? (node->getLight()) : sf::Color::Black;
 }
 
 bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(Block*)> pred){

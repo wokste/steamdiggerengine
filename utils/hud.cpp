@@ -19,6 +19,8 @@ HUD::~HUD(){
 }
 
 void HUD::draw(const Screen& screen, const Player& player){
+	glColor3ub(255,255,255);
+
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -93,7 +95,7 @@ void HealthBarHUD::draw(const Player& player){
 	int widthHP	 = std::max<int>((int) barSize.x * HPPerc, 0);
 	int widthShield = std::max<int>((int) barSize.x * ShieldPerc, 0);
 
-	barTexture->bind(0xffffffff);
+	barTexture->bind();
 	barTexture->drawPart(Vector2i(0, 0), Vector2i(widthHP, barSize.y), Vector2i(0, 0));
 	barTexture->drawPart(Vector2i(widthHP, barSize.y), Vector2i(barSize.x - widthHP, barSize.y), Vector2i(widthHP, 0));
 	barTexture->drawPart(Vector2i(0, 2*barSize.y), Vector2i(widthShield, barSize.y), Vector2i(0, barSize.y));

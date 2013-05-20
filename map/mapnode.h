@@ -14,6 +14,7 @@ public:
 	void render(Texture& tileset, Vector2i pos);
 	bool isset(int layer){ return blockId[layer] != -1;}
 	sf::Color light[2];
+	sf::Color getLight();
 private:
 	static constexpr int MAX_LAYERS = 2;
 	int frame[MAX_LAYERS];
