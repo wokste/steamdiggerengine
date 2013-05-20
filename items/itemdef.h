@@ -4,9 +4,6 @@
 class Player;
 class ItemStack;
 class Block;
-class Weapon;
-class Armour;
-class Tool;
 class ConfigNode;
 class Screen;
 class Game;

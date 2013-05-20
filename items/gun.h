@@ -3,10 +3,10 @@
 #include <string>
 class ProjectileStats;
 
-class Weapon : public ItemDef{
+class Gun : public ItemDef{
 public:
-	Weapon(const Game& game, const ConfigNode& config);
-	~Weapon();
+	Gun(const Game& game, const ConfigNode& config);
+	~Gun();
 
 	ProjectileStats* projectile;
 	virtual double use(Player& owner, ItemStack& item, const Screen& screen);

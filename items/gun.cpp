@@ -1,4 +1,4 @@
-#include "weapon.h"
+#include "gun.h"
 #include "../entities/player.h"
 #include "../entities/projectile.h"
 
@@ -9,17 +9,17 @@
 #include "../game.h"
 #include <iostream>
 
-Weapon::Weapon(const Game& game, const ConfigNode& config) : ItemDef(config){
+Gun::Gun(const Game& game, const ConfigNode& config) : ItemDef(config){
 	auto childnode = config.getNodeConst("projectile");
 	projectile = new ProjectileStats();
 	projectile->load(game, childnode);
 }
 
-Weapon::~Weapon(){
+Gun::~Gun(){
 	if (projectile) delete projectile;
 }
 
-double Weapon::use(Player& owner, ItemStack& item, const Screen& screen){
+double Gun::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (!projectile)
 		return 0;
 	Projectile* shot = projectile->spawn(owner.world, owner.pos);
