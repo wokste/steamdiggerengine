@@ -7,10 +7,6 @@
 #include <cmath>
 #include <algorithm>
 
-MonsterSpawner::MonsterSpawner(Game& game) : basicSpawnConfig(game)
-{
-}
-
 MonsterStats* SpawnConfig::getMonsterType(Game& game){
 	std::discrete_distribution<> monsterOdds({40, 10});
 	unsigned int index = monsterOdds(game.rnd);
@@ -33,6 +29,10 @@ SpawnConfig::SpawnConfig(Game& game){
 	delayWaves = 15;
 	delaySpawns = 1;
 	maxMonsters = 5;
+}
+
+MonsterSpawner::MonsterSpawner(Game& game) : basicSpawnConfig(game)
+{
 }
 
 void MonsterSpawner::logic(World* world, double time){

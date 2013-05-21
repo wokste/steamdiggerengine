@@ -36,7 +36,9 @@ void World::logic(double time){
 	#define REMOVE_FROM_LIST(v,f) v.erase(std::remove_if (v.begin(), v.end(), f), v.end())
 
 	REMOVE_FROM_LIST(monsters, [&](std::unique_ptr<Monster>& monster){
-		return monster->HP <= 0;
+		return monster->HP <= 0 || std::none_of(players.begin(), players.end(), [&monster](std::unique_ptr<Player>& player){
+			return std::hypot(monster->pos.x - player->pos.x, monster->pos.y - player->pos.y) < 48;
+		});
 	});
 	REMOVE_FROM_LIST(projectiles, [&](std::unique_ptr<Projectile>& projectile){
 		return projectile->state == ProjectileState::DeleteMe;
