@@ -58,7 +58,7 @@ void Monster::logic(double time){
 
 void Monster::hitPlayer(Player& other){
 	other.takeDamage(STATS->hitAttack, pos);
-	cooldown.set(500);
+	cooldown.set(0.5);
 }
 
 void Monster::hitTerrain(bool hitWall){

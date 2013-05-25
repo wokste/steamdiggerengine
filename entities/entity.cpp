@@ -56,7 +56,7 @@ void Entity::render(){
 	if (stats->texture != nullptr){
 		stats->texture->bind();
 
-		sf::Color color = world->map->getColor(pos);
+		sf::Color color = world->map->getColor(world->skybox->getLightColor(), pos);
 		glColor3ub(color.r,color.g,color.b);
 		int frame = 0;
 

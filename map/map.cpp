@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
+#include <SFML/Graphics/Color.hpp>
 
 #include "mapgenerator.h"
 #include "mapnode.h"
@@ -43,14 +44,17 @@ void Map::generate(){
 	LightingEngine::recalcArea(*this,Vector2i(0,0), mapSize);
 }
 
-void Map::render() const{
+void Map::logic(double time){
+}
+
+void Map::render(const sf::Color& skyColor) const{
 	if(tileSet == nullptr) return;
 
 	tileSet->bind();
 	for(int y = 0; y < mapSize.y; y++){
 		for(int x = 0; x < mapSize.x; x++){
 			MapNode* node = getMapNode(x, y);
-			node->render(*tileSet, Vector2i(x,y));
+			node->render(skyColor, *tileSet, Vector2i(x,y));
 		}
 	}
 }
@@ -62,9 +66,9 @@ MapNode* Map::getMapNode(int x, int y) const{
 	return &nodes[(y * mapSize.x + x)];
 }
 
-sf::Color Map::getColor(Vector2d pos){
+sf::Color Map::getColor(const sf::Color& skyColor, Vector2d pos) const{
 	MapNode* node = getMapNode((int)pos.x, (int)pos.y);
-	return node ? (node->getLight()) : sf::Color::Black;
+	return node ? (node->getLight(skyColor)) : skyColor;
 }
 
 bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(Block*)> pred){

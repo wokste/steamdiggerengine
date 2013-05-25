@@ -15,6 +15,7 @@ class Player;
 class Monster;
 class Projectile;
 class Game;
+class Skybox;
 
 class World{
 
@@ -33,6 +34,6 @@ public:
 	std::vector<std::unique_ptr<Player>> players;
 	std::vector<std::unique_ptr<Monster>> monsters;
 	std::vector<std::unique_ptr<Projectile>> projectiles;
-
-	MonsterSpawner monsterSpawner;
+	std::unique_ptr<Skybox> skybox;
+	std::unique_ptr<MonsterSpawner> monsterSpawner;
 };

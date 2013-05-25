@@ -5,18 +5,21 @@
 #include "game.h"
 #include <stdlib.h>
 #include "utils/confignode.h"
+#include "utils/skybox.h"
 #include "entities/player.h"
 #include "entities/projectile.h"
 #include "entities/monster.h"
 #include "items/block.h"
+#include <SFML/Graphics/Color.hpp>
 
 World::World(Game* newSettings) :
-	game(newSettings),
-	monsterSpawner(*game)
+	game(newSettings)
 {
 	//entities = new EntityList();
 	map = new Map(rand(), game);
 	map->generate();
+	monsterSpawner.reset(new MonsterSpawner(*game));
+	skybox.reset(new Skybox());
 }
 
 World::~World(){
@@ -25,6 +28,8 @@ World::~World(){
 }
 
 void World::logic(double time){
+	map->logic(time);
+
 	for (auto& projectile : projectiles)
 		projectile->logic(time);
 	for (auto& player : players)
@@ -44,11 +49,12 @@ void World::logic(double time){
 		return projectile->state == ProjectileState::DeleteMe;
 	});
 
-	monsterSpawner.logic(this, time);
+	monsterSpawner->logic(this, time);
+	skybox->logic(time);
 }
 
 void World::render(){
-	map->render();
+	map->render(skybox->getLightColor());
 
 	for (auto& player : players)
 		player->render();

@@ -2,6 +2,7 @@
 #include "../items/block.h"
 #include "../utils/texture.h"
 #include "../items/itemdefmanager.h"
+#include "../utils/skybox.h"
 
 MapNode::MapNode(){
 	frame[0] = -1;
@@ -29,12 +30,12 @@ Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
 	return (*itemDefs)[blockId[layer]]->asBlock();
 }
 
-sf::Color MapNode::getLight(){
-	return light[0] + light[1] * sf::Color(32,32,64);
+sf::Color MapNode::getLight(const sf::Color& skyColor) const{
+	return light[0] + light[1] * skyColor;
 }
 
-void MapNode::render(Texture& tileSet, Vector2i pos){
-	sf::Color currentLight = getLight();
+void MapNode::render(const sf::Color& skyColor, Texture& tileSet, Vector2i pos) const{
+	sf::Color currentLight = getLight(skyColor);
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
 	if (frame[0] != -1){
 		Vector3i pos3(pos.x, pos.y, 0);

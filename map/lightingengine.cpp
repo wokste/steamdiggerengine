@@ -29,6 +29,15 @@ sf::Color LightingEngine::makeColor(const std::string& str){
 	);
 }
 
+sf::Color operator*(const sf::Color& left, const double right){
+	return sf::Color(
+		left.r * right,
+		left.g * right,
+		left.b * right,
+		left.a
+	);
+}
+
 sf::Color operator-(const sf::Color& left, const sf::Color& right){
 	return sf::Color(
 		left.r > right.r ? left.r - right.r : 0,
