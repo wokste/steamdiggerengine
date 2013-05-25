@@ -8,10 +8,11 @@ namespace sf{
 };
 
 struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color stateColor, int nextState);
+	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
 	double stateTime;
 	double transitionTime;
-	sf::Color stateColor;
+	sf::Color lightColor;
+	sf::Color skyColor;
 	int nextState;
 };
 
@@ -20,11 +21,11 @@ public:
 	Skybox();
 	void logic(double time);
 	void render();
-	inline sf::Color getLightColor() const{return currentLight;}
+	inline sf::Color getLightColor() const{return lightColor;}
 private:
 	std::vector<SkyboxStateData> states;
 	int currentState;
 	double timeToNextState;
 
-	sf::Color currentLight;
+	sf::Color lightColor;
 };
