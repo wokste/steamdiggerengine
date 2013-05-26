@@ -19,5 +19,5 @@ public:
 
 	virtual Block* asBlock(){return this;}
 private:
-	bool placeAt(World* world, Vector2i pos, int layer);
+	bool placeAt(World& world, Vector2i pos, int layer);
 };

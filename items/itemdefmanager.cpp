@@ -30,7 +30,7 @@ ItemDefManager::ItemDefManager(const Game& game, const std::string& configFileNa
 			if (stat != nullptr){
 				stat->ID = id;
 				id++;
-				itemDefs.push_back(stat);
+				itemDefs.emplace_back(stat);
 			}
 		});
 	});

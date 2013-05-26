@@ -9,19 +9,19 @@
 #include "../items/itemdefmanager.h"
 #include <iostream>
 
-#define STATS ((PlayerStats *)(stats))
+#define STATS ((PlayerStats&)(stats))
 
 Player* PlayerStats::spawn(World* world, Vector2d pos){
 	if (!validPos(*world, pos))
 		return nullptr;
 
-	auto player = new Player(world, pos, this);
+	auto player = new Player(world, pos, *this);
 	world->players.push_back(std::unique_ptr<Player>(player));
 	return player;
 }
 
-Player::Player(World* newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(newWorld->game->itemDefs.get()), RP(0){
+Player::Player(World* newWorld, Vector2d newPos, PlayerStats& newStats) : Entity(newWorld, newPos, newStats)
+	, inventory(*newWorld->game.itemDefs.get()), RP(0){
 	//TODO: Fix constructor
 }
 
@@ -38,11 +38,11 @@ void Player::checkKeyboardMovement(double time){
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 
 	if (keyLeft && !keyRight){
-		speed.x -= (STATS->accelSpeed * time);
-		if (speed.x < -STATS->walkSpeed) speed.x = -STATS->walkSpeed;
+		speed.x -= (STATS.accelSpeed * time);
+		if (speed.x < -STATS.walkSpeed) speed.x = -STATS.walkSpeed;
 	} else if (keyRight && !keyLeft){
-		speed.x += (STATS->accelSpeed * time);
-		if (speed.x > STATS->walkSpeed) speed.x = STATS->walkSpeed;
+		speed.x += (STATS.accelSpeed * time);
+		if (speed.x > STATS.walkSpeed) speed.x = STATS.walkSpeed;
 	} else {
 		speed.x = 0;
 	}
@@ -81,8 +81,8 @@ bool Player::useItem(Screen& screen){
 }
 
 void Player::tryJump(){
-	if (!STATS->validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
-		speed.y = -STATS->jumpHeight;
+	if (!STATS.validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
+		speed.y = -STATS.jumpHeight;
 	}
 }
 

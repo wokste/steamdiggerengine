@@ -16,7 +16,7 @@ struct PlayerStats : public EntityStats{
 
 class Player : public Entity{
 public:
-	Player(World* world, Vector2d newPos, PlayerStats* stats);
+	Player(World* world, Vector2d newPos, PlayerStats& stats);
 	virtual ~Player();
 	virtual void logic(double time);
 	virtual void checkInput(double time, Screen& screen);

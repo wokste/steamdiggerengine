@@ -68,7 +68,7 @@ int main(){
 	initGL();
 
 	game.reset(new Game());
-	world.reset(new World(game.get()));
+	world.reset(new World(*game.get()));
 	//world->spawn(game->fileSystem.fullpath("ghost.json"),Vector2d(10,-20));
 	std::unique_ptr<PlayerStats> stats;
 	stats.reset(new PlayerStats());
@@ -80,11 +80,11 @@ int main(){
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
 	hud.reset(new HUD(*game.get()));
-	sf::Clock clock;
+	sf::Clock fpsClock;
 
 	bool running = true;
 	while (running){
-		double time = clock.restart().asSeconds();
+		double time = fpsClock.restart().asSeconds();
 		player->checkInput(time,*screen.get());
 		world->logic(time);
 
@@ -94,7 +94,7 @@ int main(){
 
 		screen->startScene();
 		glPushMatrix();
-			screen->centerOn(player);
+			screen->centerOn(*player);
 			world->render();
 		glPopMatrix();
 

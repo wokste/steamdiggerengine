@@ -45,10 +45,8 @@ void Screen::resize(Vector2i newSize){
 	glViewport(0, 0, size.x, size.y);
 }
 
-void Screen::centerOn(Entity * player){
-	if (player != nullptr){
-		center = player->pos;
-	}
+void Screen::centerOn(Entity& player){
+	center = player.pos;
 	glScaled(1,1,-1);
 	glTranslated(-center.x,-center.y,eyedist);
 

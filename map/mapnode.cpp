@@ -24,10 +24,10 @@ void MapNode::setBlock(Block* block, int layer){
 	}
 }
 
-Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
+Block* MapNode::getBlock(ItemDefManager& itemDefs, int layer){
 	if (blockId[layer] == -1)
 		return nullptr;
-	return (*itemDefs)[blockId[layer]]->asBlock();
+	return itemDefs[blockId[layer]]->asBlock();
 }
 
 sf::Color MapNode::getLight(const sf::Color& skyColor) const{

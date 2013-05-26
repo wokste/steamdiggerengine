@@ -85,7 +85,7 @@ HealthBarHUD::~HealthBarHUD(){
 }
 
 void HealthBarHUD::draw(const Player& player){
-	double HPPerc = player.HP / player.stats->HP;
+	double HPPerc = player.HP / player.stats.HP;
 	double ShieldPerc = 0.2;
 
 	int widthHP	 = std::max<int>((int) barSize.x * HPPerc, 0);

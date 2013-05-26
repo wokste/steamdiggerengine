@@ -24,11 +24,11 @@ public:
 	double    gravity = 25;
 
 public:
-	Map(int seed, Game* settings);
+	Map(int seed, Game& settings);
 	Map(const Map&) = delete;
 	~Map();
 
-	ItemDefManager* itemDefs;
+	ItemDefManager& itemDefs;
 	void generate();
 	void render(const sf::Color& outsideColor) const;
 	void logic(double time);

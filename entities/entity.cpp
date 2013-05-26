@@ -27,23 +27,23 @@ EntityStats::EntityStats() :
 	collision = Vector2d(1,2);
 }
 
-Entity::Entity(World* newWorld, Vector2d newPos, EntityStats* newStats) :
+Entity::Entity(World* newWorld, Vector2d newPos, EntityStats& newStats) :
 	stats(newStats),
 	world(newWorld)
 {
 	pos = newPos;
 	speed = Vector2d(0,0);
-	HP = stats->HP;
+	HP = stats.HP;
 }
 
 void Entity::logic(double time){
-	if (stats->bGravity)
+	if (stats.bGravity)
 		speed.y += world->map->gravity * time;
 
-	if (speed.x < -stats->maxSpeed) speed.x = -stats->maxSpeed;
-	if (speed.x > stats->maxSpeed) speed.x = stats->maxSpeed;
-	if (speed.y < -stats->maxSpeed) speed.y = -stats->maxSpeed;
-	if (speed.y > stats->maxSpeed) speed.y = stats->maxSpeed;
+	if (speed.x < -stats.maxSpeed) speed.x = -stats.maxSpeed;
+	if (speed.x > stats.maxSpeed) speed.x = stats.maxSpeed;
+	if (speed.y < -stats.maxSpeed) speed.y = -stats.maxSpeed;
+	if (speed.y > stats.maxSpeed) speed.y = stats.maxSpeed;
 
 	move(speed * time);
 
@@ -52,19 +52,19 @@ void Entity::logic(double time){
 }
 
 void Entity::render(){
-	if (stats->texture != nullptr){
-		stats->texture->bind();
+	if (stats.texture != nullptr){
+		stats.texture->bind();
 
 		sf::Color color = world->map->getColor(world->skybox->getLightColor(), pos);
 		glColor3ub(color.r,color.g,color.b);
 		int frame = 0;
 
-		stats->texture->drawTile(Vector2d(pos.x + stats->frameOffset.x, pos.y + stats->frameOffset.y), stats->size, frame);
+		stats.texture->drawTile(Vector2d(pos.x + stats.frameOffset.x, pos.y + stats.frameOffset.y), stats.size, frame);
 	}
 }
 
 Rect4d Entity::getBoundingBox() const{
-	return Rect4d(pos - stats->collision, stats->collision + stats->collision);
+	return Rect4d(pos - stats.collision, stats.collision + stats.collision);
 }
 
 void Entity::startAnim(std::string animName){
@@ -73,13 +73,13 @@ void Entity::startAnim(std::string animName){
 
 /// Moves the entity. Checks for collision in the process.
 void Entity::move(Vector2d movement){
-	if (stats->validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
+	if (stats.validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
 		pos.y += movement.y;
 	}else{
 		hitTerrain(false); // Hit no wall
 	}
 
-	if (stats->validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
+	if (stats.validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
 		pos.x += movement.x;
 	}else{
 		hitTerrain(true); // Hit a wall
@@ -94,10 +94,10 @@ bool EntityStats::validPos(World& world, Vector2d newPos){
 
 bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	return (
-	   (pos.x + stats->collision.x > px1.x) &&
-	   (pos.x - stats->collision.x < px2.x) &&
-	   (pos.y + stats->collision.y > px1.y) &&
-	   (pos.y - stats->collision.y < px2.y));
+	   (pos.x + stats.collision.x > px1.x) &&
+	   (pos.x - stats.collision.x < px2.x) &&
+	   (pos.y + stats.collision.y > px1.y) &&
+	   (pos.y - stats.collision.y < px2.y));
 }
 
 void Entity::hitTerrain(bool hitWall){

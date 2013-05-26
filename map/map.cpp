@@ -14,13 +14,13 @@
 #include "lightingengine.h"
 #include "../enums.h"
 
-Map::Map(int seed, Game* game) :
+Map::Map(int seed, Game& game) :
 	nodes(nullptr),
 	mapSize(Vector2i(64,64)),
 	tileSize(32,32),
-	itemDefs(game->itemDefs.get())
+	itemDefs(*game.itemDefs.get())
 {
-	tileSet.reset(new Texture(game->fileSystem.fullpath("tileset.png"), tileSize));
+	tileSet.reset(new Texture(game.fileSystem.fullpath("tileset.png"), tileSize));
 	generator.reset(new MapGenerator(seed, itemDefs));
 }
 

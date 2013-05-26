@@ -8,11 +8,11 @@ class Texture;
 class Game;
 
 class ItemDefManager{
-	std::vector<ItemDef*> itemDefs;
+	std::vector<std::unique_ptr<ItemDef>> itemDefs;
 public:
 	ItemDefManager(const Game& game, const std::string& configFileName);
 	~ItemDefManager();
-	ItemDef* operator[](int id){return itemDefs[id];}
+	ItemDef* operator[](int id){return itemDefs[id].get();}
 	int size() {return itemDefs.size();}
 	std::unique_ptr<Texture> textureSet;
 };

@@ -6,7 +6,7 @@
 #include <cmath>
 #include "../enums.h"
 
-MapGenerator::MapGenerator(int seed, ItemDefManager* newItemDefs) :
+MapGenerator::MapGenerator(int seed, ItemDefManager& newItemDefs) :
 	itemDefs(newItemDefs)
 {
 	caveNoise.reset(new PerlinNoise(seed + 1, 5, 0.5, 0.5));
@@ -27,5 +27,5 @@ Block* MapGenerator::getBlock(int x, int y, int layer) const{
 	if (layer == Layer::front && std::abs(caveVal) < 0.3) // The caves
 		return nullptr;
 
-	return (*itemDefs)[(typeVal > 0.0) ? 0 : 1]->asBlock(); // The stone and dirt
+	return itemDefs[(typeVal > 0.0) ? 0 : 1]->asBlock(); // The stone and dirt
 }

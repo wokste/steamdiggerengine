@@ -20,10 +20,10 @@ class Inventory{
 
 	ItemStack items[width * height];
 	int selectedItem;
-	ItemDefManager* itemDefs;
+	ItemDefManager& itemDefs;
 	Cooldown cooldown;
 public:
-	Inventory(ItemDefManager* newItemDefs);
+	Inventory(ItemDefManager& newItemDefs);
 	void logic(double time);
 	bool use(Player& owner, const Screen& screen);
 	void selectItem(int delta, bool relative = false);

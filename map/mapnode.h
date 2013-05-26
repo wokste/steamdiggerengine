@@ -11,7 +11,7 @@ class MapNode{
 public:
 	MapNode();
 	void setBlock(Block* block, int layer);
-	Block* getBlock(ItemDefManager* itemDefs, int layer);
+	Block* getBlock(ItemDefManager& itemDefs, int layer);
 	void render(const sf::Color& skyColor, Texture& tileset, Vector2i pos) const;
 	bool isset(int layer){ return blockId[layer] != -1;}
 	sf::Color light[2];

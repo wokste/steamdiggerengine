@@ -11,5 +11,5 @@ public:
 
 	virtual double use(Player& owner, ItemStack& item, const Screen& screen);
 private:
-	Block* mineAt(World* world, Vector2i pos, int layer);
+	Block* mineAt(World& world, Vector2i pos, int layer);
 };

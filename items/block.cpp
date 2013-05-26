@@ -25,34 +25,34 @@ double Block::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 	int layer = (useFrontLayer ? Layer::front : Layer::back);
 
-	if (placeAt(owner.world, Vector2::dToI(screen.mousePos(layer)), layer)){
+	if (placeAt(*owner.world, Vector2::dToI(screen.mousePos(layer)), layer)){
 		itemStack.count--;
 		return 0.25;
 	}
 	return 0;
 }
 
-bool Block::placeAt(World* world, Vector2i pos, int layer){
-	auto t = world->map->getMapNode(pos.x, pos.y);
+bool Block::placeAt(World& world, Vector2i pos, int layer){
+	auto t = world.map->getMapNode(pos.x, pos.y);
 
 	if (t == nullptr || t->isset(layer)) // TODO: optimize
 		return false;
 
 	if (layer == Layer::front){
 		// Check if their is a block behind this block. Otherway try to place it in the back.
-		Block* blockBack = t->getBlock(world->game->itemDefs.get(), Layer::back);
+		Block* blockBack = t->getBlock(*world.game.itemDefs.get(), Layer::back);
 		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
 			return placeAt(world, pos, Layer::back);
 
-		if (world->areaHasEntity(pos, pos + Vector2i(1,1)))
+		if (world.areaHasEntity(pos, pos + Vector2i(1,1)))
 			return false;
 	}
 
-	if (!world->map->blockAdjacent(pos.x, pos.y, layer,
+	if (!world.map->blockAdjacent(pos.x, pos.y, layer,
 			[](const Block* block){return (block != nullptr) && (block->collisionType == BlockCollisionType::Solid);}))
 		return false;
 
 	t->setBlock(this, layer);
-	LightingEngine::recalcAreaAround(*world->map, pos);
+	LightingEngine::recalcAreaAround(*world.map, pos);
 	return true;
 }

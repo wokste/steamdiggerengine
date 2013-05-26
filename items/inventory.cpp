@@ -11,7 +11,7 @@ ItemStack::ItemStack(){
 	count = 0;
 }
 
-Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), cooldown(){
+Inventory::Inventory(ItemDefManager& newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	selectedItem=0;
 
 	items[0].id = 2; items[0].count = 1; // Mining tool
@@ -21,7 +21,7 @@ Inventory::Inventory(ItemDefManager* newItemDefs) : itemDefs(newItemDefs), coold
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
-	double time = (*itemDefs)[items[selectedItem].id]->use(owner, items[selectedItem], screen);
+	double time = itemDefs[items[selectedItem].id]->use(owner, items[selectedItem], screen);
 	if (time > 0){
 		cooldown.set(time);
 		return true;

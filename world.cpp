@@ -12,13 +12,13 @@
 #include "items/block.h"
 #include <SFML/Graphics/Color.hpp>
 
-World::World(Game* newSettings) :
+World::World(Game& newSettings) :
 	game(newSettings)
 {
 	//entities = new EntityList();
 	map.reset(new Map(rand(), game));
 	map->generate();
-	monsterSpawner.reset(new MonsterSpawner(*game));
+	monsterSpawner.reset(new MonsterSpawner(game));
 	skybox.reset(new Skybox());
 }
 

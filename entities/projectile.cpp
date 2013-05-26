@@ -5,18 +5,18 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-#define STATS ((ProjectileStats *)(stats))
+#define STATS ((ProjectileStats&)(stats))
 
 Projectile* ProjectileStats::spawn(World* world, Vector2d pos){
 	if (!validPos(*world, pos))
 		return nullptr;
 
-	auto projectile = new Projectile(world, pos, this);
+	auto projectile = new Projectile(world, pos, *this);
 	world->projectiles.push_back(std::unique_ptr<Projectile>(projectile));
 	return projectile;
 }
 
-Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats * stats) :
+Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats& stats) :
 	Entity(newWorld, newPos, stats),
 	state(ProjectileState::Flying)
 {
@@ -49,13 +49,13 @@ void Projectile::hitTerrain(bool hitWall){
 }
 
 void Projectile::hitCreature(Entity& other){
-	other.takeDamage(STATS->hitAttack, pos);
+	other.takeDamage(STATS.hitAttack, pos);
 	state = ProjectileState::DeleteMe;
 }
 
 void Projectile::moveTo(Vector2d targetPos){
 	// TODO: Better aim for gravity affected projectiles
-	speed = Vector2::normalize(targetPos - pos) * STATS->speed;
+	speed = Vector2::normalize(targetPos - pos) * STATS.speed;
 }
 
 void ProjectileStats::load(const Game& game, const ConfigNode& config){

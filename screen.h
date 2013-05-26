@@ -14,7 +14,7 @@ public:
 	Screen();
 	void startScene();
 	void resize(Vector2i newPos);
-	void centerOn(Entity * player);
+	void centerOn(Entity& player);
 
 	// Note that openGL uses a different coordinate system than we do.
 	Vector2d mousePos(const int layer = -1) const;

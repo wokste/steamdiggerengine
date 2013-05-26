@@ -31,11 +31,11 @@ public:
 	Vector2d pos;
 	World* world;
 
-	EntityStats* stats;
+	EntityStats& stats;
 	Vector2d speed;
 	double HP;
 
-	Entity(World* world, Vector2d newPos, EntityStats* stats);
+	Entity(World* world, Vector2d newPos, EntityStats& stats);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}

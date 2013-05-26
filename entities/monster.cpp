@@ -5,7 +5,7 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-#define STATS ((MonsterStats*)(stats))
+#define STATS ((MonsterStats&)(stats))
 #include <iostream>
 
 // TODO: Hitwall
@@ -25,12 +25,12 @@ Monster* MonsterStats::spawn(World* world, Vector2d pos){
 	if (!validPos(*world, pos))
 		return nullptr;
 
-	auto mob = new Monster(world, pos, this);
+	auto mob = new Monster(world, pos, *this);
 	world->monsters.push_back(std::unique_ptr<Monster>(mob));
 	return mob;
 }
 
-Monster::Monster(World* newWorld, Vector2d newPos, MonsterStats* newStats) : Entity(newWorld, newPos,newStats) , target(nullptr), cooldown(){
+Monster::Monster(World* newWorld, Vector2d newPos, MonsterStats& newStats) : Entity(newWorld, newPos,newStats) , target(nullptr), cooldown(){
 
 }
 
@@ -44,7 +44,7 @@ void Monster::logic(double time){
 	Entity::logic(time);
 
 	if (target != nullptr){
-		STATS->movementType->moveTo(*this, target->pos, time);
+		STATS.movementType->moveTo(*this, target->pos, time);
 	}
 
 	if (cooldown.done()){
@@ -57,10 +57,10 @@ void Monster::logic(double time){
 }
 
 void Monster::hitPlayer(Player& other){
-	other.takeDamage(STATS->hitAttack, pos);
+	other.takeDamage(STATS.hitAttack, pos);
 	cooldown.set(0.5);
 }
 
 void Monster::hitTerrain(bool hitWall){
-	STATS->movementType->hitTerrain(*this, hitWall);
+	STATS.movementType->hitTerrain(*this, hitWall);
 }

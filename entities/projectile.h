@@ -21,7 +21,7 @@ struct ProjectileStats : public EntityStats{
 
 class Projectile : public Entity{
 public:
-	Projectile(World* world, Vector2d newPos, ProjectileStats * stats);
+	Projectile(World* world, Vector2d newPos, ProjectileStats& stats);
 	virtual void hitTerrain(bool hitWall);
 	virtual void logic(double time);
 
