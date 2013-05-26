@@ -4,13 +4,15 @@
 #include "../attack.h"
 #include "../map/map.h"
 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 #include "../utils/confignode.h"
 #include "../utils/vector2.h"
 #include "../utils/assert.h"
 #include "../game.h"
 #include <SFML/Graphics/Color.hpp>
+#include "../enums.h"
+#include "../utils/skybox.h"
 
 int floorInt(double);
 
@@ -19,8 +21,7 @@ EntityStats::EntityStats() :
 	bMapCollision(true),
 	bGravity(true),
 	texture(nullptr),
-	HP(0),
-	team(0)
+	HP(0)
 {
 	size = Vector2i(16,32);
 	frameOffset = Vector2d(-1,-2);
@@ -51,7 +52,6 @@ void Entity::logic(double time){
 	//	onAnimEnd();
 }
 
-/// Rendering function
 void Entity::render(){
 	if (stats->texture != nullptr){
 		stats->texture->bind();
@@ -64,11 +64,10 @@ void Entity::render(){
 	}
 }
 
-Rect4d Entity::getRect() const{
+Rect4d Entity::getBoundingBox() const{
 	return Rect4d(pos - stats->collision, stats->collision + stats->collision);
 }
 
-/// Starts an animation
 void Entity::startAnim(std::string animName){
 	//animation.start(entityType->getAnimation(animName));
 }
@@ -112,10 +111,7 @@ void Entity::hitTerrain(bool hitWall){
 void Entity::takeDamage(Attack& attack, Vector2d source) {}
 
 void Entity::push(Vector2d dir , double force){
-	double dTot = sqrt(dir.x * dir.x + dir.y * dir.y);
-	if (dTot < 0.01)
-		return; // Push too close
-	speed += force * dir / dTot;
+	speed += force * Vector2::normalize(dir);
 }
 
 EntityStats::~EntityStats(){
@@ -124,14 +120,13 @@ EntityStats::~EntityStats(){
 }
 
 void EntityStats::load(const Game& game, const ConfigNode& config){
-	maxSpeed = config.getDouble("max-speed");
+	maxSpeed      = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
-	bGravity = config.getBool("gravity",true);
-	size = config.getVector2i("size");
-	frameOffset =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
-	collision   = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
+	bGravity      = config.getBool("gravity",true);
+	size          = config.getVector2i("size");
+	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
+	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
-	texture = new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size"));
-	HP = config.getInt("hp",100);
-	team = config.getInt("team",1);
+	texture       = new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size"));
+	HP            = config.getInt("hp",100);
 }

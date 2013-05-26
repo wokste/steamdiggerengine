@@ -23,11 +23,10 @@ FlyingMovement::FlyingMovement(const Game& game, const ConfigNode& config){
 
 void FlyingMovement::moveTo(Monster& monster, Vector2d pos, double time){
 	double t = 1;
-
+	
 	Vector2d move = (pos) - (monster.pos + monster.speed * t);
-	double dtot = std::max(sqrt(move.x * move.x + move.y * move.y), 0.1);
-
-	monster.speed += (move / dtot) * time * accelSpeed;
+	
+	monster.speed += Vector2::normalize(move) * time * accelSpeed;
 }
 
 /** The aim of this function is to find a possible path into houses for flying monsters.

@@ -2,7 +2,9 @@
 #include "perlinnoise.h"
 #include "../items/block.h"
 #include "../items/itemdefmanager.h"
+#include "mapnode.h"
 #include <cmath>
+#include "../enums.h"
 
 MapGenerator::MapGenerator(int seed, ItemDefManager* newItemDefs) :
 	itemDefs(newItemDefs)
@@ -22,7 +24,7 @@ Block* MapGenerator::getBlock(int x, int y, int layer) const{
 	if (groundVal < 0) // The sky
 		return nullptr;
 
-	if (layer == 0 && std::abs(caveVal) < 0.3) // The caves
+	if (layer == Layer::front && std::abs(caveVal) < 0.3) // The caves
 		return nullptr;
 
 	return (*itemDefs)[(typeVal > 0.0) ? 0 : 1]->asBlock(); // The stone and dirt

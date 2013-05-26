@@ -18,7 +18,6 @@ struct EntityStats{
 	Vector2d collision;
 	Texture * texture= nullptr;
 	int HP = 0;
-	int team = 0;
 
 	EntityStats();
 	virtual ~EntityStats();
@@ -44,7 +43,7 @@ public:
 	void startAnim(std::string animName);
 	void move(Vector2d change);
 	void push(Vector2d dir, double force);
-	Rect4d getRect() const;
+	Rect4d getBoundingBox() const;
 
 	virtual void hitTerrain(bool hitWall);
 	virtual void takeDamage(Attack& attack, Vector2d source);

@@ -3,7 +3,6 @@
 #include "../utils/vector2.h"
 #include "../items/enums.h"
 #include <functional>
-#include "../utils/skybox.h"
 
 namespace sf{
 	class Color;
@@ -16,9 +15,6 @@ class Game;
 class Block;
 class MapGenerator;
 class MapNode;
-class Skybox;
-
-typedef int Color;
 
 class Map{
 public:

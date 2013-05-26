@@ -1,5 +1,5 @@
 #include "vector2.h"
-#include <math.h>
+#include <cmath>
 
 Vector2d Vector2::setLength(Vector2d source, double lengthNew){
 	double lengthOld = length(source);
@@ -9,8 +9,13 @@ Vector2d Vector2::setLength(Vector2d source, double lengthNew){
 	return source * lengthNew / lengthOld;
 }
 
+Vector2d Vector2::normalize(Vector2d source){
+	double length = std::hypot(source.x, source.y);
+	return (length > 0.01) ? source / length : Vector2d(0,0);
+}
+
 double Vector2::length(Vector2d source){
-	return sqrt(source.x * source.x + source.y * source.y);
+	return std::hypot(source.x, source.y);
 }
 
 Vector2d Vector2::iToD(Vector2i source){

@@ -28,16 +28,16 @@ void Projectile::logic(double time){
 
 	// Check for collisions
 	if (state == ProjectileState::Flying){
-		Rect4d rect = getRect();
+		Rect4d boundingBox = getBoundingBox();
 		if (targetType == ProjectileTargetType::TargetPlayer){
 			for (auto& player : world->players){
-				if (rect.intersects(player->getRect()))
+				if (boundingBox.intersects(player->getBoundingBox()))
 					hitCreature(*(player.get()));
 			}
 		}
 		if (targetType == ProjectileTargetType::TargetMonster){
 			for (auto& monster : world->monsters){
-				if (rect.intersects(monster->getRect()))
+				if (boundingBox.intersects(monster->getBoundingBox()))
 					hitCreature(*(monster.get()));
 			}
 		}
@@ -53,13 +53,9 @@ void Projectile::hitCreature(Entity& other){
 	state = ProjectileState::DeleteMe;
 }
 
-void Projectile::moveTo(Vector2d newPos){
+void Projectile::moveTo(Vector2d targetPos){
 	// TODO: Better aim for gravity affected projectiles
-
-	Vector2d diff = newPos - pos;
-
-	double dtot = std::max(sqrt(diff.x * diff.x + diff.y * diff.y), 0.1);
-	speed = diff / dtot * STATS->speed;
+	speed = Vector2::normalize(targetPos - pos) * STATS->speed;
 }
 
 void ProjectileStats::load(const Game& game, const ConfigNode& config){

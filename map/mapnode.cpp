@@ -3,14 +3,15 @@
 #include "../utils/texture.h"
 #include "../items/itemdefmanager.h"
 #include "../utils/skybox.h"
+#include "../enums.h"
 
 MapNode::MapNode(){
-	frame[0] = -1;
-	blockId[0] = -1;
-	frame[1] = -1;
-	blockId[1] = -1;
-	light[0] = sf::Color::Black;
-	light[1] = sf::Color::Black;
+	light[Layer::front] = sf::Color::Black;
+	frame[Layer::front] = -1;
+	blockId[Layer::front] = -1;
+	light[Layer::back] = sf::Color::Black;
+	frame[Layer::back] = -1;
+	blockId[Layer::back] = -1;
 }
 
 void MapNode::setBlock(Block* block, int layer){
@@ -21,7 +22,6 @@ void MapNode::setBlock(Block* block, int layer){
 		frame[layer] = block->startFrame + rand() % block->numFrames;
 		blockId[layer] = block->ID;
 	}
-	// TODO: Set lighting
 }
 
 Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
@@ -31,20 +31,20 @@ Block* MapNode::getBlock(ItemDefManager* itemDefs, int layer){
 }
 
 sf::Color MapNode::getLight(const sf::Color& skyColor) const{
-	return light[0] + light[1] * skyColor;
+	return light[LightType::placed] + light[LightType::sky] * skyColor;
 }
 
 void MapNode::render(const sf::Color& skyColor, Texture& tileSet, Vector2i pos) const{
 	sf::Color currentLight = getLight(skyColor);
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
-	if (frame[0] != -1){
-		Vector3i pos3(pos.x, pos.y, 0);
-		tileSet.drawBlock(pos3, frame[0]);
+	if (frame[Layer::front] != -1){
+		Vector3i pos3(pos.x, pos.y, Layer::front);
+		tileSet.drawBlock(pos3, frame[Layer::front]);
 	}
 
 	glColor3ub(currentLight.r * 0.8, currentLight.g * 0.8, currentLight.b * 0.8);
-	if (frame[1] != -1){
-		Vector3i pos3(pos.x, pos.y, 1);
-		tileSet.drawBlock(pos3, frame[1]);
+	if (frame[Layer::back] != -1){
+		Vector3i pos3(pos.x, pos.y, Layer::back);
+		tileSet.drawBlock(pos3, frame[Layer::back]);
 	}
 }

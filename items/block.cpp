@@ -10,6 +10,7 @@
 #include "../map/map.h"
 #include "../map/mapnode.h"
 #include "../map/lightingengine.h"
+#include "../enums.h"
 
 Block::Block(const ConfigNode& config) : ItemDef(config){
 	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
@@ -20,15 +21,13 @@ Block::Block(const ConfigNode& config) : ItemDef(config){
 	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
 }
 
-
 double Block::use(Player& owner, ItemStack& itemStack, const Screen& screen){
 	bool useFrontLayer = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
-	int layer = (useFrontLayer ? 0 : 1);
+	int layer = (useFrontLayer ? Layer::front : Layer::back);
 
 	if (placeAt(owner.world, Vector2::dToI(screen.mousePos(layer)), layer)){
 		itemStack.count--;
 		return 0.25;
-		// TODO: configurable time to mine
 	}
 	return 0;
 }
@@ -39,11 +38,11 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 	if (t == nullptr || t->isset(layer)) // TODO: optimize
 		return false;
 
-	if (layer == 0){
+	if (layer == Layer::front){
 		// Check if their is a block behind this block. Otherway try to place it in the back.
-		Block* blockBack = t->getBlock(world->game->itemDefs, 1);
+		Block* blockBack = t->getBlock(world->game->itemDefs, Layer::back);
 		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
-			return placeAt(world, pos, 1);
+			return placeAt(world, pos, Layer::back);
 
 		if (world->areaHasEntity(pos, pos + Vector2i(1,1)))
 			return false;

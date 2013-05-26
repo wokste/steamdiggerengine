@@ -16,4 +16,5 @@ namespace Vector2{
     Vector2d iToD(Vector2i source);
     Vector2i dToI(Vector2d source);
     Vector2i uToI(sf::Vector2u source);
+    Vector2d normalize(Vector2d source);
 }

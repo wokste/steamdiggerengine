@@ -4,6 +4,7 @@
 #include "mapnode.h"
 #include "../items/block.h"
 #include "../items/itemdefmanager.h"
+#include "../enums.h"
 
 // Private functions
 namespace LightingEngine{
@@ -16,10 +17,13 @@ namespace LightingEngine{
 	sf::Color airColor = sf::Color(192,192,192);
 };
 
+/// Gives the value that is blocked by the given block. Block may be null for the sky.
 sf::Color LightingEngine::getBlockedLight(const Block* block){
 	return (block && block->lightColor == sf::Color::Black) ? sf::Color(100,100,100) : sf::Color(20,20,20);
 }
 
+/// precondition: str is formatted in a 6 character hexdecimal color code (known from css)
+/// E.g. red: "ff0000", green "00ff00", blue "0000ff"
 sf::Color LightingEngine::makeColor(const std::string& str){
 	long int colorInt = strtol(str.c_str(), nullptr, 16);
 	return sf::Color(
@@ -77,7 +81,7 @@ void LightingEngine::applyLight(Map& map, const Vector2i& pos, const sf::Color& 
 	if (node == nullptr)
 		return;
 
-	Block* block = node->getBlock(map.itemDefs,0);
+	Block* block = node->getBlock(map.itemDefs,Layer::front);
 
 	if (!brightenColor(light, node->light[lightType]))
 		return;
@@ -103,8 +107,8 @@ void LightingEngine::copyLight(Map& map, const Vector2i& pos1, const Vector2i& p
 	sf::Color blockedLight = getBlockedLight(block);
 	// TODO: this should be improved
 
-	applyLight(map, pos2, node->light[0] - blockedLight, 0);
-	applyLight(map, pos2, node->light[1] - blockedLight, 1);
+	applyLight(map, pos2, node->light[LightType::placed] - blockedLight, LightType::placed);
+	applyLight(map, pos2, node->light[LightType::sky] - blockedLight, LightType::sky);
 }
 
 void LightingEngine::recalcAreaAround(Map& map, const Vector2i& pos) {
@@ -119,8 +123,8 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			if (node == nullptr)
 				continue;
 
-			node->light[0] = sf::Color::Black;
-			node->light[1] = sf::Color::Black;
+			node->light[LightType::placed] = sf::Color::Black;
+			node->light[LightType::sky] = sf::Color::Black;
 		}
 	}
 
@@ -131,14 +135,14 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			if (node == nullptr)
 				continue;
 
-			Block* frontBlock = node->getBlock(map.itemDefs, 0);
+			Block* frontBlock = node->getBlock(map.itemDefs, Layer::front);
 			if (frontBlock != nullptr && frontBlock->lightColor != sf::Color::Black){
-				applyLight(map, Vector2i(x,y), frontBlock->lightColor, 0);
+				applyLight(map, Vector2i(x,y), frontBlock->lightColor, LightType::placed);
 			}
 
-			Block* backBlock = node->getBlock(map.itemDefs, 1);
+			Block* backBlock = node->getBlock(map.itemDefs, Layer::back);
 			if (backBlock == nullptr){
-				applyLight(map, Vector2i(x,y), airColor, 1);
+				applyLight(map, Vector2i(x,y), airColor, LightType::sky);
 			}
 		}
 	}

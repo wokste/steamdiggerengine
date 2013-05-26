@@ -48,9 +48,9 @@ void Monster::logic(double time){
 	}
 
 	if (cooldown.done()){
-		Rect4d rect = getRect();
+		Rect4d boundingBox = getBoundingBox();
 		for (auto& player : world->players){
-			if (rect.intersects(player->getRect()))
+			if (boundingBox.intersects(player->getBoundingBox()))
 				hitPlayer(*(player.get()));
 		}
 	}

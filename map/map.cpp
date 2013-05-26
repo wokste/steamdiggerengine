@@ -12,6 +12,7 @@
 #include "mapgenerator.h"
 #include "mapnode.h"
 #include "lightingengine.h"
+#include "../enums.h"
 
 Map::Map(int seed, Game* game) :
 	nodes(nullptr),
@@ -107,18 +108,10 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)> 
 			if (node == nullptr){
 				continue;
 			}
-			Block* block = node->getBlock(itemDefs,0);
+			Block* block = node->getBlock(itemDefs, Layer::front);
 			if (pred(block)){
 				return true;
 			}
-			/*
-			if (block != nullptr && block->collisionType == colType){
-				return true;
-			}
-			if (block == nullptr && colType == BlockCollisionType::Air){
-				return true;
-			}
-			*/
 		}
 	}
 	return false;
