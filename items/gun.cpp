@@ -11,12 +11,11 @@
 
 Gun::Gun(const Game& game, const ConfigNode& config) : ItemDef(config){
 	auto childnode = config.getNodeConst("projectile");
-	projectile = new ProjectileStats();
+	projectile.reset(new ProjectileStats());
 	projectile->load(game, childnode);
 }
 
 Gun::~Gun(){
-	if (projectile) delete projectile;
 }
 
 double Gun::use(Player& owner, ItemStack& item, const Screen& screen){

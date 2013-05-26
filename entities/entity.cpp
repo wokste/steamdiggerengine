@@ -20,7 +20,6 @@ EntityStats::EntityStats() :
 	maxSpeed(0),
 	bMapCollision(true),
 	bGravity(true),
-	texture(nullptr),
 	HP(0)
 {
 	size = Vector2i(16,32);
@@ -115,8 +114,6 @@ void Entity::push(Vector2d dir , double force){
 }
 
 EntityStats::~EntityStats(){
-	if (texture != nullptr)
-		delete texture;
 }
 
 void EntityStats::load(const Game& game, const ConfigNode& config){
@@ -127,6 +124,6 @@ void EntityStats::load(const Game& game, const ConfigNode& config){
 	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
-	texture       = new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size"));
+	texture.reset(new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size")));
 	HP            = config.getInt("hp",100);
 }

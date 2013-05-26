@@ -4,11 +4,10 @@
 #include <cstdlib>
 
 Game::Game(){
-	itemDefs = new ItemDefManager(*this, fileSystem.fullpath("items.json"));
+	itemDefs.reset(new ItemDefManager(*this, fileSystem.fullpath("items.json")));
 }
 
 Game::~Game(){
-	delete itemDefs;
 }
 
 FileSystem::FileSystem(){

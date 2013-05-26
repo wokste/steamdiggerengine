@@ -3,6 +3,7 @@
 #include "../utils/vector2.h"
 #include "../items/enums.h"
 #include <functional>
+#include <memory>
 
 namespace sf{
 	class Color;
@@ -37,9 +38,9 @@ public:
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 private:
-	Texture* tileSet;
+	std::shared_ptr<Texture> tileSet;
 	MapNode* nodes;
-	MapGenerator* generator;
+	std::unique_ptr<MapGenerator> generator;
 
 	int32_t seed;
 

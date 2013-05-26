@@ -10,12 +10,10 @@
    ******* */
 
 HUD::HUD(const Game& game){
-	hudElements.push_back(new HealthBarHUD(game));
+	hudElements.emplace_back(new HealthBarHUD(game));
 }
 
 HUD::~HUD(){
-	for (auto elem : hudElements)
-		delete elem;
 }
 
 void HUD::draw(const Screen& screen, const Player& player){
@@ -28,7 +26,7 @@ void HUD::draw(const Screen& screen, const Player& player){
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 			glDisable(GL_DEPTH_TEST);
-			for (auto elem : hudElements){
+			for (auto& elem : hudElements){
 				// TODO: positioning the hud item
 				glLoadIdentity();
 				Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
@@ -77,15 +75,13 @@ bool HUDElement::onMousePressed(Player& player, const sf::Mouse::Button& button,
 
 HealthBarHUD::HealthBarHUD(const Game& game){
 	barSize = Vector2i(256, 24);
-	barTexture = new Texture(game.fileSystem.fullpath("healthbar.png"),barSize);
+	barTexture.reset(new Texture(game.fileSystem.fullpath("healthbar.png"),barSize));
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);
 }
 
 HealthBarHUD::~HealthBarHUD(){
-	if (barTexture != nullptr)
-		delete barTexture;
 }
 
 void HealthBarHUD::draw(const Player& player){

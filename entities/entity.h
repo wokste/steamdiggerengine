@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../utils/vector2.h"
+#include <memory>
 
 class Attack;
 class Texture;
@@ -16,7 +17,7 @@ struct EntityStats{
 	Vector2i size;
 	Vector2d frameOffset;
 	Vector2d collision;
-	Texture * texture= nullptr;
+	std::shared_ptr<Texture> texture= nullptr;
 	int HP = 0;
 
 	EntityStats();

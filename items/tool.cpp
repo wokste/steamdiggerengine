@@ -34,7 +34,7 @@ Block* Tool::mineAt(World* world, Vector2i pos, int layer){
 
 	if (layer == Layer::back){
 		// Check if their is a block in fron of this block. In this case mine the block in front.
-		Block* blockFront = t->getBlock(world->game->itemDefs, Layer::front);
+		Block* blockFront = t->getBlock(world->game->itemDefs.get(), Layer::front);
 		if (blockFront)
 			return mineAt(world, pos, Layer::front);
 
@@ -42,7 +42,7 @@ Block* Tool::mineAt(World* world, Vector2i pos, int layer){
 				[](const Block* block){return (block == nullptr) || (block->collisionType == BlockCollisionType::Air);}))
 			return nullptr;
 	}
-	Block* block = t->getBlock(world->game->itemDefs, layer);
+	Block* block = t->getBlock(world->game->itemDefs.get(), layer);
 	t->setBlock(nullptr, layer);
 	LightingEngine::recalcAreaAround(*world->map, pos);
 	return block;

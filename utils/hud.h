@@ -3,6 +3,7 @@
 #include "../utils/vector2.h"
 #include <vector>
 #include <SFML/Window.hpp>
+#include <memory>
 
 class Texture;
 class Screen;
@@ -21,7 +22,7 @@ public:
 	bool onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
 
 private:
-	std::vector<HUDElement*> hudElements;
+	std::vector<std::unique_ptr<HUDElement>> hudElements;
 };
 
 class HUDElement{
@@ -45,5 +46,5 @@ public:
 	virtual void draw(const Player& player);
 private:
 	Vector2i barSize;
-	Texture* barTexture;
+	std::shared_ptr<Texture> barTexture;
 };

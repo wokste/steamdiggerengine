@@ -18,16 +18,14 @@ Map::Map(int seed, Game* game) :
 	nodes(nullptr),
 	mapSize(Vector2i(64,64)),
 	tileSize(32,32),
-	itemDefs(game->itemDefs)
+	itemDefs(game->itemDefs.get())
 {
-	tileSet = new Texture(game->fileSystem.fullpath("tileset.png"), tileSize);
-	generator = new MapGenerator(seed, itemDefs);
+	tileSet.reset(new Texture(game->fileSystem.fullpath("tileset.png"), tileSize));
+	generator.reset(new MapGenerator(seed, itemDefs));
 }
 
 Map::~Map(){
 	if (nodes != nullptr) delete[] nodes;
-	delete tileSet;
-	delete generator;
 }
 
 void Map::generate(){

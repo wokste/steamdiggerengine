@@ -18,9 +18,8 @@ class Game;
 class Skybox;
 
 class World{
-
 public:
-	Map* map;
+	std::unique_ptr<Map> map;
 	World(Game* newSettings);
 	World(const World& that) = delete;
 	~World();

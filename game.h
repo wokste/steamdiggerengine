@@ -19,7 +19,7 @@ class Game{
 public:
 	Game();
 	~Game();
-	ItemDefManager* itemDefs;
+	std::unique_ptr<ItemDefManager> itemDefs;
 	FileSystem fileSystem;
 	std::mt19937 rnd;
 };

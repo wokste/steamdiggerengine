@@ -21,7 +21,7 @@ Player* PlayerStats::spawn(World* world, Vector2d pos){
 }
 
 Player::Player(World* newWorld, Vector2d newPos, PlayerStats * newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(newWorld->game->itemDefs), RP(0){
+	, inventory(newWorld->game->itemDefs.get()), RP(0){
 	//TODO: Fix constructor
 }
 

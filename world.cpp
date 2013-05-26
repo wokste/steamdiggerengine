@@ -16,15 +16,13 @@ World::World(Game* newSettings) :
 	game(newSettings)
 {
 	//entities = new EntityList();
-	map = new Map(rand(), game);
+	map.reset(new Map(rand(), game));
 	map->generate();
 	monsterSpawner.reset(new MonsterSpawner(*game));
 	skybox.reset(new Skybox());
 }
 
 World::~World(){
-	//delete entities;
-	delete map;
 }
 
 void World::logic(double time){
@@ -42,7 +40,7 @@ void World::logic(double time){
 
 	REMOVE_FROM_LIST(monsters, [&](std::unique_ptr<Monster>& monster){
 		return monster->HP <= 0 || std::none_of(players.begin(), players.end(), [&monster](std::unique_ptr<Player>& player){
-			return std::hypot(monster->pos.x - player->pos.x, monster->pos.y - player->pos.y) < 48;
+			return Vector2::length(monster->pos - player->pos) < 48;
 		});
 	});
 	REMOVE_FROM_LIST(projectiles, [&](std::unique_ptr<Projectile>& projectile){

@@ -40,7 +40,7 @@ bool Block::placeAt(World* world, Vector2i pos, int layer){
 
 	if (layer == Layer::front){
 		// Check if their is a block behind this block. Otherway try to place it in the back.
-		Block* blockBack = t->getBlock(world->game->itemDefs, Layer::back);
+		Block* blockBack = t->getBlock(world->game->itemDefs.get(), Layer::back);
 		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
 			return placeAt(world, pos, Layer::back);
 
