@@ -11,6 +11,7 @@
 #include "entities/monster.h"
 #include "items/block.h"
 #include <SFML/Graphics/Color.hpp>
+#include <iostream>
 
 World::World(Game& newSettings) :
 	game(newSettings)
@@ -64,7 +65,9 @@ void World::render(){
 
 bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 	return map->areaHasBlocks(px1,px2,
-		[&](const Block* block){return (block != nullptr) && (block != nullptr && block->collisionType == colType);});
+		[&](const Block* block){
+			return (block != nullptr) && (block->collisionType == colType);
+		});
 }
 
 bool World::areaHasEntity(Vector2i px1, Vector2i px2){

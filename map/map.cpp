@@ -13,10 +13,13 @@
 #include "mapnode.h"
 #include "lightingengine.h"
 #include "../enums.h"
+#include "chunk.h"
+
+bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
+	return a.x < b.x || (a.x == b.x && a.y < b.y);
+}
 
 Map::Map(int seed, Game& game) :
-	nodes(nullptr),
-	mapSize(Vector2i(64,64)),
 	tileSize(32,32),
 	itemDefs(*game.itemDefs.get())
 {
@@ -25,22 +28,17 @@ Map::Map(int seed, Game& game) :
 }
 
 Map::~Map(){
-	if (nodes != nullptr) delete[] nodes;
 }
 
 void Map::generate(){
-	if (nodes != nullptr)
-		delete[] nodes;
-	nodes = new MapNode[mapSize.x * mapSize.y];
-
-	for(int y = 0; y < mapSize.y; y++){
-		for(int x = 0; x < mapSize.x; x++){
-			for (int layer = 0; layer <= 1; layer++){
-				getMapNode(x, y)->setBlock(generator->getBlock(x,y,layer), layer);
-			}
-		}
-	}
-	LightingEngine::recalcArea(*this,Vector2i(0,0), mapSize);
+	chunks.insert(std::make_pair(Vector2i(0,0), new Chunk(*generator.get(), Vector2i(0,0))));
+	chunks.insert(std::make_pair(Vector2i(16,0), new Chunk(*generator.get(), Vector2i(16,0))));
+	chunks.insert(std::make_pair(Vector2i(-16,0), new Chunk(*generator.get(), Vector2i(16,0))));
+	chunks.insert(std::make_pair(Vector2i(0,16), new Chunk(*generator.get(), Vector2i(0,16))));
+	chunks.insert(std::make_pair(Vector2i(16,16), new Chunk(*generator.get(), Vector2i(16,16))));
+	chunks.insert(std::make_pair(Vector2i(-16,16), new Chunk(*generator.get(), Vector2i(16,16))));
+	// TODO: Add some chunks and generate
+	//LightingEngine::recalcArea(*this,Vector2i(0,0), mapSize);
 }
 
 void Map::logic(double time){
@@ -50,19 +48,21 @@ void Map::render(const sf::Color& skyColor) const{
 	if(tileSet == nullptr) return;
 
 	tileSet->bind();
-	for(int y = 0; y < mapSize.y; y++){
-		for(int x = 0; x < mapSize.x; x++){
-			MapNode* node = getMapNode(x, y);
-			node->render(skyColor, *tileSet, Vector2i(x,y));
-		}
+	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
+		iter->second->render(skyColor, *tileSet, iter->first);
 	}
 }
 
 MapNode* Map::getMapNode(int x, int y) const{
-	if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
+	Vector2i key = Vector2i(x & ~(Chunk::widthMask),y & ~(Chunk::heightMask));
+	// TODO: This can be optimized. One lookup too much
+	if (chunks.find(key) == chunks.end()) {
 		return nullptr;
-
-	return &nodes[(y * mapSize.x + x)];
+	} else {
+		Map* mutableThis = (Map*)(this);
+		Chunk* chunk = mutableThis->chunks[key];
+		return &(chunk->nodes[x & Chunk::widthMask][y & Chunk::heightMask]);
+	}
 }
 
 sf::Color Map::getColor(const sf::Color& skyColor, Vector2d pos) const{
@@ -75,8 +75,6 @@ bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(Block*)> pre
 	for (int i = 0 ; i < 4; i++){
 		MapNode* node = getMapNode(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3));
 		if (node == nullptr){
-			if (pred(nullptr))
-				return true;
 			continue;
 		}
 		Block* block = node->getBlock(itemDefs,layer);
@@ -94,19 +92,14 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)> 
 	int y1 = (int)(px1.y);
 	int y2 = (int)(px2.y) + 1;
 
-	if (x1 < 0 || x2 > mapSize.x || y2 > mapSize.y)
-		return true;
-	if (y1 < 0){
-		y1 = 0;
-	}
-
-	for(int y = y1; y < y2; y++){
-		for(int x = x1; x < x2; x++){
+	for(int y = y1; y < y2; ++y){
+		for(int x = x1; x < x2; ++x){
 			MapNode* node = getMapNode(x,y);
 			if (node == nullptr){
 				continue;
 			}
 			Block* block = node->getBlock(itemDefs, Layer::front);
+
 			if (pred(block)){
 				return true;
 			}

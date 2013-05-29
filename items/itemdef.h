@@ -1,5 +1,6 @@
 #pragma once
 #include "../utils/vector2.h"
+#include <iostream>
 
 class Player;
 class ItemStack;

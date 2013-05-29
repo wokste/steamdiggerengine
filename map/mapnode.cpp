@@ -4,6 +4,7 @@
 #include "../items/itemdefmanager.h"
 #include "../utils/skybox.h"
 #include "../enums.h"
+#include <iostream>
 
 MapNode::MapNode(){
 	light[Layer::front] = sf::Color::Black;

@@ -4,6 +4,7 @@
 #include "../items/enums.h"
 #include <functional>
 #include <memory>
+#include <map>
 
 namespace sf{
 	class Color;
@@ -16,10 +17,14 @@ class Game;
 class Block;
 class MapGenerator;
 class MapNode;
+class Chunk;
+
+struct ChunkSorter{
+	bool operator()(const Vector2i& a, const Vector2i& b) const;
+};
 
 class Map{
 public:
-	Vector2i  mapSize;
 	Vector2i  tileSize;
 	double    gravity = 25;
 
@@ -39,7 +44,7 @@ public:
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 private:
 	std::shared_ptr<Texture> tileSet;
-	MapNode* nodes;
+	std::map<Vector2i, Chunk*, ChunkSorter> chunks;
 	std::unique_ptr<MapGenerator> generator;
 
 	int32_t seed;
