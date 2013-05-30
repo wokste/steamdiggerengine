@@ -31,14 +31,14 @@ Map::~Map(){
 }
 
 void Map::generate(){
-	chunks.insert(std::make_pair(Vector2i(0,0), new Chunk(*generator.get(), Vector2i(0,0))));
-	chunks.insert(std::make_pair(Vector2i(16,0), new Chunk(*generator.get(), Vector2i(16,0))));
-	chunks.insert(std::make_pair(Vector2i(-16,0), new Chunk(*generator.get(), Vector2i(16,0))));
-	chunks.insert(std::make_pair(Vector2i(0,16), new Chunk(*generator.get(), Vector2i(0,16))));
-	chunks.insert(std::make_pair(Vector2i(16,16), new Chunk(*generator.get(), Vector2i(16,16))));
-	chunks.insert(std::make_pair(Vector2i(-16,16), new Chunk(*generator.get(), Vector2i(16,16))));
-	// TODO: Add some chunks and generate
-	//LightingEngine::recalcArea(*this,Vector2i(0,0), mapSize);
+	Vector2i posMin(-32,-32);
+	Vector2i posMax(64,64);
+	for (int x = posMin.x & ~Chunk::widthMask ; x < posMax.x; x+=Chunk::width){
+		for (int y = posMin.y & ~Chunk::heightMask; y < posMax.y; y+=Chunk::height){
+			Vector2i chunkNum(x,y);
+			chunks.insert(std::make_pair(chunkNum, new Chunk(*generator.get(), chunkNum)));
+		}
+	}
 }
 
 void Map::logic(double time){

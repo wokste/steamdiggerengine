@@ -9,22 +9,22 @@
 MapGenerator::MapGenerator(int seed, ItemDefManager& newItemDefs) :
 	itemDefs(newItemDefs)
 {
-	caveNoise.reset(new PerlinNoise(seed + 1, 5, 0.5, 0.5));
-	groundNoise.reset(new PerlinNoise(seed + 2, 5, 0.5, 0.6));
-	typeNoise.reset(new PerlinNoise(seed + 3, 2, 0.5));
+	caveNoise.reset(new PerlinNoise(seed + 1, 5, 0.5, 10));
+	groundNoise.reset(new PerlinNoise(seed + 2, 5, 0.5, 10));
+	typeNoise.reset(new PerlinNoise(seed + 3, 2, 10));
 }
 
 MapGenerator::~MapGenerator(){
 }
 
 Block* MapGenerator::getBlock(int x, int y, int layer) const{
-	double caveVal = caveNoise->noiseSum(x, y);
-	double groundVal = groundNoise->noiseSum(x, y) + 0.4 * (y - 15);
-	double typeVal = typeNoise->noiseSum(x, y);
+	double caveVal = caveNoise->noise2d(x, y);
+	double groundVal = groundNoise->noise2d(x, y) + 0.05 * (y - 15);
+	double typeVal = typeNoise->noise2d(x, y);
 	if (groundVal < 0) // The sky
 		return nullptr;
 
-	if (layer == Layer::front && std::abs(caveVal) < 0.3) // The caves
+	if (layer == Layer::front && std::abs(caveVal) < 0.1) // The caves
 		return nullptr;
 
 	return itemDefs[(typeVal > 0.0) ? 0 : 1]->asBlock(); // The stone and dirt
