@@ -1,34 +1,28 @@
 #include "mapnode.h"
-#include "../items/block.h"
+#include "blocktype.h"
 #include "../utils/texture.h"
-#include "../items/itemdefmanager.h"
 #include "../utils/skybox.h"
 #include "../enums.h"
+#include "map.h"
 #include <iostream>
 
 MapNode::MapNode(){
 	light[Layer::front] = sf::Color::Black;
 	frame[Layer::front] = -1;
-	blockId[Layer::front] = -1;
+	blockId[Layer::front] = 0;
 	light[Layer::back] = sf::Color::Black;
 	frame[Layer::back] = -1;
-	blockId[Layer::back] = -1;
+	blockId[Layer::back] = 0;
 }
 
-void MapNode::setBlock(Block* block, int layer){
-	if (block == nullptr){
-		frame[layer] = -1;
-		blockId[layer] = -1;
-	} else {
-		frame[layer] = block->startFrame + rand() % block->numFrames;
-		blockId[layer] = block->ID;
-	}
+void MapNode::setBlock(const Map& map, int newBlockId, int layer){
+	const BlockType& type = map.blockDefs[newBlockId];
+	frame[layer] = type.startFrame + rand() % type.numFrames;
+	blockId[layer] = newBlockId;
 }
 
-Block* MapNode::getBlock(ItemDefManager& itemDefs, int layer){
-	if (blockId[layer] == -1)
-		return nullptr;
-	return itemDefs[blockId[layer]]->asBlock();
+const BlockType& MapNode::getBlock(const Map& map, int layer){
+	return map.blockDefs[blockId[layer]];
 }
 
 sf::Color MapNode::getLight(const sf::Color& skyColor) const{

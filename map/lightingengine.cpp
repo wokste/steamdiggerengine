@@ -2,15 +2,14 @@
 #include <SFML/Graphics/Color.hpp>
 #include "map.h"
 #include "mapnode.h"
-#include "../items/block.h"
-#include "../items/itemdefmanager.h"
+#include "blocktype.h"
 #include "../enums.h"
 
 // Private functions
 namespace LightingEngine{
 	bool brightenColor(const sf::Color& appliedFrom, sf::Color& applyTo);
 	bool isBrighter(const sf::Color& left, const sf::Color& right);
-	sf::Color getBlockedLight(const Block* block);
+	sf::Color getBlockedLight(const BlockType& block);
 
 	void applyLight(Map& map, const Vector2i& pos, const sf::Color& light, int lightType);
 	void copyLight(Map& map, const Vector2i& pos1, const Vector2i& pos2);
@@ -18,8 +17,8 @@ namespace LightingEngine{
 };
 
 /// Gives the value that is blocked by the given block. Block may be null for the sky.
-sf::Color LightingEngine::getBlockedLight(const Block* block){
-	return (block && block->lightColor == sf::Color::Black) ? sf::Color(100,100,100) : sf::Color(20,20,20);
+sf::Color LightingEngine::getBlockedLight(const BlockType& block){
+	return (block.lightColor == sf::Color::Black) ? sf::Color(100,100,100) : sf::Color(20,20,20);
 }
 
 /// precondition: str is formatted in a 6 character hexdecimal color code (known from css)
@@ -81,12 +80,10 @@ void LightingEngine::applyLight(Map& map, const Vector2i& pos, const sf::Color& 
 	if (node == nullptr)
 		return;
 
-	Block* block = node->getBlock(map.itemDefs,Layer::front);
-
 	if (!brightenColor(light, node->light[lightType]))
 		return;
 
-	sf::Color newLight = light - getBlockedLight(block);
+	sf::Color newLight = light - getBlockedLight(node->getBlock(map,Layer::front));
 	// TODO: this should be improved
 
 	node->light[lightType] = light;
@@ -103,8 +100,7 @@ void LightingEngine::copyLight(Map& map, const Vector2i& pos1, const Vector2i& p
 	if (node == nullptr)
 		return;
 
-	Block* block = node->getBlock(map.itemDefs, 0);
-	sf::Color blockedLight = getBlockedLight(block);
+	sf::Color blockedLight = getBlockedLight(node->getBlock(map, Layer::front));
 	// TODO: this should be improved
 
 	applyLight(map, pos2, node->light[LightType::placed] - blockedLight, LightType::placed);
@@ -135,13 +131,12 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			if (node == nullptr)
 				continue;
 
-			Block* frontBlock = node->getBlock(map.itemDefs, Layer::front);
-			if (frontBlock != nullptr && frontBlock->lightColor != sf::Color::Black){
-				applyLight(map, Vector2i(x,y), frontBlock->lightColor, LightType::placed);
+			const BlockType& frontBlock = node->getBlock(map, Layer::front);
+			if (node->isset(Layer::front) && frontBlock.lightColor != sf::Color::Black){
+				applyLight(map, Vector2i(x,y), frontBlock.lightColor, LightType::placed);
 			}
 
-			Block* backBlock = node->getBlock(map.itemDefs, Layer::back);
-			if (backBlock == nullptr){
+			if (node->isset(Layer::back)){
 				applyLight(map, Vector2i(x,y), airColor, LightType::sky);
 			}
 		}

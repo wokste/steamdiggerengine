@@ -14,17 +14,22 @@
 #include "lightingengine.h"
 #include "../enums.h"
 #include "chunk.h"
+#include "blocktype.h"
 
 bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 	return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
 
 Map::Map(int seed, Game& game) :
-	tileSize(32,32),
-	itemDefs(*game.itemDefs.get())
+	tileSize(32,32)
 {
 	tileSet.reset(new Texture(game.fileSystem.fullpath("tileset.png"), tileSize));
-	generator.reset(new MapGenerator(seed, itemDefs));
+	generator.reset(new MapGenerator(seed, *this));
+
+	blockDefs.push_back(BlockType(-1));
+	blockDefs.push_back(BlockType(1));
+	blockDefs.push_back(BlockType(2));
+	blockDefs.push_back(BlockType(3));
 }
 
 Map::~Map(){
@@ -36,7 +41,7 @@ void Map::generate(){
 	for (int x = posMin.x & ~Chunk::widthMask ; x < posMax.x; x+=Chunk::width){
 		for (int y = posMin.y & ~Chunk::heightMask; y < posMax.y; y+=Chunk::height){
 			Vector2i chunkNum(x,y);
-			chunks.insert(std::make_pair(chunkNum, new Chunk(*generator.get(), chunkNum)));
+			chunks.insert(std::make_pair(chunkNum, new Chunk(*this, *generator, chunkNum)));
 		}
 	}
 	LightingEngine::recalcArea(*this, posMin, posMax);
@@ -71,23 +76,21 @@ sf::Color Map::getColor(const sf::Color& skyColor, Vector2d pos) const{
 	return node ? (node->getLight(skyColor)) : skyColor;
 }
 
-bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(Block*)> pred){
+bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)> pred){
 	// Test all adjacent tiles
 	for (int i = 0 ; i < 4; i++){
 		MapNode* node = getMapNode(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3));
 		if (node == nullptr){
 			continue;
 		}
-		Block* block = node->getBlock(itemDefs,layer);
-
-		if (pred(block)){
+		if (pred(node->getBlock(*this,layer))){
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)> pred){
+bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)> pred){
 	int x1 = (int)(px1.x);
 	int x2 = (int)(px2.x) + 1;
 	int y1 = (int)(px1.y);
@@ -99,9 +102,8 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)> 
 			if (node == nullptr){
 				continue;
 			}
-			Block* block = node->getBlock(itemDefs, Layer::front);
 
-			if (pred(block)){
+			if (pred(node->getBlock(*this,Layer::front))){
 				return true;
 			}
 		}

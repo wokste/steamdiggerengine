@@ -12,12 +12,12 @@ namespace sf{
 
 class Texture;
 class Screen;
-class ItemDefManager;
 class Game;
 class Block;
 class MapGenerator;
 class MapNode;
 class Chunk;
+class BlockType;
 
 struct ChunkSorter{
 	bool operator()(const Vector2i& a, const Vector2i& b) const;
@@ -33,13 +33,13 @@ public:
 	Map(const Map&) = delete;
 	~Map();
 
-	ItemDefManager& itemDefs;
 	void generate();
 	void render(const sf::Color& outsideColor) const;
 	void logic(double time);
-	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(Block*)>);
-	bool blockAdjacent(int x, int y, int layer, std::function<bool(Block*)>);
+	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)>);
+	bool blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)>);
 	MapNode* getMapNode(int x, int y) const;
+	std::vector<BlockType> blockDefs;
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 private:

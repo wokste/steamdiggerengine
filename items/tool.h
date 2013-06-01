@@ -4,6 +4,7 @@
 #include "enums.h"
 
 class World;
+class BlockType;
 
 class Tool : public ItemDef{
 public:
@@ -11,5 +12,5 @@ public:
 
 	virtual double use(Player& owner, ItemStack& item, const Screen& screen);
 private:
-	Block* mineAt(World& world, Vector2i pos, int layer);
+	const BlockType& mineAt(World& world, Vector2i pos, int layer);
 };

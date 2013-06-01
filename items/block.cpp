@@ -9,16 +9,13 @@
 
 #include "../map/map.h"
 #include "../map/mapnode.h"
+#include "../map/blocktype.h"
 #include "../map/lightingengine.h"
 #include "../enums.h"
 
 Block::Block(const ConfigNode& config) : ItemDef(config){
-	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
-	materialType = getBlockMaterialType(config.getString("material", "None"));
-	startFrame = config.getInt("frame-start", -1);
-	numFrames = config.getInt("frame-count", 1);
-	timeToMine = config.getDouble("time-to-mine", -1);
-	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
+	// TODO: How should this be done?
+	blockTypeID = 1;
 }
 
 double Block::use(Player& owner, ItemStack& itemStack, const Screen& screen){
@@ -40,8 +37,8 @@ bool Block::placeAt(World& world, Vector2i pos, int layer){
 
 	if (layer == Layer::front){
 		// Check if their is a block behind this block. Otherway try to place it in the back.
-		Block* blockBack = t->getBlock(*world.game.itemDefs.get(), Layer::back);
-		if (!blockBack || blockBack->collisionType != BlockCollisionType::Solid)
+		const BlockType& blockBack = t->getBlock(*world.map, Layer::back);
+		if (blockBack.collisionType != BlockCollisionType::Solid)
 			return placeAt(world, pos, Layer::back);
 
 		if (world.areaHasEntity(pos, pos + Vector2i(1,1)))
@@ -49,10 +46,10 @@ bool Block::placeAt(World& world, Vector2i pos, int layer){
 	}
 
 	if (!world.map->blockAdjacent(pos.x, pos.y, layer,
-			[](const Block* block){return (block != nullptr) && (block->collisionType == BlockCollisionType::Solid);}))
+			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Solid);}))
 		return false;
 
-	t->setBlock(this, layer);
+	t->setBlock(*world.map, blockTypeID, layer);
 	LightingEngine::recalcAreaAround(*world.map, pos);
 	return true;
 }

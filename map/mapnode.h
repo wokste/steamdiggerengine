@@ -6,12 +6,14 @@ class Block;
 class ItemDefManager;
 class Texture;
 class Skybox;
+class BlockType;
+class Map;
 
 class MapNode{
 public:
 	MapNode();
-	void setBlock(Block* block, int layer);
-	Block* getBlock(ItemDefManager& itemDefs, int layer);
+	void setBlock(const Map& map, int blockId, int layer);
+	const BlockType& getBlock(const Map& map, int layer);
 	void render(const sf::Color& skyColor, Texture& tileset, Vector2i pos) const;
 	bool isset(int layer){ return blockId[layer] != -1;}
 	sf::Color light[2];

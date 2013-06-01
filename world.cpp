@@ -9,7 +9,7 @@
 #include "entities/player.h"
 #include "entities/projectile.h"
 #include "entities/monster.h"
-#include "items/block.h"
+#include "map/blocktype.h"
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 
@@ -48,7 +48,7 @@ void World::logic(double time){
 		return projectile->state == ProjectileState::DeleteMe;
 	});
 
-	monsterSpawner->logic(this, time);
+	//monsterSpawner->logic(this, time);
 	skybox->logic(time);
 }
 
@@ -65,8 +65,8 @@ void World::render(){
 
 bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
 	return map->areaHasBlocks(px1,px2,
-		[&](const Block* block){
-			return (block != nullptr) && (block->collisionType == colType);
+		[&](const BlockType& block){
+			return (block.collisionType == colType);
 		});
 }
 
