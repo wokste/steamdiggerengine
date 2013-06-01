@@ -39,6 +39,7 @@ void Map::generate(){
 			chunks.insert(std::make_pair(chunkNum, new Chunk(*generator.get(), chunkNum)));
 		}
 	}
+	LightingEngine::recalcArea(*this, posMin, posMax);
 }
 
 void Map::logic(double time){
