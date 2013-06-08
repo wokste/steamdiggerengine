@@ -17,6 +17,7 @@ public:
 	void centerOn(Entity& player);
 
 	// Note that openGL uses a different coordinate system than we do.
+	// TODO: Function name unclear
 	Vector2d mousePos(const int layer = -1) const;
 	Vector2i getSize() const {return size;}
 protected:

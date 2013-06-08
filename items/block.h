@@ -3,6 +3,7 @@
 
 class World;
 
+// WARNING: Deprecated class
 class Block : public ItemDef{
 public:
 	int blockTypeID;

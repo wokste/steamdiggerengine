@@ -8,6 +8,7 @@ class ConfigNode;
 class Screen;
 class Game;
 
+// WARNING: Deprecated class
 class ItemDef{
 public:
 	int ID;

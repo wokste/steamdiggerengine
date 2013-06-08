@@ -6,6 +6,7 @@
 class World;
 class BlockType;
 
+// WARNING: Deprecated class
 class Tool : public ItemDef{
 public:
 	Tool(const ConfigNode& config);

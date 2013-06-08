@@ -16,7 +16,6 @@
 World::World(Game& newSettings) :
 	game(newSettings)
 {
-	//entities = new EntityList();
 	map.reset(new Map(rand(), game));
 	map->generate();
 	monsterSpawner.reset(new MonsterSpawner(game));

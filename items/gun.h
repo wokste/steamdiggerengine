@@ -4,6 +4,7 @@
 #include <memory>
 class ProjectileStats;
 
+// WARNING: Deprecated class
 class Gun : public ItemDef{
 public:
 	Gun(const Game& game, const ConfigNode& config);
