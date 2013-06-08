@@ -42,9 +42,9 @@ void Map::generate(){
 		for (int y = posMin.y & ~Chunk::heightMask; y < posMax.y; y+=Chunk::height){
 			Vector2i chunkNum(x,y);
 			chunks.insert(std::make_pair(chunkNum, new Chunk(*this, *generator, chunkNum)));
+			LightingEngine::recalcArea(*this, chunkNum, chunkNum + Vector2i(Chunk::width, Chunk::height));
 		}
 	}
-	LightingEngine::recalcArea(*this, posMin, posMax);
 }
 
 void Map::logic(double time){

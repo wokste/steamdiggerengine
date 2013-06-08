@@ -9,7 +9,7 @@
 namespace LightingEngine{
 	bool brightenColor(const sf::Color& appliedFrom, sf::Color& applyTo);
 	bool isBrighter(const sf::Color& left, const sf::Color& right);
-	sf::Color getBlockedLight(const BlockType& block);
+	sf::Color getBlockedLight(const MapNode& node);
 
 	void applyLight(Map& map, const Vector2i& pos, const sf::Color& light, int lightType);
 	void copyLight(Map& map, const Vector2i& pos1, const Vector2i& pos2);
@@ -17,8 +17,8 @@ namespace LightingEngine{
 };
 
 /// Gives the value that is blocked by the given block. Block may be null for the sky.
-sf::Color LightingEngine::getBlockedLight(const BlockType& block){
-	return (block.lightColor == sf::Color::Black) ? sf::Color(100,100,100) : sf::Color(20,20,20);
+sf::Color LightingEngine::getBlockedLight(const MapNode& node){
+	return (node.isset(Layer::front)) ? sf::Color(100,100,100) : sf::Color(10,10,10);
 }
 
 /// precondition: str is formatted in a 6 character hexdecimal color code (known from css)
@@ -83,7 +83,7 @@ void LightingEngine::applyLight(Map& map, const Vector2i& pos, const sf::Color& 
 	if (!brightenColor(light, node->light[lightType]))
 		return;
 
-	sf::Color newLight = light - getBlockedLight(node->getBlock(map,Layer::front));
+	sf::Color newLight = light - getBlockedLight(*node);
 	// TODO: this should be improved
 
 	node->light[lightType] = light;
@@ -100,7 +100,7 @@ void LightingEngine::copyLight(Map& map, const Vector2i& pos1, const Vector2i& p
 	if (node == nullptr)
 		return;
 
-	sf::Color blockedLight = getBlockedLight(node->getBlock(map, Layer::front));
+	sf::Color blockedLight = getBlockedLight(*node);
 	// TODO: this should be improved
 
 	applyLight(map, pos2, node->light[LightType::placed] - blockedLight, LightType::placed);
@@ -136,7 +136,7 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 				applyLight(map, Vector2i(x,y), frontBlock.lightColor, LightType::placed);
 			}
 
-			if (node->isset(Layer::back)){
+			if (!node->isset(Layer::back)){
 				applyLight(map, Vector2i(x,y), airColor, LightType::sky);
 			}
 		}

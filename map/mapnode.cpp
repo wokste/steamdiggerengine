@@ -21,7 +21,7 @@ void MapNode::setBlock(const Map& map, int newBlockId, int layer){
 	blockId[layer] = newBlockId;
 }
 
-const BlockType& MapNode::getBlock(const Map& map, int layer){
+const BlockType& MapNode::getBlock(const Map& map, int layer) const{
 	return map.blockDefs[blockId[layer]];
 }
 
