@@ -7,12 +7,12 @@
 #include <iostream>
 
 MapNode::MapNode(){
-	light[Layer::front] = sf::Color::Black;
-	frame[Layer::front] = -1;
-	blockId[Layer::front] = 0;
-	light[Layer::back] = sf::Color::Black;
-	frame[Layer::back] = -1;
-	blockId[Layer::back] = 0;
+	for (int i = 0; i < MAX_LAYERS; ++i){
+		frame[i] = -1;
+		blockId[i] = 0;
+	}
+	light[0] = sf::Color::Black;
+	light[1] = sf::Color::Black;
 }
 
 void MapNode::setBlock(const Map& map, int newBlockId, int layer){
