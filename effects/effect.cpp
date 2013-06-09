@@ -1,15 +1,15 @@
 #include "effect.h"
 //#include "buildeffect.h"
-//#include "mineeffect.h"
+#include "mineeffect.h"
 
 #include "../utils/confignode.h"
 
 std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config){
 	std::unique_ptr<Effect> effect;
-	std::string typeName = config.getString("type");
+	std::string typeName = config.getString("type","");
 
-	//if (typeName == "mine")
-	//	effect.reset(new MineEffect(config));
+	if (typeName == "mine")
+		effect.reset(new MineEffect(config));
 	//if (typeName == "build")
 	//	effect.reset(new BuildEffect(config));
 

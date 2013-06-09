@@ -3,16 +3,16 @@
 #include <string>
 #include <memory>
 
-class ItemDef;
+class ItemType;
 class Texture;
 class Game;
 
 class ItemDefManager{
-	std::vector<std::unique_ptr<ItemDef>> itemDefs;
+	std::vector<std::unique_ptr<ItemType>> items;
 public:
 	ItemDefManager(const Game& game, const std::string& configFileName);
 	~ItemDefManager();
-	ItemDef* operator[](int id){return itemDefs[id].get();}
-	int size() {return itemDefs.size();}
+	ItemType& operator[](int id){return *items[id];}
+	int size() {return items.size();}
 	std::unique_ptr<Texture> textureSet;
 };

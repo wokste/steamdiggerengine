@@ -65,7 +65,7 @@ MapNode* Map::getMapNode(int x, int y) const{
 	if (chunks.find(key) == chunks.end()) {
 		return nullptr;
 	} else {
-		Map* mutableThis = (Map*)(this);
+		Map* mutableThis = const_cast<Map*>(this);
 		Chunk* chunk = mutableThis->chunks[key];
 		return &(chunk->nodes[x & Chunk::widthMask][y & Chunk::heightMask]);
 	}

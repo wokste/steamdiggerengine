@@ -7,6 +7,8 @@ class ConfigNode;
 
 class Effect{
 public:
+	Effect(){};
+	~Effect(){};
 	virtual bool use(Entity& owner, const Screen& screen) = 0;
 	static std::unique_ptr<Effect> loadEffect(ConfigNode& node);
 };

@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 Game::Game(){
-	itemDefs.reset(new ItemDefManager(*this, fileSystem.fullpath("items.json")));
+	itemDefs.reset(new ItemDefManager(*this, fileSystem.fullpath("tools.json")));
 }
 
 Game::~Game(){

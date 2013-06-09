@@ -97,5 +97,6 @@ void ConfigNode::forEachNode(std::function<void (ConfigNode&)> elem_func){
 		}
 	} else {
 		std::cout << "not an array\n";
+		elem_func(*this);
 	}
 }

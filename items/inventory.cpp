@@ -1,10 +1,11 @@
 #include "inventory.h"
 #include "itemdefmanager.h"
-#include "itemdef.h"
+#include "item.h"
 #include "gun.h"
 #include <iostream>
 #include "../cooldown.h"
 #include "../screen.h"
+#include "../entities/player.h"
 
 ItemStack::ItemStack(){
 	id = 0;
@@ -14,16 +15,20 @@ ItemStack::ItemStack(){
 Inventory::Inventory(ItemDefManager& newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	selectedItem=0;
 
-	items[0].id = 2; items[0].count = 1; // Mining tool
-	items[1].id = 3; items[1].count = 1; // Gun
-	items[2].id = 4; items[2].count = 5; // Lanterns
+	items[0].id = 0; items[0].count = 1; // Mining tool
+	items[1].id = 1; items[1].count = 1; // Gun
+	items[2].id = 1; items[2].count = 5; // Lanterns
 }
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
-	double time = itemDefs[items[selectedItem].id]->use(owner, items[selectedItem], screen);
-	if (time > 0){
-		cooldown.set(time);
+
+	ItemType& type = itemDefs[items[selectedItem].id];
+	if (type.use(owner, screen)){
+		cooldown.set(type.useTime);
+		if (type.consumable)
+			items[selectedItem].count--;
+
 		return true;
 	}
 	return false;

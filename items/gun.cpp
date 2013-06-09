@@ -25,10 +25,6 @@ double Gun::use(Player& owner, ItemStack& item, const Screen& screen){
 	if (shot == nullptr)
 		return 0;
 	shot->targetType = ProjectileTargetType::TargetMonster;
-
-	if (shot != nullptr){
-		shot->moveTo(screen.mousePos(0));
-		return 0.250;
-	}
-	return 0;
+	shot->moveTo(screen.mousePos(0));
+	return 0.250;
 }

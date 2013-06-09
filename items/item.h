@@ -9,11 +9,12 @@ class ConfigNode;
 
 class ItemType{
 public:
-	ItemType(ConfigNode& array);
+	ItemType(ConfigNode& config);
+	~ItemType();
 	bool use(Entity& owner, const Screen& screen);
 
-	bool stackable;
+	int maxStack;
 	bool consumable;
 	double useTime;
-	std::vector<std::unique_ptr<Effect>> effects;
+	std::vector<std::unique_ptr<Effect>> onUseEffects;
 };
