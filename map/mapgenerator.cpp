@@ -1,6 +1,5 @@
 #include "mapgenerator.h"
 #include "perlinnoise.h"
-#include "../items/block.h"
 #include "../items/itemdefmanager.h"
 #include "mapnode.h"
 #include <cmath>

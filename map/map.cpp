@@ -1,7 +1,6 @@
 #include "map.h"
 #include "../utils/texture.h"
 #include "../screen.h"
-#include "../items/block.h"
 #include "../items/itemdefmanager.h"
 #include "../game.h"
 #include <iostream>

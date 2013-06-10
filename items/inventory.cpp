@@ -1,7 +1,6 @@
 #include "inventory.h"
 #include "itemdefmanager.h"
 #include "item.h"
-#include "gun.h"
 #include <iostream>
 #include "../cooldown.h"
 #include "../screen.h"
