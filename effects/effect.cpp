@@ -1,6 +1,5 @@
 #include "effect.h"
-//#include "buildeffect.h"
-#include "mineeffect.h"
+#include "mapeffect.h"
 
 #include "../utils/confignode.h"
 

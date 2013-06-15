@@ -1,4 +1,4 @@
-#include "mineeffect.h"
+#include "mapeffect.h"
 #include "../entities/player.h"
 
 #include "../world.h"
