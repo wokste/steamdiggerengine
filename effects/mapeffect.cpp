@@ -39,3 +39,37 @@ bool MineEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 	//TODO: add item in inventory
 	return true;
 }
+
+BuildEffect::BuildEffect(const ConfigNode& config){
+	blockTypeID = 1; // TODO: make this configurable
+}
+
+bool BuildEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+	Map& map = *owner.world->map;
+	const Vector2i pos = Vector2::dToI(targetPos);
+	MapNode* node = map.getMapNode(pos.x, pos.y);
+
+	if (!node || node->isset(targetLayer)){
+		return false;
+	}
+
+	if (targetLayer == Layer::front){
+		if (owner.world->areaHasEntity(pos, pos + Vector2i(1,1)))
+			return false;
+	}
+
+	if (targetLayer == Layer::back && node->isset(Layer::front)){
+		targetLayer = Layer::front;
+	}
+
+	if (!map.blockAdjacent(pos.x, pos.y, targetLayer,
+			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Solid);}))
+		return false;
+
+	node->setBlock(map, blockTypeID, targetLayer);
+	LightingEngine::recalcAreaAround(map, pos);
+	return true;
+
+	//TODO: add item in inventory
+	return true;
+}

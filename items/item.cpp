@@ -8,7 +8,7 @@
 ItemType::ItemType(ConfigNode& config){
 	maxStack=config.getInt("stack",1);
 	consumable=config.getBool("consumable",false);
-	useTime=config.getDouble("use-time",1.0);
+	useTime=config.getDouble("use-time",0.2);
 
 	auto onUseConfig = config.getNode("on-use");
 	onUseConfig.forEachNode([&] (ConfigNode& effect) {
