@@ -85,6 +85,8 @@ int main(){
 	bool running = true;
 	while (running){
 		double time = fpsClock.restart().asSeconds();
+		if (time > 0.1)
+			time = 0.1; // To avoid slow FPS screwing up physics
 		player->checkInput(time,*screen.get());
 		world->logic(time);
 

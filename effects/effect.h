@@ -1,4 +1,5 @@
 #pragma once
+#include "../utils/vector2.h"
 #include <memory>
 
 class Entity;
@@ -9,6 +10,6 @@ class Effect{
 public:
 	Effect(){};
 	~Effect(){};
-	virtual bool use(Entity& owner, const Screen& screen) = 0;
+	virtual bool use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
 	static std::unique_ptr<Effect> loadEffect(ConfigNode& node);
 };

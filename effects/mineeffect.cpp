@@ -15,26 +15,25 @@
 MineEffect::MineEffect(const ConfigNode& config){
 }
 
-bool MineEffect::use(Entity& owner, const Screen& screen){
+bool MineEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
-	const Vector2i pos = Vector2::dToI(screen.mousePos());
+	const Vector2i pos = Vector2::dToI(targetPos);
 	MapNode* node = map.getMapNode(pos.x, pos.y);
-	int layer = Layer::front;
 
-	if (!node || !node->isset(layer)){
+	if (!node || !node->isset(targetLayer)){
 		return false;
 	}
 
-	if (layer == Layer::back && node->isset(Layer::front)){
-		layer = Layer::front;
+	if (targetLayer == Layer::back && node->isset(Layer::front)){
+		targetLayer = Layer::front;
 	}
 
-	if (!map.blockAdjacent(pos.x, pos.y, layer,
+	if (!map.blockAdjacent(pos.x, pos.y, targetLayer,
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}))
 		return false;
 
-	const BlockType& minedBlock = node->getBlock(map, layer);
-	node->setBlock(map, 0, layer);
+	const BlockType& minedBlock = node->getBlock(map, targetLayer);
+	node->setBlock(map, 0, targetLayer);
 	LightingEngine::recalcAreaAround(map, pos);
 
 	//TODO: add item in inventory

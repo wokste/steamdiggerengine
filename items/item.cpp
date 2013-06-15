@@ -3,6 +3,7 @@
 #include "../screen.h"
 #include "../effects/effect.h"
 #include "../utils/confignode.h"
+#include "../enums.h"
 
 ItemType::ItemType(ConfigNode& config){
 	maxStack=config.getInt("stack",1);
@@ -21,9 +22,10 @@ ItemType::~ItemType(){
 }
 
 bool ItemType::use(Entity& user, const Screen& screen){
+	int layer = Layer::front;
 	bool success = false;
 	for(auto& effect: onUseEffects){
-		if (effect->use(user, screen))
+		if (effect->use(user, user.pos, screen.mousePos(layer), layer))
 			success = true;
 	}
 	return success;
