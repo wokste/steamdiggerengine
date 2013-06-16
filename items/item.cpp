@@ -4,6 +4,7 @@
 #include "../effects/effect.h"
 #include "../utils/confignode.h"
 #include "../enums.h"
+#include <SFML/Window/Keyboard.hpp>
 
 ItemType::ItemType(ConfigNode& config){
 	maxStack=config.getInt("stack",1);
@@ -23,6 +24,10 @@ ItemType::~ItemType(){
 
 bool ItemType::use(Entity& user, const Screen& screen){
 	int layer = Layer::front;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+		layer = Layer::back;
+
 	bool success = false;
 	for(auto& effect: onUseEffects){
 		if (effect->use(user, user.pos, screen.mousePos(layer), layer))
