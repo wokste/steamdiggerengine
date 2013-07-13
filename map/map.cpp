@@ -1,5 +1,6 @@
 #include "map.h"
 #include "../utils/texture.h"
+#include "../utils/confignode.h"
 #include "../screen.h"
 #include "../items/itemdefmanager.h"
 #include "../game.h"
@@ -25,13 +26,18 @@ Map::Map(int seed, Game& game) :
 	tileSet.reset(new Texture(game.fileSystem.fullpath("tileset.png"), tileSize));
 	generator.reset(new MapGenerator(seed, *this));
 
-	blockDefs.push_back(BlockType(-1));
-	blockDefs.push_back(BlockType(1));
-	blockDefs.push_back(BlockType(2));
-	blockDefs.push_back(BlockType(3));
+	loadBlocks(game.fileSystem.fullpath("blocks.json"));
 }
 
 Map::~Map(){
+}
+
+void Map::loadBlocks(std::string jsonFileName){
+	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
+		jsonArray.forEachNode([&] (ConfigNode& json) {
+			blockDefs.push_back(BlockType(json));
+		});
+	});
 }
 
 void Map::generate(){

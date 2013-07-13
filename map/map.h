@@ -33,6 +33,7 @@ public:
 	Map(const Map&) = delete;
 	~Map();
 
+	void loadBlocks(std::string fileName);
 	void generate();
 	void render(const sf::Color& outsideColor) const;
 	void logic(double time);
