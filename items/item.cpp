@@ -10,13 +10,8 @@ ItemType::ItemType(ConfigNode& config){
 	maxStack=config.getInt("stack",1);
 	consumable=config.getBool("consumable",false);
 	useTime=config.getDouble("use-time",0.2);
-
-	auto onUseConfig = config.getNode("on-use");
-	onUseConfig.forEachNode([&] (ConfigNode& effect) {
-		auto e = Effect::loadEffect(effect);
-		if (e)
-			onUseEffects.push_back(std::move(e));
-	});
+	auto onUseNode = config.getNode("on-use");
+	onUse.load(onUseNode);
 }
 
 ItemType::ItemType(int frameID){
@@ -34,10 +29,5 @@ bool ItemType::use(Entity& user, const Screen& screen){
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
 		layer = Layer::back;
 
-	bool success = false;
-	for(auto& effect: onUseEffects){
-		if (effect->use(user, user.pos, screen.mousePos(layer), layer))
-			success = true;
-	}
-	return success;
+	return onUse.run(user, user.pos, screen.mousePos(layer), layer);
 }

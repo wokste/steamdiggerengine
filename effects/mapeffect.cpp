@@ -15,7 +15,7 @@
 MineEffect::MineEffect(const ConfigNode& config){
 }
 
-bool MineEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
 	const Vector2i pos = Vector2::dToI(targetPos);
 	MapNode* node = map.getMapNode(pos.x, pos.y);
@@ -36,7 +36,7 @@ bool MineEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 	return true;
 }
 
-bool BuildEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
 	const Vector2i pos = Vector2::dToI(targetPos);
 	MapNode* node = map.getMapNode(pos.x, pos.y);

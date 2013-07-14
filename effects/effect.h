@@ -10,8 +10,17 @@ class Effect{
 public:
 	Effect(){};
 	~Effect(){};
-	virtual bool use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
+	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
 	static std::unique_ptr<Effect> loadEffect(ConfigNode& node);
 };
 
-// TODO: EffectList
+class EffectSlot{
+public:
+	EffectSlot();
+	~EffectSlot();
+	void load(ConfigNode& node);
+	bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	void add(std::unique_ptr<Effect> effect);
+private:
+	std::vector<std::unique_ptr<Effect>> effects;
+};

@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include "../effects/effect.h"
 
 class Entity;
 class Screen;
-class Effect;
 class ConfigNode;
 
 class ItemType{
@@ -17,5 +17,5 @@ public:
 	int maxStack;
 	bool consumable;
 	double useTime;
-	std::vector<std::unique_ptr<Effect>> onUseEffects;
+	EffectSlot onUse;
 };
