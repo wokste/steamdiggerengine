@@ -6,12 +6,12 @@
 #include "../enums.h"
 #include <SFML/Window/Keyboard.hpp>
 
-ItemType::ItemType(ConfigNode& config){
+ItemType::ItemType(ConfigNode& config, const Game& game){
 	maxStack=config.getInt("stack",1);
 	consumable=config.getBool("consumable",false);
 	useTime=config.getDouble("use-time",0.2);
 	auto onUseNode = config.getNode("on-use");
-	onUse.load(onUseNode);
+	onUse.load(onUseNode, game);
 }
 
 ItemType::ItemType(int frameID){

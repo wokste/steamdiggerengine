@@ -50,10 +50,6 @@ bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 			return false;
 	}
 
-	if (targetLayer == Layer::back && node->isset(Layer::front)){
-		targetLayer = Layer::front;
-	}
-
 	if (!map.blockAdjacent(pos.x, pos.y, targetLayer,
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Solid);}))
 		return false;

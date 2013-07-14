@@ -1,14 +1,19 @@
 #include "effect.h"
 #include "mapeffect.h"
+#include "combateffect.h"
 
 #include "../utils/confignode.h"
 
-std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config){
+std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config, const Game& game){
 	std::unique_ptr<Effect> effect;
 	std::string typeName = config.getString("type","");
 
 	if (typeName == "mine")
 		effect.reset(new MineEffect(config));
+	if (typeName == "shoot")
+		effect.reset(new ShootEffect(config, game));
+	if (typeName == "heal")
+		effect.reset(new HealEffect(config));
 
 	return effect;
 }
@@ -22,9 +27,9 @@ EffectSlot::~EffectSlot(){
 
 }
 
-void EffectSlot::load(ConfigNode& jsonArray){
+void EffectSlot::load(ConfigNode& jsonArray, const Game& game){
 	jsonArray.forEachNode([&] (ConfigNode& jsonEffect) {
-		add(Effect::loadEffect(jsonEffect));
+		add(Effect::loadEffect(jsonEffect, game));
 	});
 }
 
