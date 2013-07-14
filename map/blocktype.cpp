@@ -12,3 +12,7 @@ BlockType::BlockType(const ConfigNode& config){
 	timeToMine = config.getDouble("time-to-mine", -1);
 	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
 }
+
+void BlockType::addDrop(int itemID, float chance){
+	//TODO: Implement using effects
+}

@@ -9,8 +9,6 @@ std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config){
 
 	if (typeName == "mine")
 		effect.reset(new MineEffect(config));
-	if (typeName == "build")
-		effect.reset(new BuildEffect(config));
 
 	return effect;
 }

@@ -19,6 +19,12 @@ ItemType::ItemType(ConfigNode& config){
 	});
 }
 
+ItemType::ItemType(int frameID){
+	maxStack=250;
+	consumable=true;
+	useTime=0.2;
+}
+
 ItemType::~ItemType(){
 }
 

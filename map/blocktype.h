@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 class ConfigNode;
+class Game;
 
 class BlockType{
 public:
@@ -14,7 +15,5 @@ public:
 	sf::Color lightColor;
 
 	BlockType(const ConfigNode& config);
-
-	// TODO: Delete this
-	BlockType(int nFrame) {startFrame = nFrame; numFrames = 1; timeToMine = 0.5; lightColor = sf::Color::Black; collisionType = (nFrame == -1) ? BlockCollisionType::Air : BlockCollisionType::Solid; materialType = BlockMaterialType::Stone;}
+	void addDrop(int itemID, float chance = 1);
 };

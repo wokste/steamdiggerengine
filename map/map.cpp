@@ -26,16 +26,28 @@ Map::Map(int seed, Game& game) :
 	tileSet.reset(new Texture(game.fileSystem.fullpath("tileset.png"), tileSize));
 	generator.reset(new MapGenerator(seed, *this));
 
-	loadBlocks(game.fileSystem.fullpath("blocks.json"));
+	loadBlocks(game.fileSystem.fullpath("blocks.json"), game);
 }
 
 Map::~Map(){
 }
 
-void Map::loadBlocks(std::string jsonFileName){
+void Map::loadBlocks(std::string jsonFileName, Game& game){
 	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
 		jsonArray.forEachNode([&] (ConfigNode& json) {
-			blockDefs.push_back(BlockType(json));
+			BlockType block = BlockType(json);
+			std::string dropTag = json.getString("drop","_default");
+			if (dropTag == "_default"){
+				int blockID = blockDefs.size();
+				int iconFrame = 1;// TODO: FIX
+				int dropID = game.itemDefs->addBuildingBlock(blockID, iconFrame);
+				block.addDrop(dropID);
+			} else if (dropTag != ""){
+				// TODO: Exception handling
+				// TODO: Lazy evaluation of dropTag
+				block.addDrop(game.itemDefs->at(dropTag));
+			}
+			blockDefs.push_back(block);
 		});
 	});
 }

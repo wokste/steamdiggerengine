@@ -14,9 +14,9 @@ ItemStack::ItemStack(){
 Inventory::Inventory(ItemDefManager& newItemDefs) : itemDefs(newItemDefs), cooldown(){
 	selectedItem=0;
 
-	items[0].id = 0; items[0].count = 1; // Mining tool
-	items[1].id = 1; items[1].count = 1; // Gun
-	items[2].id = 1; items[2].count = 5; // Lanterns
+	for (int i = 0; i < itemDefs.size(); i++){
+		add(i, itemDefs[i].maxStack);
+	}
 }
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)

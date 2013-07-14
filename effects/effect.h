@@ -13,3 +13,5 @@ public:
 	virtual bool use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
 	static std::unique_ptr<Effect> loadEffect(ConfigNode& node);
 };
+
+// TODO: EffectList

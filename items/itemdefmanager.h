@@ -7,6 +7,7 @@
 class ItemType;
 class Texture;
 class Game;
+class BlockType;
 
 class ItemDefManager{
 	std::vector<std::unique_ptr<ItemType>> items;
@@ -15,8 +16,10 @@ public:
 	ItemDefManager(const Game& game, const std::string& configFileName);
 	~ItemDefManager();
 	ItemType& operator[](int id){return *items[id];}
-	ItemType& operator[](std::string tag){return *items[tags.at(tag)];}
+	int at(std::string& tag){return tags.at(tag);}
 	int insert(std::unique_ptr<ItemType> type, const std::string tag);
 	int size() {return items.size();}
 	std::unique_ptr<Texture> textureSet;
+
+	int addBuildingBlock(int blockID, int frameID, const std::string tag = "");
 };

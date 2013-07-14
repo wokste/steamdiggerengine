@@ -36,10 +36,6 @@ bool MineEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 	return true;
 }
 
-BuildEffect::BuildEffect(const ConfigNode& config){
-	blockTypeID = 1; // TODO: make this configurable
-}
-
 bool BuildEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
 	const Vector2i pos = Vector2::dToI(targetPos);
@@ -64,8 +60,5 @@ bool BuildEffect::use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 
 	node->setBlock(map, blockTypeID, targetLayer);
 	LightingEngine::recalcAreaAround(map, pos);
-	return true;
-
-	//TODO: add item in inventory
 	return true;
 }

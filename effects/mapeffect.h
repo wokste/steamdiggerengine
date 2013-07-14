@@ -4,7 +4,7 @@
 class BuildEffect : public Effect{
 public:
 	int blockTypeID;
-	BuildEffect(const ConfigNode& node);
+	BuildEffect(int blockTypeID){this->blockTypeID = blockTypeID;}
 	virtual bool use(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 };
 

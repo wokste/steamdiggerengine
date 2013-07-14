@@ -10,6 +10,7 @@ class ConfigNode;
 class ItemType{
 public:
 	ItemType(ConfigNode& config);
+	ItemType(int frameID);
 	~ItemType();
 	bool use(Entity& owner, const Screen& screen);
 
