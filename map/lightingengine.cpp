@@ -83,10 +83,9 @@ void LightingEngine::applyLight(Map& map, const Vector2i& pos, const sf::Color& 
 	if (!brightenColor(light, node->light[lightType]))
 		return;
 
-	sf::Color newLight = light - getBlockedLight(*node);
-	// TODO: this should be improved
-
 	node->light[lightType] = light;
+	
+	sf::Color newLight = light - getBlockedLight(*node);
 
 	// == recursive part ==
 	applyLight(map, pos + Vector2i( 1, 0), newLight, lightType);
@@ -101,7 +100,6 @@ void LightingEngine::copyLight(Map& map, const Vector2i& pos1, const Vector2i& p
 		return;
 
 	sf::Color blockedLight = getBlockedLight(*node);
-	// TODO: this should be improved
 
 	applyLight(map, pos2, node->light[LightType::placed] - blockedLight, LightType::placed);
 	applyLight(map, pos2, node->light[LightType::sky] - blockedLight, LightType::sky);

@@ -27,7 +27,6 @@ void HUD::draw(const Screen& screen, const Player& player){
 		glPushMatrix();
 			glDisable(GL_DEPTH_TEST);
 			for (auto& elem : hudElements){
-				// TODO: positioning the hud item
 				glLoadIdentity();
 				Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
 				pos.x *= elem->docking.x;
