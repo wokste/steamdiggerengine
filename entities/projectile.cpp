@@ -21,9 +21,14 @@ Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats& stats)
 	state(ProjectileState::Flying)
 {
 	targetType = ProjectileTargetType::TargetPlayer;
+	TTL = stats.TTL;
 }
 
 void Projectile::logic(double time){
+	TTL -= time;
+	if (TTL < 0)
+		state = ProjectileState::DeleteMe;
+
 	Entity::logic(time);
 
 	// Check for collisions
@@ -45,7 +50,14 @@ void Projectile::logic(double time){
 };
 
 void Projectile::hitTerrain(bool hitWall){
-	state = ProjectileState::DeleteMe;
+	if (STATS.bounce >= 0){
+		if (hitWall)
+			speed.x = -speed.x * STATS.bounce;
+		else
+			speed.y = -speed.y * STATS.bounce;
+	} else {
+		state = ProjectileState::DeleteMe;
+	}
 }
 
 void Projectile::hitCreature(Entity& other){
@@ -63,5 +75,6 @@ void ProjectileStats::load(const Game& game, const ConfigNode& config){
 	speed = config.getInt("speed");
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
-	//TODO: on-hit-wall
+	TTL = config.getDouble("ttl", 5);
+	bounce = config.getDouble("bounce", -1);
 }

@@ -17,6 +17,8 @@ struct ProjectileStats : public EntityStats{
 	ProjectileStats() = default;
 	Projectile* spawn(World* world, Vector2d pos);
 	virtual void load(const Game& game, const ConfigNode& config);
+	double TTL; // Time to live in seconds
+	double bounce; // Negative is no bounce
 };
 
 class Projectile : public Entity{
@@ -28,6 +30,7 @@ public:
 	ProjectileState state;
 	ProjectileTargetType targetType;
 	void moveTo(Vector2d point);
+	double TTL;
 
 private:
 	void hitCreature(Entity& other);
