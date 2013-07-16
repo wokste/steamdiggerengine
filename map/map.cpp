@@ -72,7 +72,7 @@ void Map::render(const sf::Color& skyColor) const{
 
 	tileSet->bind();
 	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
-		iter->second->render(skyColor, *tileSet, iter->first);
+		iter->second->render(*this, skyColor, *tileSet, iter->first);
 	}
 }
 
