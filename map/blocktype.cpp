@@ -11,8 +11,8 @@ BlockType::BlockType(const ConfigNode& config){
 	auto numFrames = config.getInt("frame-count", 1);
 	auto timeToMine = config.getDouble("time-to-mine", -1);
 	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
-	auto sheet = sf::Vector2i(4,4);
-	model.createCube(sf::Vector3f(0,0,0),startFrame,sheet);
+	auto framesPerSheet = sf::Vector2i(4,4);
+	model.create(config.getString("display","cube"),startFrame,framesPerSheet);
 }
 
 void BlockType::addDrop(int itemID, float chance){

@@ -12,7 +12,16 @@ void VertexArray::clear(){
 	vertices.clear();
 };
 
-void VertexArray::createCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet){
+void VertexArray::create(std::string type, int frameNum, Vector2i& framesPerSheet){
+	if (type == "cube"){
+		addCube(sf::Vector3f(0,0,0), frameNum, framesPerSheet);
+	}else if (type == "plant"){
+		addSheet(sf::Vector3f(0,0,0), sf::Vector3f(0,1,0), sf::Vector3f(1,0,1), frameNum, framesPerSheet);
+		addSheet(sf::Vector3f(0,0,1), sf::Vector3f(0,1,0), sf::Vector3f(1,0,-1), frameNum, framesPerSheet);
+	}
+}
+
+void VertexArray::addCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet){
 	const sf::Vector3f AxisX = sf::Vector3f(1,0,0);
 	const sf::Vector3f AxisY = sf::Vector3f(0,1,0);
 	const sf::Vector3f AxisZ = sf::Vector3f(0,0,1);

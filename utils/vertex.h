@@ -24,7 +24,8 @@ public:
 	void clear();
 
 	void addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, const sf::Vector3f& dir2, int frameNum, Vector2i& framesPerSheet);
-	void createCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet);
+	void addCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet);
+	void create(std::string type, int frameNum, Vector2i& framesPerSheet);
 
 	void render() const;
 };
