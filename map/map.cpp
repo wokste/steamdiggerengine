@@ -25,31 +25,9 @@ Map::Map(int seed) :
 {
 	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png"), tileSize));
 	generator.reset(new MapGenerator(seed, *this));
-
-	loadBlocks(GameGlobals::fileSystem.fullpath("blocks.json"));
 }
 
 Map::~Map(){
-}
-
-void Map::loadBlocks(std::string jsonFileName){
-	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
-		jsonArray.forEachNode([&] (ConfigNode& json) {
-			BlockType block = BlockType(json, models);
-			std::string dropTag = json.getString("drop","_default");
-			if (dropTag == "_default"){
-				int blockID = blockDefs.size();
-				int iconFrame = 1;// TODO: FIX
-				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame);
-				block.addDrop(dropID);
-			} else if (dropTag != ""){
-				// TODO: Exception handling
-				// TODO: Lazy evaluation of dropTag
-				block.addDrop(GameGlobals::itemDefs->at(dropTag));
-			}
-			blockDefs.push_back(block);
-		});
-	});
 }
 
 void Map::generate(){
@@ -58,7 +36,7 @@ void Map::generate(){
 	for (int x = posMin.x & ~Chunk::widthMask ; x < posMax.x; x+=Chunk::width){
 		for (int y = posMin.y & ~Chunk::heightMask; y < posMax.y; y+=Chunk::height){
 			Vector2i chunkNum(x,y);
-			chunks.insert(std::make_pair(chunkNum, new Chunk(*this, *generator, chunkNum)));
+			chunks.insert(std::make_pair(chunkNum, new Chunk(*generator, chunkNum)));
 			LightingEngine::recalcArea(*this, chunkNum, chunkNum + Vector2i(Chunk::width, Chunk::height));
 		}
 	}
@@ -72,7 +50,7 @@ void Map::render(const sf::Color& skyColor) const{
 
 	tileSet->bind();
 	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
-		iter->second->render(*this, skyColor, *tileSet, iter->first);
+		iter->second->render(skyColor, iter->first);
 	}
 }
 
@@ -100,7 +78,7 @@ bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(const BlockT
 		if (node == nullptr){
 			continue;
 		}
-		if (pred(node->getBlock(*this,layer))){
+		if (pred(node->getBlock(layer))){
 			return true;
 		}
 	}
@@ -120,7 +98,7 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const Blo
 				continue;
 			}
 
-			if (pred(node->getBlock(*this,Layer::front))){
+			if (pred(node->getBlock(Layer::front))){
 				return true;
 			}
 		}

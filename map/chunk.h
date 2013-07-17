@@ -12,8 +12,8 @@ public:
 	static constexpr int heightMask = height - 1;
 	MapNode nodes[width][height];
 
-	Chunk(const Map& map, const MapGenerator& generator, const Vector2i& topLeft);
-	void render(const Map& map, const sf::Color& skyColor, Texture& texture, const Vector2i& topLeft) const;
+	Chunk(const MapGenerator& generator, const Vector2i& topLeft);
+	void render(const sf::Color& skyColor, const Vector2i& topLeft) const;
 };
 
 // == Constraints ==

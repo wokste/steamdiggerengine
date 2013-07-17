@@ -5,6 +5,7 @@
 #include <random>
 class ItemDefManager;
 class World;
+class BlockTypeManager;
 
 class FileSystem{
 public:
@@ -21,4 +22,5 @@ public:
 	static std::unique_ptr<ItemDefManager> itemDefs;
 	static FileSystem fileSystem;
 	static std::mt19937 rnd;
+	static std::unique_ptr<BlockTypeManager> blockDefs;
 };

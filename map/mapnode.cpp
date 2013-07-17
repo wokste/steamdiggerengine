@@ -5,6 +5,7 @@
 #include "../enums.h"
 #include "map.h"
 #include <iostream>
+#include "../game.h"
 
 MapNode::MapNode(){
 	for (int i = 0; i < MAX_LAYERS; ++i){
@@ -15,27 +16,27 @@ MapNode::MapNode(){
 	light[1] = sf::Color::Black;
 }
 
-void MapNode::setBlock(const Map& map, int newBlockId, int layer){
-	const BlockType& type = map.blockDefs[newBlockId];
+void MapNode::setBlock(int newBlockId, int layer){
+	const BlockType& type = (*GameGlobals::blockDefs)[newBlockId];
 	modelId[layer] = type.getModelId();
 	blockId[layer] = newBlockId;
 }
 
-const BlockType& MapNode::getBlock(const Map& map, int layer) const{
-	return map.blockDefs[blockId[layer]];
+const BlockType& MapNode::getBlock(int layer) const{
+	return (*GameGlobals::blockDefs)[blockId[layer]];
 }
 
 sf::Color MapNode::getLight(const sf::Color& skyColor) const{
 	return light[LightType::placed] + light[LightType::sky] * skyColor;
 }
 
-void MapNode::render(const Map& map, const sf::Color& skyColor, Texture& tileSet, Vector2i pos) const{
+void MapNode::render(const sf::Color& skyColor, Vector2i pos) const{
 	sf::Color currentLight = getLight(skyColor);
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
 	if (modelId[Layer::front] >= 0){
 		glPushMatrix();
 		glTranslated(pos.x, pos.y, Layer::front);
-		map.models[modelId[Layer::front]].render();
+		(*GameGlobals::blockDefs)[blockId[Layer::front]].models[modelId[Layer::front]].render();
 		glPopMatrix();
 	}
 
@@ -43,7 +44,7 @@ void MapNode::render(const Map& map, const sf::Color& skyColor, Texture& tileSet
 	if (modelId[Layer::back] >= 0){
 		glPushMatrix();
 		glTranslated(pos.x, pos.y, Layer::back);
-		map.models[modelId[Layer::back]].render();
+		(*GameGlobals::blockDefs)[blockId[Layer::back]].models[modelId[Layer::back]].render();
 		glPopMatrix();
 	}
 }

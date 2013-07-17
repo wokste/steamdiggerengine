@@ -84,7 +84,7 @@ void LightingEngine::applyLight(Map& map, const Vector2i& pos, const sf::Color& 
 		return;
 
 	node->light[lightType] = light;
-	
+
 	sf::Color newLight = light - getBlockedLight(*node);
 
 	// == recursive part ==
@@ -129,7 +129,7 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			if (node == nullptr)
 				continue;
 
-			const BlockType& frontBlock = node->getBlock(map, Layer::front);
+			const BlockType& frontBlock = node->getBlock(Layer::front);
 			if (node->isset(Layer::front) && frontBlock.lightColor != sf::Color::Black){
 				applyLight(map, Vector2i(x,y), frontBlock.lightColor, LightType::placed);
 			}

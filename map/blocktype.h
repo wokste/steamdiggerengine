@@ -12,9 +12,17 @@ public:
 	BlockMaterialType materialType;
 	int HP;
 	sf::Color lightColor;
+	std::vector<VertexArray> models;
 
-	BlockType(const ConfigNode& config, std::vector<VertexArray>& modelList);
+	BlockType(const ConfigNode& config);
 	void addDrop(int itemID, float chance = 1);
-	std::vector<int> modelNums;
 	int getModelId() const;
+};
+
+class BlockTypeManager{
+	std::vector<BlockType> blocks;
+public:
+	BlockTypeManager(std::string jsonFileName);
+	~BlockTypeManager();
+	BlockType& operator[](int id);
 };

@@ -28,8 +28,8 @@ bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}))
 		return false;
 
-	const BlockType& minedBlock = node->getBlock(map, targetLayer);
-	node->setBlock(map, 0, targetLayer);
+	const BlockType& minedBlock = node->getBlock(targetLayer);
+	node->setBlock(0, targetLayer);
 	LightingEngine::recalcAreaAround(map, pos);
 
 	//TODO: add item in inventory
@@ -54,7 +54,7 @@ bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Solid);}))
 		return false;
 
-	node->setBlock(map, blockTypeID, targetLayer);
+	node->setBlock(blockTypeID, targetLayer);
 	LightingEngine::recalcAreaAround(map, pos);
 	return true;
 }
