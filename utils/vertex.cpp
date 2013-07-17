@@ -12,7 +12,7 @@ void VertexArray::clear(){
 	vertices.clear();
 };
 
-void VertexArray::create(std::string type, int frameNum, Vector2i& framesPerSheet){
+VertexArray::VertexArray(std::string type, int frameNum, Vector2i& framesPerSheet){
 	if (type == "cube"){
 		addCube(sf::Vector3f(0,0,0), frameNum, framesPerSheet);
 	}else if (type == "plant"){

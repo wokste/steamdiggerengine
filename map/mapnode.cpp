@@ -8,7 +8,7 @@
 
 MapNode::MapNode(){
 	for (int i = 0; i < MAX_LAYERS; ++i){
-		frame[i] = -1;
+		modelId[i] = -1;
 		blockId[i] = 0;
 	}
 	light[0] = sf::Color::Black;
@@ -17,7 +17,7 @@ MapNode::MapNode(){
 
 void MapNode::setBlock(const Map& map, int newBlockId, int layer){
 	const BlockType& type = map.blockDefs[newBlockId];
-	//frame[layer] = type.startFrame + rand() % type.numFrames;
+	modelId[layer] = type.getModelId();
 	blockId[layer] = newBlockId;
 }
 
@@ -32,18 +32,18 @@ sf::Color MapNode::getLight(const sf::Color& skyColor) const{
 void MapNode::render(const Map& map, const sf::Color& skyColor, Texture& tileSet, Vector2i pos) const{
 	sf::Color currentLight = getLight(skyColor);
 	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
-	if (blockId[Layer::front] != 0){
+	if (modelId[Layer::front] >= 0){
 		glPushMatrix();
 		glTranslated(pos.x, pos.y, Layer::front);
-		map.blockDefs[blockId[Layer::front]].model.render();
+		map.models[modelId[Layer::front]].render();
 		glPopMatrix();
 	}
 
 	glColor3ub(currentLight.r * 0.8, currentLight.g * 0.8, currentLight.b * 0.8);
-	if (blockId[Layer::back] != 0){
+	if (modelId[Layer::back] >= 0){
 		glPushMatrix();
 		glTranslated(pos.x, pos.y, Layer::back);
-		map.blockDefs[blockId[Layer::back]].model.render();
+		map.models[modelId[Layer::back]].render();
 		glPopMatrix();
 	}
 }

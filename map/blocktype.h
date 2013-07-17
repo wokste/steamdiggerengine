@@ -1,5 +1,6 @@
 #pragma once
 #include "../items/enums.h" // TODO: Move this file
+#include <vector>
 #include "../utils/vertex.h"
 #include <SFML/Graphics/Color.hpp>
 
@@ -10,12 +11,11 @@ class BlockType{
 public:
 	BlockCollisionType collisionType;
 	BlockMaterialType materialType;
-	//int startFrame;
-	//int numFrames;
-	double timeToMine;
+	int HP;
 	sf::Color lightColor;
-	VertexArray model;
 
-	BlockType(const ConfigNode& config);
+	BlockType(const ConfigNode& config, std::vector<VertexArray>& modelList);
 	void addDrop(int itemID, float chance = 1);
+	std::vector<int> modelNums;
+	int getModelId() const;
 };

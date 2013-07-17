@@ -35,7 +35,7 @@ Map::~Map(){
 void Map::loadBlocks(std::string jsonFileName, Game& game){
 	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
 		jsonArray.forEachNode([&] (ConfigNode& json) {
-			BlockType block = BlockType(json);
+			BlockType block = BlockType(json, models);
 			std::string dropTag = json.getString("drop","_default");
 			if (dropTag == "_default"){
 				int blockID = blockDefs.size();

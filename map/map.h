@@ -5,6 +5,8 @@
 #include <functional>
 #include <memory>
 #include <map>
+#include <vector>
+#include "../utils/vertex.h"
 
 namespace sf{
 	class Color;
@@ -41,6 +43,7 @@ public:
 	bool blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)>);
 	MapNode* getMapNode(int x, int y) const;
 	std::vector<BlockType> blockDefs;
+	std::vector<VertexArray> models;
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 private:

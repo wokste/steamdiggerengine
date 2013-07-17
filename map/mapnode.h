@@ -20,6 +20,6 @@ public:
 	sf::Color getLight(const sf::Color& skyColor) const;
 private:
 	static constexpr int MAX_LAYERS = 2;
-	int frame[MAX_LAYERS];
+	int modelId[MAX_LAYERS];
 	int blockId[MAX_LAYERS];
 };
