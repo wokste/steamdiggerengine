@@ -5,24 +5,25 @@
 #include "../cooldown.h"
 #include "../screen.h"
 #include "../entities/player.h"
+#include "../game.h"
 
 ItemStack::ItemStack(){
 	id = 0;
 	count = 0;
 }
 
-Inventory::Inventory(ItemDefManager& newItemDefs) : itemDefs(newItemDefs), cooldown(){
+Inventory::Inventory() : cooldown(){
 	selectedItem=0;
 
-	for (int i = 0; i < itemDefs.size(); i++){
-		add(i, itemDefs[i].maxStack);
+	for (int i = 0; i < GameGlobals::itemDefs->size(); i++){
+		add(i, (*GameGlobals::itemDefs)[i].maxStack);
 	}
 }
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
 
-	ItemType& type = itemDefs[items[selectedItem].id];
+	ItemType& type = (*GameGlobals::itemDefs)[items[selectedItem].id];
 	if (type.use(owner, screen)){
 		cooldown.set(type.useTime);
 		if (type.consumable)

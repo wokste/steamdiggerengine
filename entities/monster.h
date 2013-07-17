@@ -17,7 +17,7 @@ struct MonsterStats : public EntityStats{
 	std::unique_ptr<MovementType> movementType;
 
 	Monster* spawn(World* world, Vector2d pos);
-	virtual void load(const Game& game, const ConfigNode& config);
+	virtual void load(const ConfigNode& config);
 };
 
 class Monster : public Entity{

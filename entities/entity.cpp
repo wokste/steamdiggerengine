@@ -116,7 +116,7 @@ void Entity::push(Vector2d dir , double force){
 EntityStats::~EntityStats(){
 }
 
-void EntityStats::load(const Game& game, const ConfigNode& config){
+void EntityStats::load(const ConfigNode& config){
 	maxSpeed      = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity      = config.getBool("gravity",true);
@@ -124,6 +124,6 @@ void EntityStats::load(const Game& game, const ConfigNode& config){
 	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
-	texture.reset(new Texture(game.fileSystem.fullpath(textureName), config.getVector2i("size")));
+	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName), config.getVector2i("size")));
 	HP            = config.getInt("hp",100);
 }

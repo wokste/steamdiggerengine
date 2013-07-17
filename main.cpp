@@ -13,7 +13,6 @@
 #include "utils/confignode.h"
 
 std::unique_ptr<Screen> screen;
-std::unique_ptr<Game> game;
 std::unique_ptr<World> world;
 std::unique_ptr<HUD> hud;
 Player* player;
@@ -64,22 +63,21 @@ void draw(){
 int main(){
 	// create the window
 	srand(time(nullptr));
+	GameGlobals::init();
 	screen.reset(new Screen());
 	initGL();
 
-	game.reset(new Game());
-	world.reset(new World(*game.get()));
-	//world->spawn(game->fileSystem.fullpath("ghost.json"),Vector2d(10,-20));
+	world.reset(new World());
 	std::unique_ptr<PlayerStats> stats;
 	stats.reset(new PlayerStats());
-	ConfigNode::load(game->fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
-		stats->load(*(game.get()), config);
+	ConfigNode::load(GameGlobals::fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
+		stats->load(config);
 		player = stats->spawn(world.get(),Vector2d(20,-10));
 	});
 
 	ASSERT(player != nullptr, "Main", "player = NULL");
 
-	hud.reset(new HUD(*game.get()));
+	hud.reset(new HUD());
 	sf::Clock fpsClock;
 
 	bool running = true;
@@ -100,7 +98,7 @@ int main(){
 			world->render();
 		glPopMatrix();
 
-		hud->draw(*screen.get(), *player);
+		hud->draw(*screen, *player);
 		screen->window->display();
 	}
 	return 0;

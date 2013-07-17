@@ -3,11 +3,12 @@
 #include <iostream>
 #include <cstdlib>
 
-Game::Game(){
-	itemDefs.reset(new ItemDefManager(*this, fileSystem.fullpath("tools.json")));
-}
+std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
+FileSystem GameGlobals::fileSystem;
+std::mt19937 GameGlobals::rnd;
 
-Game::~Game(){
+void GameGlobals::init(){
+	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.json")));
 }
 
 FileSystem::FileSystem(){

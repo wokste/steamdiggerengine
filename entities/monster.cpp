@@ -13,12 +13,12 @@
 MonsterStats::MonsterStats(){}
 MonsterStats::~MonsterStats(){}
 
-void MonsterStats::load(const Game& game, const ConfigNode& config){
-	EntityStats::load(game, config);
+void MonsterStats::load(const ConfigNode& config){
+	EntityStats::load(config);
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 
-	movementType.reset(MovementType::staticLoad(game, config));
+	movementType.reset(MovementType::staticLoad(config));
 }
 
 Monster* MonsterStats::spawn(World* world, Vector2d pos){

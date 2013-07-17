@@ -14,13 +14,12 @@ class ProjectileStats;
 class Player;
 class Monster;
 class Projectile;
-class Game;
 class Skybox;
 
 class World{
 public:
 	std::unique_ptr<Map> map;
-	World(Game& newSettings);
+	World();
 	World(const World& that) = delete;
 	~World();
 
@@ -28,7 +27,6 @@ public:
 	void render();
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
-	Game& game;
 
 	std::vector<std::unique_ptr<Player>> players;
 	std::vector<std::unique_ptr<Monster>> monsters;

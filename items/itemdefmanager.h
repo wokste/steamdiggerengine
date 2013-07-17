@@ -13,7 +13,7 @@ class ItemDefManager{
 	std::vector<std::unique_ptr<ItemType>> items;
 	std::map<std::string, int> tags;
 public:
-	ItemDefManager(const Game& game, const std::string& configFileName);
+	ItemDefManager(const std::string& configFileName);
 	~ItemDefManager();
 	ItemType& operator[](int id){return *items[id];}
 	int at(std::string& tag){return tags.at(tag);}

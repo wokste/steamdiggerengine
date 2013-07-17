@@ -9,8 +9,8 @@
    * HUD *
    ******* */
 
-HUD::HUD(const Game& game){
-	hudElements.emplace_back(new HealthBarHUD(game));
+HUD::HUD(){
+	hudElements.emplace_back(new HealthBarHUD());
 }
 
 HUD::~HUD(){
@@ -72,9 +72,9 @@ bool HUDElement::onMousePressed(Player& player, const sf::Mouse::Button& button,
    * HealthBarHUD *
    **************** */
 
-HealthBarHUD::HealthBarHUD(const Game& game){
+HealthBarHUD::HealthBarHUD(){
 	barSize = Vector2i(256, 24);
-	barTexture.reset(new Texture(game.fileSystem.fullpath("healthbar.png"),barSize));
+	barTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("healthbar.png"),barSize));
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);

@@ -9,11 +9,10 @@ class Texture;
 class Screen;
 class Player;
 class HUDElement;
-class Game;
 
 class HUD{
 public:
-	HUD(const Game& game);
+	HUD();
 	HUD(const HUD& that) = delete;
 	~HUD();
 
@@ -39,7 +38,7 @@ public:
 
 class HealthBarHUD : public HUDElement{
 public:
-	HealthBarHUD(const Game& game);
+	HealthBarHUD();
 	HealthBarHUD(const HealthBarHUD& that) = delete;
 	virtual ~HealthBarHUD();
 

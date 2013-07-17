@@ -8,7 +8,6 @@ class Texture;
 class Entity;
 class ConfigNode;
 class World;
-class Game;
 
 struct EntityStats{
 	double maxSpeed=0;
@@ -22,7 +21,7 @@ struct EntityStats{
 
 	EntityStats();
 	virtual ~EntityStats();
-	virtual void load(const Game& game, const ConfigNode& config);
+	virtual void load(const ConfigNode& config);
 	bool validPos(World& world, Vector2d newPos);
 };
 

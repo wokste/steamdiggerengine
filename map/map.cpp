@@ -20,19 +20,19 @@ bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 	return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
 
-Map::Map(int seed, Game& game) :
+Map::Map(int seed) :
 	tileSize(32,32)
 {
-	tileSet.reset(new Texture(game.fileSystem.fullpath("tileset.png"), tileSize));
+	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png"), tileSize));
 	generator.reset(new MapGenerator(seed, *this));
 
-	loadBlocks(game.fileSystem.fullpath("blocks.json"), game);
+	loadBlocks(GameGlobals::fileSystem.fullpath("blocks.json"));
 }
 
 Map::~Map(){
 }
 
-void Map::loadBlocks(std::string jsonFileName, Game& game){
+void Map::loadBlocks(std::string jsonFileName){
 	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
 		jsonArray.forEachNode([&] (ConfigNode& json) {
 			BlockType block = BlockType(json, models);
@@ -40,12 +40,12 @@ void Map::loadBlocks(std::string jsonFileName, Game& game){
 			if (dropTag == "_default"){
 				int blockID = blockDefs.size();
 				int iconFrame = 1;// TODO: FIX
-				int dropID = game.itemDefs->addBuildingBlock(blockID, iconFrame);
+				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame);
 				block.addDrop(dropID);
 			} else if (dropTag != ""){
 				// TODO: Exception handling
 				// TODO: Lazy evaluation of dropTag
-				block.addDrop(game.itemDefs->at(dropTag));
+				block.addDrop(GameGlobals::itemDefs->at(dropTag));
 			}
 			blockDefs.push_back(block);
 		});

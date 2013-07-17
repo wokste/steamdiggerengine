@@ -21,7 +21,7 @@ Player* PlayerStats::spawn(World* world, Vector2d pos){
 }
 
 Player::Player(World* newWorld, Vector2d newPos, PlayerStats& newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(*newWorld->game.itemDefs.get()), RP(0){
+	, inventory(), RP(0){
 }
 
 Player::~Player(){
@@ -90,8 +90,8 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void PlayerStats::load(const Game& game, const ConfigNode& config){
-	EntityStats::load(game, config);
+void PlayerStats::load(const ConfigNode& config){
+	EntityStats::load(config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");

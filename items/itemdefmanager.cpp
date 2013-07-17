@@ -7,10 +7,10 @@
 #include "../effects/mapeffect.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(const Game& game, const std::string& jsonFileName){
+ItemDefManager::ItemDefManager(const std::string& jsonFileName){
 	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
 		jsonArray.forEachNode([&] (ConfigNode& json) {
-			insert(std::unique_ptr<ItemType>(new ItemType(json, game)), json.getString("tag",""));
+			insert(std::unique_ptr<ItemType>(new ItemType(json)), json.getString("tag",""));
 		});
 	});
 }

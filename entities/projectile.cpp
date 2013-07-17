@@ -70,8 +70,8 @@ void Projectile::moveTo(Vector2d targetPos){
 	speed = Vector2::normalize(targetPos - pos) * STATS.speed;
 }
 
-void ProjectileStats::load(const Game& game, const ConfigNode& config){
-	EntityStats::load(game, config);
+void ProjectileStats::load(const ConfigNode& config){
+	EntityStats::load(config);
 	speed = config.getInt("speed");
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);

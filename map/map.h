@@ -14,7 +14,6 @@ namespace sf{
 
 class Texture;
 class Screen;
-class Game;
 class Block;
 class MapGenerator;
 class MapNode;
@@ -31,11 +30,11 @@ public:
 	double    gravity = 25;
 
 public:
-	Map(int seed, Game& settings);
+	Map(int seed);
 	Map(const Map&) = delete;
 	~Map();
 
-	void loadBlocks(std::string fileName, Game& game);
+	void loadBlocks(std::string fileName);
 	void generate();
 	void render(const sf::Color& outsideColor) const;
 	void logic(double time);

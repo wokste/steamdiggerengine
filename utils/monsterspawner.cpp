@@ -7,20 +7,20 @@
 #include <cmath>
 #include <algorithm>
 
-MonsterStats* SpawnConfig::getMonsterType(Game& game){
+MonsterStats* SpawnConfig::getMonsterType(){
 	std::discrete_distribution<> monsterOdds({40, 10});
-	unsigned int index = monsterOdds(game.rnd);
+	unsigned int index = monsterOdds(GameGlobals::rnd);
 	if (index >= prototypes.size())
 		return nullptr;
 
 	return prototypes[index].get();
 }
 
-SpawnConfig::SpawnConfig(Game& game){
-	ConfigNode::load(game.fileSystem.fullpath("monsters.json"),[&] (ConfigNode& configFile){
+SpawnConfig::SpawnConfig(){
+	ConfigNode::load(GameGlobals::fileSystem.fullpath("monsters.json"),[&] (ConfigNode& configFile){
 		configFile.forEachNode([&] (ConfigNode& monsterConfig) {
 			auto stats = new MonsterStats();
-			stats->load(game, monsterConfig);
+			stats->load(monsterConfig);
 			prototypes.push_back(std::move(std::unique_ptr<MonsterStats>(stats)));
 		});
 	});
@@ -31,7 +31,7 @@ SpawnConfig::SpawnConfig(Game& game){
 	maxMonsters = 5;
 }
 
-MonsterSpawner::MonsterSpawner(Game& game) : basicSpawnConfig(game)
+MonsterSpawner::MonsterSpawner() : basicSpawnConfig()
 {
 }
 
@@ -55,22 +55,22 @@ void MonsterSpawner::logic(World* world, double time){
 				}
 			}
 		}
-		if (std::bernoulli_distribution(spawnConfig.newWaveChance)(world->game.rnd))
-			cooldown.set(poisson(world->game.rnd) * spawnConfig.delayWaves);
+		if (std::bernoulli_distribution(spawnConfig.newWaveChance)(GameGlobals::rnd))
+			cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
 		else
-			cooldown.set(poisson(world->game.rnd) * spawnConfig.delaySpawns);
+			cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delaySpawns);
 	}
 }
 
 bool MonsterSpawner::trySpawn(World* world, Player* player){
 	std::uniform_real_distribution<> distanceRandomizer(28,32);
 	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
-	double distance = distanceRandomizer(world->game.rnd);
-	double direction = directionRandomizer(world->game.rnd);
+	double distance = distanceRandomizer(GameGlobals::rnd);
+	double direction = directionRandomizer(GameGlobals::rnd);
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 
 	// TODO: randomly chosen biome dependant mobs
-	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType(world->game);
+	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType();
 	if (typeToSpawn == nullptr) return false;
 	Monster* spawned = typeToSpawn->spawn(world, spawnPos);
 

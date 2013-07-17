@@ -9,7 +9,7 @@ class ConfigNode;
 
 class ItemType{
 public:
-	ItemType(ConfigNode& config, const Game& game);
+	ItemType(ConfigNode& config);
 	ItemType(int frameID);
 	~ItemType();
 	bool use(Entity& owner, const Screen& screen);

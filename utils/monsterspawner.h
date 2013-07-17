@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-class Game;
 class World;
 class Player;
 class Monster;
@@ -11,8 +10,8 @@ class MonsterStats;
 
 class SpawnConfig{
 public:
-	SpawnConfig(Game& game);
-	MonsterStats* getMonsterType(Game& game);
+	SpawnConfig();
+	MonsterStats* getMonsterType();
 	double newWaveChance;
 	int delayWaves;
 	int delaySpawns;
@@ -23,7 +22,7 @@ private:
 
 class MonsterSpawner{
 public:
-	MonsterSpawner(Game& game);
+	MonsterSpawner();
 	void logic(World* world, double time);
 
 private:

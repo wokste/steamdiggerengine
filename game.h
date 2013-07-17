@@ -15,11 +15,10 @@ private:
 	std::string dataDir;
 };
 
-class Game{
+class GameGlobals{
 public:
-	Game();
-	~Game();
-	std::unique_ptr<ItemDefManager> itemDefs;
-	FileSystem fileSystem;
-	std::mt19937 rnd;
+	static void init();
+	static std::unique_ptr<ItemDefManager> itemDefs;
+	static FileSystem fileSystem;
+	static std::mt19937 rnd;
 };

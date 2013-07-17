@@ -13,12 +13,11 @@
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 
-World::World(Game& newSettings) :
-	game(newSettings)
+World::World()
 {
-	map.reset(new Map(rand(), game));
+	map.reset(new Map(rand()));
 	map->generate();
-	monsterSpawner.reset(new MonsterSpawner(game));
+	monsterSpawner.reset(new MonsterSpawner());
 	skybox.reset(new Skybox());
 }
 

@@ -6,7 +6,7 @@ class ProjectileStats;
 
 class ShootEffect : public Effect{
 public:
-	ShootEffect(const ConfigNode& node, const Game& game);
+	ShootEffect(const ConfigNode& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 private:
 	std::unique_ptr<ProjectileStats> projectile;

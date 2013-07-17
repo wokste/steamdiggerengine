@@ -11,12 +11,12 @@ struct FlyingMovement : public MovementType{
 	double accelSpeed;
 	double bounceSpeed;
 
-	FlyingMovement(const Game& game, const ConfigNode& config);
+	FlyingMovement(const ConfigNode& config);
 	virtual void moveTo(Monster& self, Vector2d position, double time);
 	virtual void hitTerrain(Monster& self, bool hitWall);
 };
 
-FlyingMovement::FlyingMovement(const Game& game, const ConfigNode& config){
+FlyingMovement::FlyingMovement(const ConfigNode& config){
 	accelSpeed = config.getInt("acceleration");
 	bounceSpeed = config.getInt("bounce-speed");
 }
@@ -50,6 +50,6 @@ void FlyingMovement::hitTerrain(Monster& monster, bool hitWall){
 
 // == Factory ==
 
-MovementType* MovementType::staticLoad(const Game& game, const ConfigNode& config){
-	return new FlyingMovement(game,config);
+MovementType* MovementType::staticLoad(const ConfigNode& config){
+	return new FlyingMovement(config);
 }

@@ -5,9 +5,9 @@
 #include "../utils/vector2.h"
 #include "../entities/projectile.h"
 
-ShootEffect::ShootEffect(const ConfigNode& config, const Game& game){
+ShootEffect::ShootEffect(const ConfigNode& config){
 	projectile.reset(new ProjectileStats());
-	projectile->load(game, config);
+	projectile->load(config);
 }
 
 bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
