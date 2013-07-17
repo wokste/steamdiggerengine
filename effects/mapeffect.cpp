@@ -13,6 +13,9 @@
 #include "../enums.h"
 
 MineEffect::MineEffect(const ConfigNode& config){
+	damageHigh = config.getInt("damage-high", 10);
+	damageLow = config.getInt("damage-low", (damageHigh + 1) / 2);
+	materialType = 255; //TODO
 }
 
 bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
@@ -29,10 +32,10 @@ bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 		return false;
 
 	const BlockType& minedBlock = node->getBlock(targetLayer);
-	node->setBlock(0, targetLayer);
-	LightingEngine::recalcAreaAround(map, pos);
-
-	//TODO: add item in inventory
+	if (node->damageBlock(targetLayer, damageHigh, damageLow, materialType)){
+		LightingEngine::recalcAreaAround(map, pos);
+		//TODO: add item in inventory
+	}
 	return true;
 }
 

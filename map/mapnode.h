@@ -18,8 +18,11 @@ public:
 	bool isset(int layer) const{ return blockId[layer] != 0;}
 	sf::Color light[2];
 	sf::Color getLight(const sf::Color& skyColor) const;
-private:
+	bool damageBlock(int layer, int damageHigh, int damageLow, int damageTypeSet);
+
 	static constexpr int MAX_LAYERS = 2;
+private:
 	int modelId[MAX_LAYERS];
 	int blockId[MAX_LAYERS];
+	int HP[MAX_LAYERS];
 };

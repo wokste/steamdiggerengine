@@ -20,6 +20,7 @@ void MapNode::setBlock(int newBlockId, int layer){
 	const BlockType& type = (*GameGlobals::blockDefs)[newBlockId];
 	modelId[layer] = type.getModelId();
 	blockId[layer] = newBlockId;
+	HP[layer] = type.HP;
 }
 
 const BlockType& MapNode::getBlock(int layer) const{
@@ -47,4 +48,16 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos) const{
 		(*GameGlobals::blockDefs)[blockId[Layer::back]].models[modelId[Layer::back]].render();
 		glPopMatrix();
 	}
+}
+
+bool MapNode::damageBlock(int layer, int damageHigh, int damageLow, int preferredMaterial){
+	auto blockMaterial = (*GameGlobals::blockDefs)[blockId[layer]].materialType;
+	auto damage = ((preferredMaterial & (int)blockMaterial) != 0) ? damageHigh : damageLow;
+
+	HP[layer] -= damage;
+	if (HP[layer] <= 0){
+		setBlock(0, layer);
+		return true;
+	}
+	return false;
 }
