@@ -1,7 +1,7 @@
 #include "blocktype.h"
 
 #include "lightingengine.h"
-#include "../items/enums.h"
+#include "../enums.h"
 #include "../utils/confignode.h"
 #include "../game.h"
 #include "../items/itemdefmanager.h"

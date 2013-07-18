@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include "utils/vector2.h"
-#include "items/enums.h"
+#include "enums.h"
 #include "utils/monsterspawner.h"
 
 class Map;

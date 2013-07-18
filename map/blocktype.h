@@ -1,5 +1,5 @@
 #pragma once
-#include "../items/enums.h" // TODO: Move this file
+#include "../enums.h"
 #include <vector>
 #include "../utils/vertex.h"
 #include <SFML/Graphics/Color.hpp>

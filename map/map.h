@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "../utils/vector2.h"
-#include "../items/enums.h"
+#include "../enums.h"
 #include <functional>
 #include <memory>
 #include <map>
