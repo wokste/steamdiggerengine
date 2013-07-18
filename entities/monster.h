@@ -11,7 +11,6 @@ class Monster : public Creature{
 public:
 	Monster();
 	virtual ~Monster();
-	Monster(Monster& prototype, World* newWorld, Vector2d newPos);
 
 	virtual void logic(double time);
 	virtual void hitPlayer(Player& other);

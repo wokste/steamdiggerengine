@@ -27,18 +27,9 @@ Entity::Entity() :
 	collision = Vector2d(1,2);
 }
 
-Entity::Entity(Entity& prototype, World* newWorld, Vector2d newPos) :
-	world(newWorld)
-{
+void Entity::setPos(World* newWorld, Vector2d newPos){
 	pos = newPos;
-	speed = Vector2d(0,0);
-	maxSpeed = prototype.maxSpeed;
-	bMapCollision = prototype.bMapCollision;
-	bGravity = prototype.bGravity;
-	size = prototype.size;
-	frameOffset = prototype.frameOffset;
-	collision = prototype.collision;
-	texture = prototype.texture;
+	world = newWorld;
 }
 
 void Entity::logic(double time){

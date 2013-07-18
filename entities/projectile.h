@@ -14,7 +14,6 @@ class Projectile : public Entity{
 public:
 	Projectile();
 	virtual ~Projectile();
-	Projectile(Projectile& prototype, World* newWorld, Vector2d newPos);
 	virtual void load(const ConfigNode& config);
 
 	virtual void hitTerrain(bool hitWall);

@@ -8,7 +8,6 @@ class Screen;
 class Player : public Creature{
 public:
 	Player();
-	Player(Player& prototype, World* newWorld, Vector2d newPos);
 	virtual ~Player();
 	virtual void logic(double time);
 	virtual void checkInput(double time, Screen& screen);

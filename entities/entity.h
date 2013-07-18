@@ -12,12 +12,13 @@ class World;
 class Entity{
 public:
 	Entity();
-	Entity(Entity& prototype, World* newWorld, Vector2d newPos);
+	virtual ~Entity() {}
+
 	virtual void load(const ConfigNode& config);
 	bool validPos(World& world, Vector2d newPos);
+	void setPos(World* newWorld, Vector2d newPos);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
-	virtual ~Entity() {}
 	void logic(double time);
 	void render();
 	void startAnim(std::string animName);

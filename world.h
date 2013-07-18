@@ -38,7 +38,8 @@ public:
 	T* spawn(T& prototype, Vector2d newPos){
 		T* spawned = nullptr;
 		if (prototype.validPos(*this, newPos)){
-			spawned = static_cast<T*>(new T(prototype, this, newPos));
+			spawned = new T(prototype);
+			spawned->setPos(this, newPos);
 			addEntity(spawned);
 		}
 

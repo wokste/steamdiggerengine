@@ -9,22 +9,10 @@ Projectile::Projectile(){
 	bounce = 0;
 	TTL = 0;
 	projectileSpeed = 0;
-
-}
-Projectile::~Projectile(){}
-
-Projectile::Projectile(Projectile& prototype, World* world, Vector2d pos) :
-	Entity(prototype, world, pos),
-	hitAttack(prototype.hitAttack)
-{
-	projectileSpeed = prototype.projectileSpeed;
-
-	bounce = prototype.bounce;
-	TTL = prototype.TTL;
-
 	targetType = ProjectileTargetType::TargetMonster;
 	state = ProjectileState::Flying;
 }
+Projectile::~Projectile(){}
 
 void Projectile::logic(double time){
 	TTL -= time;

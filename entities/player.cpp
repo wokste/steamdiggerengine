@@ -15,14 +15,6 @@ Player::Player(){
 	walkSpeed  = 0;
 }
 
-Player::Player(Player& prototype, World* newWorld, Vector2d newPos) : Creature(prototype, newWorld, newPos)
-	, inventory()
-{
-	jumpHeight = prototype.jumpHeight;
-	accelSpeed = prototype.accelSpeed;
-	walkSpeed  = prototype.walkSpeed;
-}
-
 Player::~Player(){
 
 }

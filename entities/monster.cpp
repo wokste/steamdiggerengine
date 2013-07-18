@@ -20,15 +20,6 @@ void Monster::load(const ConfigNode& config){
 	movementType.reset(MovementType::staticLoad(config));
 }
 
-Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) :
-	Creature(prototype, newWorld, newPos),
-	movementType(prototype.movementType),
-	hitAttack(prototype.hitAttack),
-	target(nullptr),
-	cooldown()
-{
-}
-
 void Monster::logic(double time){
 	cooldown -= time;
 	Entity::logic(time);

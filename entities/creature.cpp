@@ -51,11 +51,6 @@ std::string Stat::asText() const{
 Creature::Creature(){}
 Creature::~Creature(){}
 
-Creature::Creature(Creature& prototype, World* newWorld, Vector2d newPos) : Entity(prototype, newWorld, newPos){
-	HP = prototype.HP;
-	shield = prototype.shield;
-}
-
 void Creature::load(const ConfigNode& config)
 {
 	Entity::load(config);
