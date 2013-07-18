@@ -12,6 +12,7 @@
 #include "map/blocktype.h"
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
+#include <assert.h>
 
 World::World()
 {
@@ -76,4 +77,20 @@ bool World::areaHasEntity(Vector2i px1, Vector2i px2){
 	for (auto& monster : monsters)
 		if (monster->isInArea(px1d, px2d)) return true;
 	return false;
+}
+
+void World::addEntity(Entity* entity){
+	auto pMonster = dynamic_cast<Monster*>(entity);
+	auto pPlayer = dynamic_cast<Player*>(entity);
+	auto pProjectile = dynamic_cast<Projectile*>(entity);
+
+	if (pMonster != nullptr){
+		monsters.push_back(std::unique_ptr<Monster>(pMonster));
+	} else if (pPlayer != nullptr){
+		players.push_back(std::unique_ptr<Player>(pPlayer));
+	} else if (pProjectile != nullptr){
+		projectiles.push_back(std::unique_ptr<Projectile>(pProjectile));
+	} else {
+		assert(false);
+	}
 }

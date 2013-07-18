@@ -5,18 +5,10 @@
 
 class Screen;
 
-struct PlayerStats : public EntityStats{
-	double jumpHeight;
-	double accelSpeed;
-	double walkSpeed;
-	PlayerStats() = default;
-	Player* spawn(World* world, Vector2d pos);
-	virtual void load(const ConfigNode& config);
-};
-
 class Player : public Entity{
 public:
-	Player(World* world, Vector2d newPos, PlayerStats& stats);
+	Player();
+	Player(Player& prototype, World* newWorld, Vector2d newPos);
 	virtual ~Player();
 	virtual void logic(double time);
 	virtual void checkInput(double time, Screen& screen);
@@ -26,7 +18,13 @@ public:
 	void selectItem(int nr);
 	bool useItem(Screen& screen);
 	void tryJump();
+
+	virtual void load(const ConfigNode& config);
+
 	Inventory inventory;
+	double jumpHeight;
+	double accelSpeed;
+	double walkSpeed;
 private:
 	int RP = 0;
 

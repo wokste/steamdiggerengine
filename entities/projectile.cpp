@@ -5,23 +5,15 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-#define STATS ((ProjectileStats&)(stats))
+Projectile::Projectile(){}
+Projectile::~Projectile(){}
 
-Projectile* ProjectileStats::spawn(World* world, Vector2d pos){
-	if (!validPos(*world, pos))
-		return nullptr;
+Projectile::Projectile(Projectile& prototype, World* world, Vector2d pos) : Entity(prototype, world, pos){
+	hitAttack = prototype.hitAttack;
+	projectileSpeed = prototype.projectileSpeed;
 
-	auto projectile = new Projectile(world, pos, *this);
-	world->projectiles.push_back(std::unique_ptr<Projectile>(projectile));
-	return projectile;
-}
-
-Projectile::Projectile(World* newWorld, Vector2d newPos, ProjectileStats& stats) :
-	Entity(newWorld, newPos, stats),
-	state(ProjectileState::Flying)
-{
-	targetType = ProjectileTargetType::TargetPlayer;
-	TTL = stats.TTL;
+	bounce = prototype.bounce;
+	TTL = prototype.TTL;
 }
 
 void Projectile::logic(double time){
@@ -50,29 +42,29 @@ void Projectile::logic(double time){
 };
 
 void Projectile::hitTerrain(bool hitWall){
-	if (STATS.bounce >= 0){
+	if (bounce >= 0){
 		if (hitWall)
-			speed.x = -speed.x * STATS.bounce;
+			speed.x = -speed.x * bounce;
 		else
-			speed.y = -speed.y * STATS.bounce;
+			speed.y = -speed.y * bounce;
 	} else {
 		state = ProjectileState::DeleteMe;
 	}
 }
 
 void Projectile::hitCreature(Entity& other){
-	other.takeDamage(STATS.hitAttack, pos);
+	other.takeDamage(hitAttack, pos);
 	state = ProjectileState::DeleteMe;
 }
 
 void Projectile::moveTo(Vector2d targetPos){
 	// TODO: Better aim for gravity affected projectiles
-	speed = Vector2::normalize(targetPos - pos) * STATS.speed;
+	speed = Vector2::normalize(targetPos - pos) * projectileSpeed;
 }
 
-void ProjectileStats::load(const ConfigNode& config){
-	EntityStats::load(config);
-	speed = config.getInt("speed");
+void Projectile::load(const ConfigNode& config){
+	Entity::load(config);
+	projectileSpeed = config.getInt("speed");
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 	TTL = config.getDouble("ttl", 5);

@@ -6,18 +6,17 @@
 class World;
 class Player;
 class Monster;
-class MonsterStats;
 
 class SpawnConfig{
 public:
 	SpawnConfig();
-	MonsterStats* getMonsterType();
+	Monster* getMonsterType();
 	double newWaveChance;
 	int delayWaves;
 	int delaySpawns;
 	int maxMonsters;
 private:
-	std::vector<std::unique_ptr<MonsterStats>> prototypes;
+	std::vector<std::unique_ptr<Monster>> prototypes;
 };
 
 class MonsterSpawner{

@@ -10,28 +10,25 @@ class Monster;
 enum class ProjectileState {Flying, Exploding, DeleteMe};
 enum class ProjectileTargetType {TargetPlayer, TargetMonster};
 
-struct ProjectileStats : public EntityStats{
-	Attack hitAttack;
-	double speed;
-
-	ProjectileStats() = default;
-	Projectile* spawn(World* world, Vector2d pos);
-	virtual void load(const ConfigNode& config);
-	double TTL; // Time to live in seconds
-	double bounce; // Negative is no bounce
-};
-
 class Projectile : public Entity{
 public:
-	Projectile(World* world, Vector2d newPos, ProjectileStats& stats);
+	Projectile();
+	virtual ~Projectile();
+	Projectile(Projectile& prototype, World* newWorld, Vector2d newPos);
+	virtual void load(const ConfigNode& config);
+
 	virtual void hitTerrain(bool hitWall);
 	virtual void logic(double time);
 
 	ProjectileState state;
 	ProjectileTargetType targetType;
 	void moveTo(Vector2d point);
-	double TTL;
 
+	Attack hitAttack;
+	double projectileSpeed;
+
+	double bounce; // Negative is no bounce
+	double TTL; // Time to live in seconds
 private:
 	void hitCreature(Entity& other);
 	void damage(Entity& other);

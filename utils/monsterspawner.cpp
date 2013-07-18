@@ -1,13 +1,14 @@
 #include "monsterspawner.h"
 
 #include "../entities/monster.h"
+#include "../entities/movementtype.h"
 #include "../entities/player.h"
 #include "../world.h"
 #include "../game.h"
 #include <cmath>
 #include <algorithm>
 
-MonsterStats* SpawnConfig::getMonsterType(){
+Monster* SpawnConfig::getMonsterType(){
 	std::discrete_distribution<> monsterOdds({40, 10});
 	unsigned int index = monsterOdds(GameGlobals::rnd);
 	if (index >= prototypes.size())
@@ -19,9 +20,9 @@ MonsterStats* SpawnConfig::getMonsterType(){
 SpawnConfig::SpawnConfig(){
 	ConfigNode::load(GameGlobals::fileSystem.fullpath("monsters.json"),[&] (ConfigNode& configFile){
 		configFile.forEachNode([&] (ConfigNode& monsterConfig) {
-			auto stats = new MonsterStats();
+			auto stats = new Monster();
 			stats->load(monsterConfig);
-			prototypes.push_back(std::move(std::unique_ptr<MonsterStats>(stats)));
+			prototypes.push_back(std::move(std::unique_ptr<Monster>(stats)));
 		});
 	});
 
@@ -70,9 +71,10 @@ bool MonsterSpawner::trySpawn(World* world, Player* player){
 	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 
 	// TODO: randomly chosen biome dependant mobs
-	MonsterStats* typeToSpawn = basicSpawnConfig.getMonsterType();
-	if (typeToSpawn == nullptr) return false;
-	Monster* spawned = typeToSpawn->spawn(world, spawnPos);
+	Monster* typeToSpawn = basicSpawnConfig.getMonsterType();
+	if (typeToSpawn == nullptr)
+		return false;
+	Monster* spawned = world->spawn(*typeToSpawn, spawnPos);
 
 	if (spawned)
 		spawned->target = player;

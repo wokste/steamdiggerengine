@@ -63,17 +63,16 @@ void draw(){
 int main(){
 	// create the window
 	srand(time(nullptr));
-	GameGlobals::init();
 	screen.reset(new Screen());
 	initGL();
-
+	GameGlobals::init();
 	world.reset(new World());
-	std::unique_ptr<PlayerStats> stats;
-	stats.reset(new PlayerStats());
-	ConfigNode::load(GameGlobals::fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
+	std::unique_ptr<Player> stats;
+	stats.reset(new Player());
+ 	ConfigNode::load(GameGlobals::fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
 		stats->load(config);
-		player = stats->spawn(world.get(),Vector2d(20,-10));
-	});
+		player = world->spawn(*stats,Vector2d(20,-10));
+ 	});
 
 	ASSERT(player != nullptr, "Main", "player = NULL");
 

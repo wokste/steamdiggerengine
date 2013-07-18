@@ -9,32 +9,12 @@ class Entity;
 class ConfigNode;
 class World;
 
-struct EntityStats{
-	double maxSpeed=0;
-	bool bMapCollision=true;
-	bool bGravity=true;
-	Vector2i size;
-	Vector2d frameOffset;
-	Vector2d collision;
-	std::shared_ptr<Texture> texture= nullptr;
-	int HP = 0;
-
-	EntityStats();
-	virtual ~EntityStats();
-	virtual void load(const ConfigNode& config);
-	bool validPos(World& world, Vector2d newPos);
-};
-
 class Entity{
 public:
-	Vector2d pos;
-	World* world;
-
-	EntityStats& stats;
-	Vector2d speed;
-	int HP;
-
-	Entity(World* world, Vector2d newPos, EntityStats& stats);
+	Entity();
+	Entity(Entity& prototype, World* newWorld, Vector2d newPos);
+	virtual void load(const ConfigNode& config);
+	bool validPos(World& world, Vector2d newPos);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual ~Entity() {}
@@ -47,4 +27,21 @@ public:
 
 	virtual void hitTerrain(bool hitWall);
 	virtual void takeDamage(Attack& attack, Vector2d source);
+
+public:
+	// Variables
+	Vector2d pos;
+	World* world;
+
+	Vector2d speed;
+	int HP;
+
+	double maxSpeed;
+	bool bMapCollision;
+	bool bGravity;
+	Vector2i size;
+	Vector2d frameOffset;
+	Vector2d collision;
+	std::shared_ptr<Texture> texture= nullptr;
+	int HPMax;
 };

@@ -9,19 +9,17 @@
 #include "../items/itemdefmanager.h"
 #include <iostream>
 
-#define STATS ((PlayerStats&)(stats))
+Player::Player(){
 
-Player* PlayerStats::spawn(World* world, Vector2d pos){
-	if (!validPos(*world, pos))
-		return nullptr;
-
-	auto player = new Player(world, pos, *this);
-	world->players.push_back(std::unique_ptr<Player>(player));
-	return player;
 }
 
-Player::Player(World* newWorld, Vector2d newPos, PlayerStats& newStats) : Entity(newWorld, newPos, newStats)
-	, inventory(), RP(0){
+Player::Player(Player& prototype, World* newWorld, Vector2d newPos) : Entity(prototype, newWorld, newPos)
+	, inventory(), RP(0)
+{
+	jumpHeight = prototype.jumpHeight;
+	accelSpeed = prototype.accelSpeed;
+	walkSpeed  = prototype.walkSpeed;
+	RP         = prototype.RP;
 }
 
 Player::~Player(){
@@ -37,11 +35,11 @@ void Player::checkKeyboardMovement(double time){
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 
 	if (keyLeft && !keyRight){
-		speed.x -= (STATS.accelSpeed * time);
-		if (speed.x < -STATS.walkSpeed) speed.x = -STATS.walkSpeed;
+		speed.x -= (accelSpeed * time);
+		if (speed.x < -walkSpeed) speed.x = -walkSpeed;
 	} else if (keyRight && !keyLeft){
-		speed.x += (STATS.accelSpeed * time);
-		if (speed.x > STATS.walkSpeed) speed.x = STATS.walkSpeed;
+		speed.x += (accelSpeed * time);
+		if (speed.x > walkSpeed) speed.x = walkSpeed;
 	} else {
 		speed.x = 0;
 	}
@@ -80,8 +78,8 @@ bool Player::useItem(Screen& screen){
 }
 
 void Player::tryJump(){
-	if (!STATS.validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
-		speed.y = -STATS.jumpHeight;
+	if (!validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
+		speed.y = -jumpHeight;
 	}
 }
 
@@ -90,8 +88,8 @@ void Player::takeDamage(Attack& attack, Vector2d source){
 	push(pos - source, attack.push);
 }
 
-void PlayerStats::load(const ConfigNode& config){
-	EntityStats::load(config);
+void Player::load(const ConfigNode& config){
+	Entity::load(config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");

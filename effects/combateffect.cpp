@@ -6,14 +6,14 @@
 #include "../entities/projectile.h"
 
 ShootEffect::ShootEffect(const ConfigNode& config){
-	projectile.reset(new ProjectileStats());
+	projectile.reset(new Projectile());
 	projectile->load(config);
 }
 
 bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	if (!projectile)
 		return false;
-	Projectile* shot = projectile->spawn(owner.world, sourcePos);
+	Projectile* shot = owner.world->spawn<Projectile>(*projectile, sourcePos);
 	if (shot == nullptr)
 		return false;
 	shot->targetType = ProjectileTargetType::TargetMonster;
@@ -26,8 +26,8 @@ HealEffect::HealEffect(const ConfigNode& config){
 }
 
 bool HealEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	if (owner.HP == owner.stats.HP)
+	if (owner.HP == owner.HPMax)
 		return false;
-	owner.HP = std::min(owner.HP + hpGain, owner.stats.HP);
+	owner.HP = std::min(owner.HP + hpGain, owner.HPMax);
 	return true;
 }

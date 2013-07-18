@@ -16,7 +16,7 @@
 
 int floorInt(double);
 
-EntityStats::EntityStats() :
+Entity::Entity() :
 	maxSpeed(0),
 	bMapCollision(true),
 	bGravity(true),
@@ -27,44 +27,50 @@ EntityStats::EntityStats() :
 	collision = Vector2d(1,2);
 }
 
-Entity::Entity(World* newWorld, Vector2d newPos, EntityStats& newStats) :
-	stats(newStats),
+Entity::Entity(Entity& prototype, World* newWorld, Vector2d newPos) :
 	world(newWorld)
 {
 	pos = newPos;
+	world = newWorld;
+
 	speed = Vector2d(0,0);
-	HP = stats.HP;
+	HP = prototype.HP;
+	HPMax = prototype.HPMax;
+	maxSpeed = prototype.maxSpeed;
+	bMapCollision = prototype.bMapCollision;
+	bGravity = prototype.bGravity;
+	size = prototype.size;
+	frameOffset = prototype.frameOffset;
+	collision = prototype.collision;
+	texture = prototype.texture;
 }
 
 void Entity::logic(double time){
-	if (stats.bGravity)
+	if (bGravity)
 		speed.y += world->map->gravity * time;
 
-	if (speed.x < -stats.maxSpeed) speed.x = -stats.maxSpeed;
-	if (speed.x > stats.maxSpeed) speed.x = stats.maxSpeed;
-	if (speed.y < -stats.maxSpeed) speed.y = -stats.maxSpeed;
-	if (speed.y > stats.maxSpeed) speed.y = stats.maxSpeed;
+	if (speed.x < -maxSpeed) speed.x = -maxSpeed;
+	if (speed.x > maxSpeed) speed.x = maxSpeed;
+	if (speed.y < -maxSpeed) speed.y = -maxSpeed;
+	if (speed.y > maxSpeed) speed.y = maxSpeed;
 
 	move(speed * time);
-
-	//if (animation.animate(time))
-	//	onAnimEnd();
 }
 
 void Entity::render(){
-	if (stats.texture != nullptr){
-		stats.texture->bind();
+	if (texture != nullptr){
+		texture->bind();
 
 		sf::Color color = world->map->getColor(world->skybox->getLightColor(), pos);
 		glColor3ub(color.r,color.g,color.b);
 		int frame = 0;
 
-		stats.texture->drawTile(Vector2d(pos.x + stats.frameOffset.x, pos.y + stats.frameOffset.y), stats.size, frame);
+		texture->drawTile(Vector2d(pos.x + frameOffset.x, pos.y + frameOffset.y), size, frame);
 	}
 }
 
 Rect4d Entity::getBoundingBox() const{
-	return Rect4d(pos - stats.collision, stats.collision + stats.collision);
+	return Rect4d(pos - collision, collision + collision);
 }
 
 void Entity::startAnim(std::string animName){
@@ -73,20 +79,20 @@ void Entity::startAnim(std::string animName){
 
 /// Moves the entity. Checks for collision in the process.
 void Entity::move(Vector2d movement){
-	if (stats.validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
+	if (validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
 		pos.y += movement.y;
 	}else{
 		hitTerrain(false); // Hit no wall
 	}
 
-	if (stats.validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
+	if (validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
 		pos.x += movement.x;
 	}else{
 		hitTerrain(true); // Hit a wall
 	}
 }
 
-bool EntityStats::validPos(World& world, Vector2d newPos){
+bool Entity::validPos(World& world, Vector2d newPos){
 	if (!bMapCollision)
 		return true;
 	return !world.areaHasBlocks(Vector2::dToI(newPos - collision), Vector2::dToI(newPos + collision));
@@ -94,10 +100,10 @@ bool EntityStats::validPos(World& world, Vector2d newPos){
 
 bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	return (
-	   (pos.x + stats.collision.x > px1.x) &&
-	   (pos.x - stats.collision.x < px2.x) &&
-	   (pos.y + stats.collision.y > px1.y) &&
-	   (pos.y - stats.collision.y < px2.y));
+	   (pos.x + collision.x > px1.x) &&
+	   (pos.x - collision.x < px2.x) &&
+	   (pos.y + collision.y > px1.y) &&
+	   (pos.y - collision.y < px2.y));
 }
 
 void Entity::hitTerrain(bool hitWall){
@@ -113,10 +119,7 @@ void Entity::push(Vector2d dir , double force){
 	speed += force * Vector2::normalize(dir);
 }
 
-EntityStats::~EntityStats(){
-}
-
-void EntityStats::load(const ConfigNode& config){
+void Entity::load(const ConfigNode& config){
 	maxSpeed      = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
 	bGravity      = config.getBool("gravity",true);
@@ -125,5 +128,5 @@ void EntityStats::load(const ConfigNode& config){
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName), config.getVector2i("size")));
-	HP            = config.getInt("hp",100);
+	HPMax         = config.getInt("hp",100);
 }

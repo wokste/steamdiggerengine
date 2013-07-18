@@ -5,33 +5,25 @@
 #include "../world.h"
 #include "../utils/confignode.h"
 
-#define STATS ((MonsterStats&)(stats))
 #include <iostream>
+
+Monster::Monster(){}
+Monster::~Monster(){}
 
 // TODO: Hitwall
 
-MonsterStats::MonsterStats(){}
-MonsterStats::~MonsterStats(){}
-
-void MonsterStats::load(const ConfigNode& config){
-	EntityStats::load(config);
+void Monster::load(const ConfigNode& config){
+	Entity::load(config);
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 
 	movementType.reset(MovementType::staticLoad(config));
 }
 
-Monster* MonsterStats::spawn(World* world, Vector2d pos){
-	if (!validPos(*world, pos))
-		return nullptr;
-
-	auto mob = new Monster(world, pos, *this);
-	world->monsters.push_back(std::unique_ptr<Monster>(mob));
-	return mob;
-}
-
-Monster::Monster(World* newWorld, Vector2d newPos, MonsterStats& newStats) : Entity(newWorld, newPos,newStats) , target(nullptr), cooldown(){
-
+Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) : Entity(prototype, newWorld, newPos) , target(nullptr), cooldown(){
+	hitAttack = prototype.hitAttack;
+	movementType = prototype.movementType;
+	target = nullptr;
 }
 
 void Monster::takeDamage(Attack& attack,Vector2d source){
@@ -44,7 +36,7 @@ void Monster::logic(double time){
 	Entity::logic(time);
 
 	if (target != nullptr){
-		STATS.movementType->moveTo(*this, target->pos, time);
+		movementType->moveTo(*this, target->pos, time);
 	}
 
 	if (cooldown.done()){
@@ -57,10 +49,10 @@ void Monster::logic(double time){
 }
 
 void Monster::hitPlayer(Player& other){
-	other.takeDamage(STATS.hitAttack, pos);
+	other.takeDamage(hitAttack, pos);
 	cooldown.set(0.5);
 }
 
 void Monster::hitTerrain(bool hitWall){
-	STATS.movementType->hitTerrain(*this, hitWall);
+	movementType->hitTerrain(*this, hitWall);
 }

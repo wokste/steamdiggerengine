@@ -8,9 +8,6 @@
 
 class Map;
 class Entity;
-class PlayerStats;
-class MonsterStats;
-class ProjectileStats;
 class Player;
 class Monster;
 class Projectile;
@@ -33,4 +30,18 @@ public:
 	std::vector<std::unique_ptr<Projectile>> projectiles;
 	std::unique_ptr<Skybox> skybox;
 	std::unique_ptr<MonsterSpawner> monsterSpawner;
+
+private:
+	void addEntity(Entity* entity);
+public:
+	template <class T>
+	T* spawn(T& prototype, Vector2d newPos){
+		T* spawned = nullptr;
+		if (prototype.validPos(*this, newPos)){
+			spawned = static_cast<T*>(new T(prototype, this, newPos));
+			addEntity(spawned);
+		}
+
+		return spawned;
+	}
 };
