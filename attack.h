@@ -9,5 +9,4 @@ struct Attack{
 	void load(const ConfigNode& config);
 
 	Attack();
-	Attack(const Attack& that) = delete;
 };

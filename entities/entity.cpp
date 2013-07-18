@@ -20,7 +20,7 @@ Entity::Entity() :
 	maxSpeed(0),
 	bMapCollision(true),
 	bGravity(true),
-	HP(0)
+	world(nullptr)
 {
 	size = Vector2i(16,32);
 	frameOffset = Vector2d(-1,-2);
@@ -122,5 +122,4 @@ void Entity::load(const ConfigNode& config){
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName), config.getVector2i("size")));
-	HPMax         = config.getInt("hp",100);
 }

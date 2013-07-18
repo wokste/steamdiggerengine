@@ -10,7 +10,6 @@ public:
 
 class MineEffect : public Effect{
 public:
-	int typesToMine;
 	MineEffect(const ConfigNode& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 	int damageLow;

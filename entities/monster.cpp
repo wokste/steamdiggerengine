@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-Monster::Monster(){}
+Monster::Monster() : target(nullptr){}
 Monster::~Monster(){}
 
 // TODO: Hitwall
@@ -20,9 +20,13 @@ void Monster::load(const ConfigNode& config){
 	movementType.reset(MovementType::staticLoad(config));
 }
 
-Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) : Creature(prototype, newWorld, newPos) , target(nullptr), cooldown(){
-	hitAttack = prototype.hitAttack;
-	movementType = prototype.movementType;
+Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) :
+	Creature(prototype, newWorld, newPos),
+	movementType(prototype.movementType),
+	hitAttack(prototype.hitAttack),
+	target(nullptr),
+	cooldown()
+{
 }
 
 void Monster::logic(double time){

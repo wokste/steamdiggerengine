@@ -15,6 +15,9 @@ struct Stat{
 	Stat(int newVal);
 	Stat(const Stat& other) = default;
 	~Stat();
+	bool heal(int healing);
+	int soak(int damage);
+
 	double asProportion() const;
 	std::string asText() const;
 };
@@ -25,7 +28,7 @@ public:
 	virtual ~Creature();
 	Creature(Creature& prototype, World* newWorld, Vector2d newPos);
 	virtual void load(const ConfigNode& config);
-	void takeDamage(Attack& attack, Vector2d source);
+	void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}
 public:
 	Stat HP;

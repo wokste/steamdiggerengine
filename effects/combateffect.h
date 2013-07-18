@@ -18,4 +18,5 @@ public:
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 private:
 	int hpGain;
+	int shieldGain;
 };

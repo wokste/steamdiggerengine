@@ -11,6 +11,7 @@ MapNode::MapNode(){
 	for (int i = 0; i < MAX_LAYERS; ++i){
 		modelId[i] = -1;
 		blockId[i] = 0;
+		HP[i] = 0;
 	}
 	light[0] = sf::Color::Black;
 	light[1] = sf::Color::Black;

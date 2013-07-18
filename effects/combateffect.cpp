@@ -23,11 +23,15 @@ bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 
 HealEffect::HealEffect(const ConfigNode& config){
 	hpGain = config.getInt("hp",0);
+	shieldGain = config.getInt("shield",0);
 }
 
 bool HealEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	if (owner.HP == owner.HPMax)
-		return false;
-	owner.HP = std::min(owner.HP + hpGain, owner.HPMax);
-	return true;
+	auto target = dynamic_cast<Creature*>(&owner);
+	bool hasEffect = false;
+	if (target){
+		hasEffect |= target->HP.heal(hpGain);
+		hasEffect |= target->shield.heal(shieldGain);
+	}
+	return hasEffect;
 }

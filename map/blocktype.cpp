@@ -26,7 +26,7 @@ void BlockType::addDrop(int itemID, float chance){
 
 int BlockType::getModelId() const{
 	// TODO: Make it possible to have rare variants
-	if (models.size() == 0)
+	if (models.empty())
 		return -1;
 	return rand() % models.size();
 }

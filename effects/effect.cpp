@@ -3,6 +3,7 @@
 #include "combateffect.h"
 
 #include "../utils/confignode.h"
+#include <iostream>
 
 std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config){
 	std::unique_ptr<Effect> effect;

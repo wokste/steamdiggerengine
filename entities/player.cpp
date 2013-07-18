@@ -10,7 +10,9 @@
 #include <iostream>
 
 Player::Player(){
-
+	jumpHeight = 0;
+	accelSpeed = 0;
+	walkSpeed  = 0;
 }
 
 Player::Player(Player& prototype, World* newWorld, Vector2d newPos) : Creature(prototype, newWorld, newPos)

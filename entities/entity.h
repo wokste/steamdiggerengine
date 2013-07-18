@@ -34,7 +34,6 @@ public:
 	World* world;
 
 	Vector2d speed;
-	int HP;
 
 	double maxSpeed;
 	bool bMapCollision;
@@ -43,5 +42,4 @@ public:
 	Vector2d frameOffset;
 	Vector2d collision;
 	std::shared_ptr<Texture> texture= nullptr;
-	int HPMax;
 };

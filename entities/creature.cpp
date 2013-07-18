@@ -7,12 +7,33 @@
 #include "../utils/confignode.h"
 #include "../game.h"
 
-Stat::Stat(){}
+Stat::Stat(): cur(0), max(0){}
 Stat::~Stat(){}
 
 Stat::Stat(int newVal){
 	cur = newVal;
 	max = newVal;
+}
+
+/// returns the amount that is healed.
+bool Stat::heal(int healing){
+	if (cur == max)
+		return false;
+
+	cur = std::min(cur + healing, max);
+	return true;
+}
+
+/// reduces stat
+/// returns the amount that is not soaked.
+int Stat::soak(int damage){
+	cur -= damage;
+	if (cur < 0){
+		auto notSoaked = -cur;
+		cur = 0;
+		return notSoaked;
+	}
+	return 0;
 }
 
 double Stat::asProportion() const{
@@ -42,8 +63,10 @@ void Creature::load(const ConfigNode& config)
 	shield = config.getInt("shield",0);
 }
 
-void Creature::takeDamage(Attack& attack,Vector2d source){
-	// TODO: shield
-	HP.cur -= attack.damage;
+void Creature::takeDamage(const Attack& attack,Vector2d source){
+	int damage = attack.damage;
+
+	damage = shield.soak(damage);
+	damage = HP.soak(damage);
 	push(pos - source, attack.push);
 }
