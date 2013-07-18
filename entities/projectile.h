@@ -30,6 +30,5 @@ public:
 	double bounce; // Negative is no bounce
 	double TTL; // Time to live in seconds
 private:
-	void hitCreature(Entity& other);
-	void damage(Entity& other);
+	void hitCreature(Creature& other);
 };

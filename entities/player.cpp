@@ -13,13 +13,12 @@ Player::Player(){
 
 }
 
-Player::Player(Player& prototype, World* newWorld, Vector2d newPos) : Entity(prototype, newWorld, newPos)
-	, inventory(), RP(0)
+Player::Player(Player& prototype, World* newWorld, Vector2d newPos) : Creature(prototype, newWorld, newPos)
+	, inventory()
 {
 	jumpHeight = prototype.jumpHeight;
 	accelSpeed = prototype.accelSpeed;
 	walkSpeed  = prototype.walkSpeed;
-	RP         = prototype.RP;
 }
 
 Player::~Player(){
@@ -46,7 +45,7 @@ void Player::checkKeyboardMovement(double time){
 }
 
 void Player::checkInput(double time, Screen& screen){
-	if (HP > 0){
+	if (alive()){
 		checkKeyboardMovement(time);
 	}else{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
@@ -56,7 +55,7 @@ void Player::checkInput(double time, Screen& screen){
 		}
 	}
 
-	if (HP > 0){
+	if (alive()){
 		inventory.logic(time);
 	}
 }
@@ -83,13 +82,8 @@ void Player::tryJump(){
 	}
 }
 
-void Player::takeDamage(Attack& attack, Vector2d source){
-	HP -= attack.damage;
-	push(pos - source, attack.push);
-}
-
 void Player::load(const ConfigNode& config){
-	Entity::load(config);
+	Creature::load(config);
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");

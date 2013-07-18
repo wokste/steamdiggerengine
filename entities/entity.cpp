@@ -31,11 +31,7 @@ Entity::Entity(Entity& prototype, World* newWorld, Vector2d newPos) :
 	world(newWorld)
 {
 	pos = newPos;
-	world = newWorld;
-
 	speed = Vector2d(0,0);
-	HP = prototype.HP;
-	HPMax = prototype.HPMax;
 	maxSpeed = prototype.maxSpeed;
 	bMapCollision = prototype.bMapCollision;
 	bGravity = prototype.bGravity;
@@ -112,8 +108,6 @@ void Entity::hitTerrain(bool hitWall){
 	else
 		speed.y = 0;
 }
-
-void Entity::takeDamage(Attack& attack, Vector2d source) {}
 
 void Entity::push(Vector2d dir , double force){
 	speed += force * Vector2::normalize(dir);

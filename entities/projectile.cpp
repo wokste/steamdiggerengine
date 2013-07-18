@@ -52,7 +52,7 @@ void Projectile::hitTerrain(bool hitWall){
 	}
 }
 
-void Projectile::hitCreature(Entity& other){
+void Projectile::hitCreature(Creature& other){
 	other.takeDamage(hitAttack, pos);
 	state = ProjectileState::DeleteMe;
 }

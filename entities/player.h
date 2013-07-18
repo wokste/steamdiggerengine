@@ -1,18 +1,17 @@
 #pragma once
-#include "entity.h"
+#include "creature.h"
 #include "../items/inventory.h"
 #include "../cooldown.h"
 
 class Screen;
 
-class Player : public Entity{
+class Player : public Creature{
 public:
 	Player();
 	Player(Player& prototype, World* newWorld, Vector2d newPos);
 	virtual ~Player();
 	virtual void logic(double time);
 	virtual void checkInput(double time, Screen& screen);
-	virtual void takeDamage(Attack& attack, Vector2d source);
 
 	void onMouseWheel(int delta);
 	void selectItem(int nr);
@@ -26,7 +25,5 @@ public:
 	double accelSpeed;
 	double walkSpeed;
 private:
-	int RP = 0;
-
 	void checkKeyboardMovement(double time);
 };

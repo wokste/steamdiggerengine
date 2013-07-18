@@ -13,22 +13,16 @@ Monster::~Monster(){}
 // TODO: Hitwall
 
 void Monster::load(const ConfigNode& config){
-	Entity::load(config);
+	Creature::load(config);
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 
 	movementType.reset(MovementType::staticLoad(config));
 }
 
-Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) : Entity(prototype, newWorld, newPos) , target(nullptr), cooldown(){
+Monster::Monster(Monster& prototype, World* newWorld, Vector2d newPos) : Creature(prototype, newWorld, newPos) , target(nullptr), cooldown(){
 	hitAttack = prototype.hitAttack;
 	movementType = prototype.movementType;
-	target = nullptr;
-}
-
-void Monster::takeDamage(Attack& attack,Vector2d source){
-	HP -= attack.damage;
-	push(pos - source, attack.push);
 }
 
 void Monster::logic(double time){

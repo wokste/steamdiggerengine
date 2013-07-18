@@ -26,7 +26,7 @@ public:
 	Rect4d getBoundingBox() const;
 
 	virtual void hitTerrain(bool hitWall);
-	virtual void takeDamage(Attack& attack, Vector2d source);
+
 
 public:
 	// Variables

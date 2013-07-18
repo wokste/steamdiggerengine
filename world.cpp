@@ -39,7 +39,7 @@ void World::logic(double time){
 	#define REMOVE_FROM_LIST(v,f) v.erase(std::remove_if (v.begin(), v.end(), f), v.end())
 
 	REMOVE_FROM_LIST(monsters, [&](std::unique_ptr<Monster>& monster){
-		return monster->HP <= 0 || std::none_of(players.begin(), players.end(), [&monster](std::unique_ptr<Player>& player){
+		return !monster->alive() || std::none_of(players.begin(), players.end(), [&monster](std::unique_ptr<Player>& player){
 			return Vector2::length(monster->pos - player->pos) < 48;
 		});
 	});

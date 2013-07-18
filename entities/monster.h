@@ -1,5 +1,5 @@
 #pragma once
-#include "entity.h"
+#include "creature.h"
 #include "../attack.h"
 #include "../cooldown.h"
 #include <memory>
@@ -7,7 +7,7 @@
 class Player;
 class MovementType;
 
-class Monster : public Entity{
+class Monster : public Creature{
 public:
 	Monster();
 	virtual ~Monster();
@@ -15,7 +15,6 @@ public:
 
 	virtual void logic(double time);
 	virtual void hitPlayer(Player& other);
-	virtual void takeDamage(Attack& attack, Vector2d source);
 	virtual void load(const ConfigNode& config);
 	virtual void hitTerrain(bool hitWall);
 public:
