@@ -34,6 +34,9 @@ SpawnConfig::SpawnConfig(){
 
 MonsterSpawner::MonsterSpawner() : basicSpawnConfig()
 {
+	std::poisson_distribution<> poisson(1);
+	SpawnConfig& spawnConfig = basicSpawnConfig;
+	cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
 }
 
 void MonsterSpawner::logic(World* world, double time){
