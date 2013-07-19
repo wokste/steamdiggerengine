@@ -43,11 +43,12 @@ void World::logic(double time){
 			return Vector2::length(monster->pos - player->pos) < 48;
 		});
 	});
+
 	REMOVE_FROM_LIST(projectiles, [&](std::unique_ptr<Projectile>& projectile){
 		return projectile->state == ProjectileState::DeleteMe;
 	});
 
-	//monsterSpawner->logic(this, time);
+	monsterSpawner->logic(this, time);
 	skybox->logic(time);
 }
 

@@ -22,7 +22,7 @@ void Monster::load(const ConfigNode& config){
 
 void Monster::logic(double time){
 	cooldown -= time;
-	Entity::logic(time);
+	Creature::logic(time);
 
 	if (target != nullptr){
 		movementType->moveTo(*this, target->pos, time);

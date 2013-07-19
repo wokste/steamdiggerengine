@@ -58,10 +58,22 @@ void Creature::load(const ConfigNode& config)
 	shield = config.getInt("shield",0);
 }
 
+void Creature::logic(double time)
+{
+	Entity::logic(time);
+	regenCooldown -= time;
+	while (regenCooldown.done()){
+		shield.heal(1);
+		regenCooldown.add(0.1);
+	}
+}
+
 void Creature::takeDamage(const Attack& attack,Vector2d source){
 	int damage = attack.damage;
 
 	damage = shield.soak(damage);
 	damage = HP.soak(damage);
 	push(pos - source, attack.push);
+
+	regenCooldown.set(5);
 }

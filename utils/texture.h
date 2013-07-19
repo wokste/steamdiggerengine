@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef TEXTURE_H
-#define TEXTURE_H
-
 #include <GL/gl.h>
 #include <string>
 #include "vector2.h"
@@ -30,5 +27,3 @@ public:
 	void drawBlock(Vector3i pos, int tileNum) const;
 	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const;
 };
-
-#endif // TEXTURE_H

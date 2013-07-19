@@ -20,7 +20,7 @@ Player::~Player(){
 }
 
 void Player::logic(double time){
-	Entity::logic(time);
+	Creature::logic(time);
 }
 
 void Player::checkKeyboardMovement(double time){
