@@ -12,14 +12,16 @@ public:
 	Monster();
 	virtual ~Monster();
 
-	virtual void logic(double time);
-	virtual void hitPlayer(Player& other);
-	virtual void load(const ConfigNode& config);
-	virtual void hitTerrain(bool hitWall);
+	void logic(double time) override;
+
+	void load(const ConfigNode& config) override;
+	void hitTerrain(bool hitWall) override;
+	void hitCreature(Creature& other);
+	void onCreatureDied(Creature* other) override;
 public:
 	Attack hitAttack;
 	std::shared_ptr<MovementType> movementType;
 	Cooldown cooldown;
 
-	Player* target;
+	Creature* target;
 };

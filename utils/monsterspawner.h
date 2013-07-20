@@ -4,7 +4,7 @@
 #include <vector>
 
 class World;
-class Player;
+class Creature;
 class Monster;
 
 class SpawnConfig{
@@ -27,5 +27,8 @@ public:
 private:
 	Cooldown cooldown;
 	SpawnConfig basicSpawnConfig;
-	bool trySpawn(World* world, Player* player);
+	bool trySpawn(World* world, Creature* player);
+	const int despawnRadius = 48;
+	const int spawnRadiusMin = 28;
+	const int spawnRadiusMax = 32;
 };

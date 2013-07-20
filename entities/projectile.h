@@ -8,7 +8,6 @@ class Projectile;
 class Player;
 class Monster;
 enum class ProjectileState {Flying, Exploding, DeleteMe};
-enum class ProjectileTargetType {TargetPlayer, TargetMonster};
 
 class Projectile : public Entity{
 public:
@@ -20,7 +19,7 @@ public:
 	virtual void logic(double time);
 
 	ProjectileState state;
-	ProjectileTargetType targetType;
+	int team;
 	void moveTo(Vector2d point);
 
 	Attack hitAttack;

@@ -77,3 +77,7 @@ void Creature::takeDamage(const Attack& attack,Vector2d source){
 
 	regenCooldown.set(5);
 }
+
+bool Creature::aggressiveTo(Creature& other){
+	return team != other.team;
+}

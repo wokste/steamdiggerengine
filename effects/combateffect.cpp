@@ -16,7 +16,11 @@ bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 	Projectile* shot = owner.world->spawn<Projectile>(*projectile, sourcePos);
 	if (shot == nullptr)
 		return false;
-	shot->targetType = ProjectileTargetType::TargetMonster;
+
+	//auto target = dynamic_cast<Creature*>(&owner);
+	//if (target){
+		shot->team = 0;//target->team;
+	//}
 	shot->moveTo(targetPos);
 	return true;
 }
@@ -27,11 +31,11 @@ HealEffect::HealEffect(const ConfigNode& config){
 }
 
 bool HealEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	auto target = dynamic_cast<Creature*>(&owner);
 	bool hasEffect = false;
+	/*auto target = dynamic_cast<Creature*>(&owner);
 	if (target){
 		hasEffect |= target->HP.heal(hpGain);
 		hasEffect |= target->shield.heal(shieldGain);
-	}
+	}*/
 	return hasEffect;
 }

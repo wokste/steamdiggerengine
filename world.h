@@ -8,9 +8,7 @@
 
 class Map;
 class Entity;
-class Player;
-class Monster;
-class Projectile;
+class Creature;
 class Skybox;
 
 class World{
@@ -25,12 +23,15 @@ public:
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
 
-	std::vector<std::unique_ptr<Player>> players;
-	std::vector<std::unique_ptr<Monster>> monsters;
-	std::vector<std::unique_ptr<Projectile>> projectiles;
+	std::vector<Entity*> entities;
+	// A subset of entities containing all creatures
+	std::vector<Creature*> creatures;
+	// A subset of entities containing all entities that will be deleted. This is added because removing from entities or creatures at the wrong moment invalidates an iterator.
+	std::vector<Entity*> toDelete;
 	std::unique_ptr<Skybox> skybox;
 	std::unique_ptr<MonsterSpawner> monsterSpawner;
 
+	void removeEntity(Entity* entity);
 private:
 	void addEntity(Entity* entity);
 public:
@@ -42,7 +43,6 @@ public:
 			spawned->setPos(this, newPos);
 			addEntity(spawned);
 		}
-
 		return spawned;
 	}
 };

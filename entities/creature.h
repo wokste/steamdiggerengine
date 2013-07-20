@@ -31,8 +31,10 @@ public:
 	virtual void logic(double time);
 	void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}
+	bool aggressiveTo(Creature& other);
 public:
 	Stat HP;
 	Stat shield;
 	Cooldown regenCooldown;
+	int team;
 };

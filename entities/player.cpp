@@ -81,4 +81,6 @@ void Player::load(const ConfigNode& config){
 	jumpHeight = config.getDouble("jump-height");
 	accelSpeed = config.getDouble("acceleration");
 	walkSpeed = config.getDouble("walk-speed");
+
+	team = config.getInt("team", 0);
 }

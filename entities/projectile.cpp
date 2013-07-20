@@ -9,7 +9,7 @@ Projectile::Projectile(){
 	bounce = 0;
 	TTL = 0;
 	projectileSpeed = 0;
-	targetType = ProjectileTargetType::TargetMonster;
+	team = 0;
 	state = ProjectileState::Flying;
 }
 Projectile::~Projectile(){}
@@ -24,17 +24,9 @@ void Projectile::logic(double time){
 	// Check for collisions
 	if (state == ProjectileState::Flying){
 		Rect4d boundingBox = getBoundingBox();
-		if (targetType == ProjectileTargetType::TargetPlayer){
-			for (auto& player : world->players){
-				if (boundingBox.intersects(player->getBoundingBox()))
-					hitCreature(*(player.get()));
-			}
-		}
-		if (targetType == ProjectileTargetType::TargetMonster){
-			for (auto& monster : world->monsters){
-				if (boundingBox.intersects(monster->getBoundingBox()))
-					hitCreature(*(monster.get()));
-			}
+		for (auto& creature : world->creatures){
+			if (team != creature->team && boundingBox.intersects(creature->getBoundingBox()))
+				hitCreature(*creature);
 		}
 	};
 };
@@ -46,13 +38,13 @@ void Projectile::hitTerrain(bool hitWall){
 		else
 			speed.y = -speed.y * bounce;
 	} else {
-		state = ProjectileState::DeleteMe;
+		world->removeEntity(this);
 	}
 }
 
 void Projectile::hitCreature(Creature& other){
 	other.takeDamage(hitAttack, pos);
-	state = ProjectileState::DeleteMe;
+	world->removeEntity(this);
 }
 
 void Projectile::moveTo(Vector2d targetPos){

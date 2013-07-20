@@ -8,6 +8,7 @@ class Texture;
 class Entity;
 class ConfigNode;
 class World;
+class Creature;
 
 class Entity{
 public:
@@ -19,7 +20,7 @@ public:
 	void setPos(World* newWorld, Vector2d newPos);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
-	void logic(double time);
+	virtual void logic(double time);
 	void render();
 	void startAnim(std::string animName);
 	void move(Vector2d change);
@@ -27,6 +28,7 @@ public:
 	Rect4d getBoundingBox() const;
 
 	virtual void hitTerrain(bool hitWall);
+	virtual void onCreatureDied(Creature* other){}
 
 
 public:

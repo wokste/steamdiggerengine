@@ -17,10 +17,17 @@ void Monster::load(const ConfigNode& config){
 	ConfigNode onHit = config.getNodeConst("on-hit");
 	hitAttack.load(onHit);
 
+	team = config.getInt("team", 1);
+
 	movementType.reset(MovementType::staticLoad(config));
 }
 
 void Monster::logic(double time){
+	if (!alive()){
+		world->removeEntity(this);
+		return;
+	}
+
 	cooldown -= time;
 	Creature::logic(time);
 
@@ -30,18 +37,23 @@ void Monster::logic(double time){
 
 	if (cooldown.done()){
 		Rect4d boundingBox = getBoundingBox();
-		for (auto& player : world->players){
-			if (boundingBox.intersects(player->getBoundingBox()))
-				hitPlayer(*(player.get()));
+		for (auto& creature : world->creatures){
+			if (aggressiveTo(*creature) && boundingBox.intersects(creature->getBoundingBox()))
+				hitCreature(*creature);
 		}
 	}
 }
 
-void Monster::hitPlayer(Player& other){
+void Monster::hitCreature(Creature& other){
 	other.takeDamage(hitAttack, pos);
 	cooldown.set(0.5);
 }
 
 void Monster::hitTerrain(bool hitWall){
 	movementType->hitTerrain(*this, hitWall);
+}
+
+void Monster::onCreatureDied(Creature* other){
+	if (target == other)
+		target = nullptr;
 }

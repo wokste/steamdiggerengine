@@ -41,24 +41,43 @@ MonsterSpawner::MonsterSpawner() : basicSpawnConfig()
 
 void MonsterSpawner::logic(World* world, double time){
 	cooldown -= time;
+
 	if (cooldown.done()){
-		std::poisson_distribution<> poisson(1);
 		// TODO: Have a different spawn config for day and night
 		SpawnConfig& spawnConfig = basicSpawnConfig;
-		for(auto& player: world->players){
-			int numMonsters = std::count_if(world->monsters.begin(), world->monsters.end(),[&](std::unique_ptr<Monster>& monster) {
-				return monster->target == player.get();
-			});
-			if (numMonsters >= spawnConfig.maxMonsters)
-				continue;
+		std::vector<Creature*> spawnAround;
 
+		// Step 1: Find the creatures it should spawn around.
+		for(auto test: world->creatures){
+			if (test->team == 0){
+				// This is a creature on the player team and monsters should be spawned around it
+				int numMonsters = std::count_if(world->creatures.begin(), world->creatures.end(),[&](Creature* other) {
+					return (other->aggressiveTo(*test) && Vector2::length(other->pos - test->pos) < despawnRadius);
+				});
+				if (numMonsters >= spawnConfig.maxMonsters)
+					continue;
+				spawnAround.push_back(test);
+			} else {
+				// Testing whether this creature should be deleted
+				if(std::all_of(world->creatures.begin(), world->creatures.end(),[&](Creature* other) {
+					return (!other->aggressiveTo(*test) || Vector2::length(other->pos - test->pos) > despawnRadius);
+				})){
+					world->removeEntity(test);
+				}
+			}
+		}
+
+		// Step 2: Spawn around those creatures
+		for(auto player: spawnAround){
 			for (int attempt = 0; attempt < 50; ++attempt ){
-				if (trySpawn(world, player.get())){
-					numMonsters++;
+				if (trySpawn(world, player)){
 					break;
 				}
 			}
 		}
+
+		// Step 3: Set cooldown
+		std::poisson_distribution<> poisson(1);
 		if (std::bernoulli_distribution(spawnConfig.newWaveChance)(GameGlobals::rnd))
 			cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
 		else
@@ -66,7 +85,7 @@ void MonsterSpawner::logic(World* world, double time){
 	}
 }
 
-bool MonsterSpawner::trySpawn(World* world, Player* player){
+bool MonsterSpawner::trySpawn(World* world, Creature* player){
 	std::uniform_real_distribution<> distanceRandomizer(28,32);
 	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
 	double distance = distanceRandomizer(GameGlobals::rnd);

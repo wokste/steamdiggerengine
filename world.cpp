@@ -23,31 +23,33 @@ World::World()
 }
 
 World::~World(){
+	for (auto entity: entities){
+		delete entity;
+	}
 }
 
 void World::logic(double time){
 	map->logic(time);
 
-	for (auto& projectile : projectiles)
-		projectile->logic(time);
-	for (auto& player : players)
-		player->logic(time);
-	for (auto& monster : monsters)
-		monster->logic(time);
+	for (auto entity: entities)
+		entity->logic(time);
 
 	// == Removal of entities ==
-	#define REMOVE_FROM_LIST(v,f) v.erase(std::remove_if (v.begin(), v.end(), f), v.end())
+	for (auto removing: toDelete){
+		entities.erase(std::remove(entities.begin(), entities.end(), removing),entities.end());
 
-	REMOVE_FROM_LIST(monsters, [&](std::unique_ptr<Monster>& monster){
-		return !monster->alive() || std::none_of(players.begin(), players.end(), [&monster](std::unique_ptr<Player>& player){
-			return Vector2::length(monster->pos - player->pos) < 48;
-		});
-	});
+		auto removingCreature = dynamic_cast<Creature*>(removing);
+		if (removingCreature != nullptr){
+			creatures.erase(std::remove(creatures.begin(), creatures.end(), removingCreature),creatures.end());
+			for (auto entity: entities)
+				entity->onCreatureDied(removingCreature);
+		}
 
-	REMOVE_FROM_LIST(projectiles, [&](std::unique_ptr<Projectile>& projectile){
-		return projectile->state == ProjectileState::DeleteMe;
-	});
+		delete removing;
+	}
+	toDelete.clear();
 
+	// == Final logic ==
 	monsterSpawner->logic(this, time);
 	skybox->logic(time);
 }
@@ -55,12 +57,8 @@ void World::logic(double time){
 void World::render(){
 	map->render(skybox->getLightColor());
 
-	for (auto& player : players)
-		player->render();
-	for (auto& monster : monsters)
-		monster->render();
-	for (auto& projectile : projectiles)
-		projectile->render();
+	for (auto& entity : entities)
+		entity->render();
 }
 
 bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
@@ -73,25 +71,21 @@ bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType
 bool World::areaHasEntity(Vector2i px1, Vector2i px2){
 	Vector2d px1d = Vector2::iToD(px1);
 	Vector2d px2d = Vector2::iToD(px2);
-	for (auto& player : players)
-		if (player->isInArea(px1d, px2d)) return true;
-	for (auto& monster : monsters)
-		if (monster->isInArea(px1d, px2d)) return true;
+	for (auto creature : creatures)
+		if (creature->isInArea(px1d, px2d)) return true;
 	return false;
 }
 
 void World::addEntity(Entity* entity){
-	auto pMonster = dynamic_cast<Monster*>(entity);
-	auto pPlayer = dynamic_cast<Player*>(entity);
-	auto pProjectile = dynamic_cast<Projectile*>(entity);
+	auto creature = dynamic_cast<Creature*>(entity);
 
-	if (pMonster != nullptr){
-		monsters.push_back(std::unique_ptr<Monster>(pMonster));
-	} else if (pPlayer != nullptr){
-		players.push_back(std::unique_ptr<Player>(pPlayer));
-	} else if (pProjectile != nullptr){
-		projectiles.push_back(std::unique_ptr<Projectile>(pProjectile));
-	} else {
-		assert(false);
+	if (creature != nullptr){
+		creatures.push_back(creature);
 	}
+	entities.push_back(entity);
+}
+
+void World::removeEntity(Entity* entity){
+	if (std::find(toDelete.begin(), toDelete.end(), entity)==toDelete.end())
+		toDelete.push_back(entity);
 }
