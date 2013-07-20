@@ -17,7 +17,7 @@ Projectile::~Projectile(){}
 void Projectile::logic(double time){
 	TTL -= time;
 	if (TTL < 0)
-		state = ProjectileState::DeleteMe;
+		world->removeEntity(this);
 
 	Entity::logic(time);
 
@@ -25,11 +25,13 @@ void Projectile::logic(double time){
 	if (state == ProjectileState::Flying){
 		Rect4d boundingBox = getBoundingBox();
 		for (auto& creature : world->creatures){
-			if (team != creature->team && boundingBox.intersects(creature->getBoundingBox()))
+			if (team != creature->team && boundingBox.intersects(creature->getBoundingBox())){
 				hitCreature(*creature);
+				return;
+			}
 		}
-	};
-};
+	}
+}
 
 void Projectile::hitTerrain(bool hitWall){
 	if (bounce >= 0){

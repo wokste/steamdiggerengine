@@ -18,6 +18,7 @@ public:
 	void tryJump();
 
 	virtual void load(const ConfigNode& config);
+	bool pickupItem(int id, int count) override;
 
 	Inventory inventory;
 	double jumpHeight;

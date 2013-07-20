@@ -34,7 +34,7 @@ bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 	const BlockType& minedBlock = node->getBlock(targetLayer);
 	if (node->damageBlock(targetLayer, damageHigh, damageLow, materialType)){
 		LightingEngine::recalcAreaAround(map, pos);
-		//TODO: add item in inventory
+
 	}
 	return true;
 }

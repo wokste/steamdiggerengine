@@ -84,3 +84,7 @@ void Player::load(const ConfigNode& config){
 
 	team = config.getInt("team", 0);
 }
+
+bool Player::pickupItem(int id, int count){
+	return inventory.add(id,count);
+}

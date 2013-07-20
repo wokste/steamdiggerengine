@@ -32,6 +32,7 @@ public:
 	void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature& other);
+	virtual bool pickupItem(int id, int count){return false;}
 public:
 	Stat HP;
 	Stat shield;
