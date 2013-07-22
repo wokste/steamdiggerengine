@@ -49,7 +49,7 @@ void MonsterSpawner::logic(World* world, double time){
 
 		// Step 1: Find the creatures it should spawn around.
 		for(auto test: world->creatures){
-			if (test->team == 0){
+			if (test->isPlayer){
 				// This is a creature on the player team and monsters should be spawned around it
 				int numMonsters = std::count_if(world->creatures.begin(), world->creatures.end(),[&](Creature* other) {
 					return (other->aggressiveTo(*test) && Vector2::length(other->pos - test->pos) < despawnRadius);

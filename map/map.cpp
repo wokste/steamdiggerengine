@@ -30,12 +30,15 @@ Map::Map(int seed) :
 Map::~Map(){
 }
 
-void Map::generate(){
-	Vector2i posMin(-32,-32);
-	Vector2i posMax(64,64);
+void Map::generateAround(const Vector2d& pos){
+	Vector2i posMin((int)pos.x - 48, (int)pos.y - 48);
+	Vector2i posMax((int)pos.x + 48, (int)pos.y + 48);
 	for (int x = posMin.x & ~Chunk::widthMask ; x < posMax.x; x+=Chunk::width){
 		for (int y = posMin.y & ~Chunk::heightMask; y < posMax.y; y+=Chunk::height){
 			Vector2i chunkNum(x,y);
+			if (chunks.count(chunkNum) >= 1)
+				continue;
+
 			chunks.insert(std::make_pair(chunkNum, new Chunk(*generator, chunkNum)));
 			LightingEngine::recalcArea(*this, chunkNum, chunkNum + Vector2i(Chunk::width, Chunk::height));
 		}

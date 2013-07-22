@@ -13,6 +13,7 @@ Player::Player(){
 	jumpHeight = 0;
 	accelSpeed = 0;
 	walkSpeed  = 0;
+	isPlayer   = true;
 }
 
 Player::~Player(){

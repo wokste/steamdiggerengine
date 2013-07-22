@@ -17,7 +17,6 @@
 World::World()
 {
 	map.reset(new Map(rand()));
-	map->generate();
 	monsterSpawner.reset(new MonsterSpawner());
 	skybox.reset(new Skybox());
 }
@@ -31,8 +30,12 @@ World::~World(){
 void World::logic(double time){
 	map->logic(time);
 
-	for (auto entity: entities)
+	for (auto entity: entities){
 		entity->logic(time);
+
+		if (entity->isPlayer)
+			map->generateAround(entity->pos);
+	}
 
 	// == Removal of entities ==
 	for (auto removing: toDelete){

@@ -45,4 +45,5 @@ public:
 	Vector2d frameOffset;
 	Vector2d collision;
 	std::shared_ptr<Texture> texture= nullptr;
+	bool isPlayer;
 };

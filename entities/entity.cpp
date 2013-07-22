@@ -25,6 +25,7 @@ Entity::Entity() :
 	size = Vector2i(16,32);
 	frameOffset = Vector2d(-1,-2);
 	collision = Vector2d(1,2);
+	isPlayer = false;
 }
 
 void Entity::setPos(World* newWorld, Vector2d newPos){

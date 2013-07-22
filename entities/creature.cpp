@@ -49,6 +49,7 @@ std::string Stat::asText() const{
 }
 
 Creature::Creature(){}
+
 Creature::~Creature(){}
 
 void Creature::load(const ConfigNode& config)

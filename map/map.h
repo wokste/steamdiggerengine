@@ -34,8 +34,7 @@ public:
 	Map(const Map&) = delete;
 	~Map();
 
-	void loadBlocks(std::string fileName);
-	void generate();
+	void generateAround(const Vector2d& pos);
 	void render(const sf::Color& outsideColor) const;
 	void logic(double time);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)>);
