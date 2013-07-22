@@ -18,7 +18,7 @@ namespace LightingEngine{
 
 /// Gives the value that is blocked by the given block. Block may be null for the sky.
 sf::Color LightingEngine::getBlockedLight(const MapNode& node){
-	return (node.isset(Layer::front)) ? sf::Color(100,100,100) : sf::Color(10,10,10);
+	return node.getBlock(Layer::front).blockedLight;
 }
 
 /// precondition: str is formatted in a 6 character hexdecimal color code (known from css)

@@ -12,6 +12,7 @@ public:
 	BlockMaterialType materialType;
 	int HP;
 	sf::Color lightColor;
+	sf::Color blockedLight;
 	std::vector<VertexArray> models;
 
 	BlockType(const ConfigNode& config);

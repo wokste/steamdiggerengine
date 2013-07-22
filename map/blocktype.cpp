@@ -11,6 +11,8 @@ BlockType::BlockType(const ConfigNode& config){
 	materialType = getBlockMaterialType(config.getString("material", "None"));
 	HP = config.getDouble("hp", -1);
 	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
+	unsigned char blockedLightByte = config.getInt("blocked-light", 100);
+	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 
 	const_cast<ConfigNode&>(config).getNode("frame").forEachNode([&] (const ConfigNode& json) {
 		auto framesPerSheet = sf::Vector2i(4,4);
