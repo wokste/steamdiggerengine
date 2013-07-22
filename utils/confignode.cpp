@@ -13,7 +13,9 @@ ConfigNode::~ConfigNode(){
 void ConfigNode::load(const std::string& filename, std::function<void (ConfigNode&)> onLoad){
 	json_error_t error;
 	json_t* node = json_load_file(filename.c_str(), 0, &error);
-	ASSERT(node, error.source, "Error: Could not load " + filename + "\n" + error.text);
+	if (!node){
+		std::cout << "Error: Could not load " << filename << "\n" << error.text << " on line " << error.line << " char " << error.column << "\n";
+	}
 	auto cnode = ConfigNode(node);
 	onLoad(cnode);
 	json_decref(node);
