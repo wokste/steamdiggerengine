@@ -11,6 +11,7 @@
 
 HUD::HUD(){
 	hudElements.emplace_back(new HealthBarHUD());
+	hudElements.emplace_back(new InventoryHUD());
 }
 
 HUD::~HUD(){
@@ -26,6 +27,7 @@ void HUD::draw(const Screen& screen, const Player& player){
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
 			for (auto& elem : hudElements){
 				glLoadIdentity();
 				Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
@@ -34,6 +36,7 @@ void HUD::draw(const Screen& screen, const Player& player){
 				glTranslated(pos.x, pos.y, 0);
 				elem->draw(player);
 			}
+			glDisable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
@@ -73,8 +76,8 @@ bool HUDElement::onMousePressed(Player& player, const sf::Mouse::Button& button,
    **************** */
 
 HealthBarHUD::HealthBarHUD(){
-	barSize = Vector2i(256, 24);
-	barTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("healthbar.png"),barSize));
+	barSize = Vector2i(256,24);
+	barTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("healthbar.png")));
 
 	size = Vector2i(256, 48);
 	docking = Vector2d(1, 0);
@@ -91,8 +94,43 @@ void HealthBarHUD::draw(const Player& player){
 	int widthShield = std::max<int>((int) barSize.x * ShieldPerc, 0);
 
 	barTexture->bind();
-	barTexture->drawPart(Vector2i(0, 0), Vector2i(widthHP, barSize.y), Vector2i(0, 0));
-	barTexture->drawPart(Vector2i(widthHP, barSize.y), Vector2i(barSize.x - widthHP, barSize.y), Vector2i(widthHP, 0));
-	barTexture->drawPart(Vector2i(0, 2*barSize.y), Vector2i(widthShield, barSize.y), Vector2i(0, barSize.y));
-	barTexture->drawPart(Vector2i(widthShield, 3*barSize.y), Vector2i(barSize.x - widthShield, barSize.y), Vector2i(widthShield, barSize.y));
+	barTexture->draw(Vector2i(0, 0), Vector2i(widthHP, barSize.y), Vector2i(0, 0));
+	barTexture->draw(Vector2i(widthHP, barSize.y), Vector2i(barSize.x - widthHP, barSize.y), Vector2i(widthHP, 0));
+	barTexture->draw(Vector2i(0, 2*barSize.y), Vector2i(widthShield, barSize.y), Vector2i(0, barSize.y));
+	barTexture->draw(Vector2i(widthShield, 3*barSize.y), Vector2i(barSize.x - widthShield, barSize.y), Vector2i(widthShield, barSize.y));
+}
+
+/* *****************
+   * Inventory HUD *
+   ***************** */
+
+InventoryHUD::InventoryHUD(){
+	texture.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
+	isOpen = true;
+	toggleOpen();
+	docking = Vector2d(0.5, 1);
+}
+
+InventoryHUD::~InventoryHUD(){
+}
+
+void InventoryHUD::draw(const Player& player){
+	texture->bind();
+	// Draw background
+	if (isOpen){
+		texture->draw(Vector2i(0, 0), size, Vector2i(0, 0));
+	} else {
+		texture->draw(Vector2i(0, 165), size, Vector2i(0, 0));
+	}
+
+	// TODO: Draw inventory
+}
+
+void InventoryHUD::toggleOpen(){
+	isOpen = !isOpen;
+	if (isOpen){
+		size = Vector2i(405, 164);
+	} else {
+		size = Vector2i(405, 46);
+	}
 }

@@ -23,7 +23,7 @@ bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 Map::Map(int seed) :
 	tileSize(32,32)
 {
-	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png"), tileSize));
+	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
 	generator.reset(new MapGenerator(seed, *this));
 }
 

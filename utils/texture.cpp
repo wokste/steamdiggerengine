@@ -12,21 +12,13 @@
 
 extern std::string dataDirectory;
 
-Texture::Texture(std::string fileName, Vector2i newFrameSize){
-	if (loadTexture(fileName, newFrameSize)){
+Texture::Texture(std::string fileName){
+	if (loadTexture(fileName)){
 		std::cout<<"loaded texture " << fileName << " as " << ID<<'\n';
 		return;
 	}
 	ID = 0;
-	setSize(newFrameSize, newFrameSize);
 	std::cout<<"error loading texture " << fileName << '\n';
-}
-
-void Texture::setSize(Vector2i imgSize, Vector2i newFrameSize){
-	size = imgSize;
-	frameSize = newFrameSize;
-	sizeGL = sf::Vector2f((float)(frameSize.x) / size.x,(float)(frameSize.y) / size.y);
-	framesPerRow = (size.x / frameSize.x);
 }
 
 void Texture::bind(){
@@ -34,77 +26,11 @@ void Texture::bind(){
 	gluErrorString(glGetError());
 }
 
-void Texture::drawTile(Vector2d pos, Vector2i tile, int tileNum) const{
-	double texLeft = (tileNum % framesPerRow) * sizeGL.x;
-	double texRight = texLeft + sizeGL.x;
-	double texTop = (tileNum / framesPerRow) * sizeGL.y;
-	double texBottom = texTop + sizeGL.y;
-
-	Vector2d tileD = Vector2::iToD(tile) / 16.0;
-
-	glBegin(GL_QUADS);
-	glTexCoord2d(texLeft, texTop);
-	glVertex3d(pos.x, pos.y, 0.5);
-	glTexCoord2d(texLeft, texBottom);
-	glVertex3d(pos.x, pos.y + tileD.y, 0.5);
-	glTexCoord2d(texRight, texBottom);
-	glVertex3d(pos.x + tileD.x, pos.y + tileD.y, 0.5);
-	glTexCoord2d(texRight, texTop);
-	glVertex3d(pos.x + tileD.x, pos.y, 0.5);
-	glEnd();
-}
-
-void Texture::drawBlock(Vector3i pos, int tileNum) const{
-	double x = pos.x;
-	double y = pos.y;
-	double z = pos.z;
-
-	double texLeft = (tileNum % framesPerRow) * sizeGL.x;
-	double texRight = texLeft + sizeGL.x;
-	double texTop = (tileNum / framesPerRow) * sizeGL.y;
-	double texBottom = texTop + sizeGL.y;
-
-	glBegin(GL_QUADS);
-		// Front Face
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y    ,z+1.0);
-		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y    ,z+1.0);
-		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z+1.0);
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z+1.0);
-		// Back Face
-		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z);
-		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y+1.0,z);
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y+1.0,z);
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z);
-		// Top Face
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z);
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y+1.0,z+1.0);
-		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y+1.0,z+1.0);
-		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z);
-		// Bottom Face
-		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y    ,z);
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y    ,z);
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z+1.0);
-		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z+1.0);
-		// Right face
-		glTexCoord2d(texRight, texTop);   glVertex3d(x+1.0,y    ,z);
-		glTexCoord2d(texRight, texBottom);glVertex3d(x+1.0,y+1.0,z);
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x+1.0,y+1.0,z+1.0);
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x+1.0,y    ,z+1.0);
-		// Left Face
-		glTexCoord2d(texLeft, texTop);    glVertex3d(x    ,y    ,z);
-		glTexCoord2d(texRight, texTop);   glVertex3d(x    ,y    ,z+1.0);
-		glTexCoord2d(texRight, texBottom);glVertex3d(x    ,y+1.0,z+1.0);
-		glTexCoord2d(texLeft, texBottom); glVertex3d(x    ,y+1.0,z);
-	glEnd();
-}
-
-void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const{
+void Texture::draw(Vector2i src, Vector2i imgSize, Vector2i dest) const{
 	double texLeft = ((double)src.x / size.x);
 	double texRight = ((double)(src.x + imgSize.x) / size.x);
 	double texTop = ((double)src.y / size.y);
 	double texBottom = ((double)(src.y + imgSize.y) / size.y);
-
-	//imgSize /= 16; // Quickfix. Remove this
 
 	glBegin(GL_QUADS);
 	glTexCoord2d(texLeft,  texTop);    glVertex2d(dest.x            , dest.y);
@@ -114,12 +40,25 @@ void Texture::drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const{
 	glEnd();
 }
 
+void Texture::draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const{
+	double texLeft = ((double)src.x / size.x);
+	double texRight = ((double)(src.x + srcSize.x) / size.x);
+	double texTop = ((double)src.y / size.y);
+	double texBottom = ((double)(src.y + srcSize.y) / size.y);
+
+	glBegin(GL_QUADS);
+	glTexCoord2d(texLeft,  texTop);    glVertex2d(dest.x             , dest.y);
+	glTexCoord2d(texLeft,  texBottom); glVertex2d(dest.x             , dest.y + destSize.y);
+	glTexCoord2d(texRight, texBottom); glVertex2d(dest.x + destSize.x, dest.y + destSize.y);
+	glTexCoord2d(texRight, texTop);    glVertex2d(dest.x + destSize.x, dest.y);
+	glEnd();
+}
+
 Texture::~Texture(){
-	std::cout<<"unloaded texture " << ID <<'\n';
 	glDeleteTextures(1, &ID);
 }
 
-bool Texture::loadTexture(std::string fileName, Vector2i newFrameSize){
+bool Texture::loadTexture(std::string fileName){
 	sf::Image image;
 	if (!image.loadFromFile(fileName))
 		return false;
@@ -138,6 +77,6 @@ bool Texture::loadTexture(std::string fileName, Vector2i newFrameSize){
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-	setSize(Vector2i(imgSize.x , imgSize.y), newFrameSize);
+	size = Vector2i(imgSize.x , imgSize.y);
 	return true;
 }

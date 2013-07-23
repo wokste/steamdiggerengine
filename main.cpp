@@ -52,7 +52,7 @@ void initGL(){
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glAlphaFunc(GL_GREATER, 0.5);
+	glAlphaFunc(GL_GREATER, 0.1);
 	glEnable(GL_ALPHA_TEST);
 }
 

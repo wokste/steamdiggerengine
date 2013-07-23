@@ -51,9 +51,8 @@ void Entity::render(){
 
 		sf::Color color = world->map->getColor(world->skybox->getLightColor(), pos);
 		glColor3ub(color.r,color.g,color.b);
-		int frame = 0;
-
-		texture->drawTile(Vector2d(pos.x + frameOffset.x, pos.y + frameOffset.y), size, frame);
+		// TODO: Stuff
+		texture->draw(Vector2i(0,0),size,Vector2d(pos.x + frameOffset.x, pos.y + frameOffset.y),Vector2d(size.x / 16.0,size.y / 16.0));
 	}
 }
 
@@ -113,5 +112,5 @@ void Entity::load(const ConfigNode& config){
 	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
-	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName), config.getVector2i("size")));
+	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
 }

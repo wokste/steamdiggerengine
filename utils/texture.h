@@ -17,13 +17,10 @@ private:
 
 public:
 	static Texture* load(const ConfigNode& config);
-	Texture(std::string fileName, Vector2i frameSize);
+	Texture(std::string fileName);
 	~Texture();
-	bool loadTexture(std::string fileName, Vector2i frameSize);
+	bool loadTexture(std::string fileName);
 	void bind();
-
-	void setSize(Vector2i imgSize, Vector2i frameSize);
-	void drawTile(Vector2d pos, Vector2i tileSize, int tileNum) const;
-	void drawBlock(Vector3i pos, int tileNum) const;
-	void drawPart(Vector2i src, Vector2i imgSize, Vector2i dest) const;
+	void draw(Vector2i src, Vector2i imgSize, Vector2i dest) const;
+	void draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const;
 };

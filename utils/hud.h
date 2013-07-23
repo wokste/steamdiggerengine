@@ -47,3 +47,17 @@ private:
 	Vector2i barSize;
 	std::shared_ptr<Texture> barTexture;
 };
+
+class InventoryHUD : public HUDElement{
+public:
+	InventoryHUD();
+	InventoryHUD(const InventoryHUD& that) = delete;
+	virtual ~InventoryHUD();
+
+	virtual void draw(const Player& player);
+	void toggleOpen();
+private:
+	std::shared_ptr<Texture> texture;
+	bool isOpen;
+};
+
