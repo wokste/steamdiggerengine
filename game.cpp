@@ -15,7 +15,7 @@ void GameGlobals::init(){
 }
 
 FileSystem::FileSystem(){
-	dataDir = "data/";
+	dataDir = "C:/Users/wokste/projects/steamdigger/data/";
 }
 
 std::string FileSystem::fullpath(const std::string& resourcename) const{

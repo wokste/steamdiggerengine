@@ -10,6 +10,7 @@ class Map;
 class Entity;
 class Creature;
 class Skybox;
+class Screen;
 
 class World{
 public:
@@ -19,7 +20,7 @@ public:
 	~World();
 
 	void logic(double time);
-	void render();
+	void render(const Screen& screen);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
 

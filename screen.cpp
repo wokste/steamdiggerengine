@@ -6,7 +6,8 @@
 #include <iostream>
 
 constexpr double eyedist = 10;
-constexpr double blocksOnScreen = 200;
+constexpr double blocksX = 30;
+constexpr double blocksY = 18;
 constexpr double nearPlane = eyedist - 3;
 constexpr double farPlane = eyedist + 3;
 
@@ -20,7 +21,7 @@ Screen::Screen(){
 	settings.majorVersion = 1;
 	settings.minorVersion = 1;
 
-	window.reset(new sf::Window(sf::VideoMode(800, 600), "Steamdigger", sf::Style::Default, settings));
+	window.reset(new sf::Window(sf::VideoMode(1000, 600), "Steamdigger", sf::Style::Default, settings));
 	window->setVerticalSyncEnabled(true);
 
 	center = Vector2d(0,0);
@@ -32,12 +33,12 @@ void Screen::startScene(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	double blocksX = std::sqrt(blocksOnScreen * size.x / size.y);
-	double blocksY = std::sqrt(blocksOnScreen * size.y / size.x);
-	glFrustum(-blocksX/2, blocksX/2, blocksY/2, -blocksY/2, nearPlane, farPlane);
+	//double blocksX = std::sqrt(blocksOnScreen * size.x / size.y);
+	//double blocksY = std::sqrt(blocksOnScreen * size.y / size.x);
+	constexpr double factor = (nearPlane / eyedist) / 2;
+	glFrustum(-blocksX*factor, blocksX*factor, blocksY*factor, -blocksY*factor, nearPlane, farPlane);
 	gluLookAt(0,0,1,0,0,0,0,1,0);
 	glMatrixMode(GL_MODELVIEW);
-
 }
 
 void Screen::resize(Vector2i newSize){
@@ -49,10 +50,14 @@ void Screen::centerOn(Entity& player){
 	center = player.pos;
 	glScaled(1,1,-1);
 	glTranslated(-center.x,-center.y,eyedist);
+}
 
-	/*gluLookAt(center.x, center.y, 0.0f,
-		center.x, center.y, 1.0f,
-		0.0f, 1.0f,  0.0f);*/
+bool Screen::containsArea(Vector2i topLeft, Vector2i vecSize) const{
+	constexpr double factor = (farPlane / eyedist) / 2;
+	return (topLeft.x < center.x + blocksX*factor)
+		&& (topLeft.x + vecSize.x > center.x - blocksX*factor)
+		&& (topLeft.y < center.y + blocksY*factor)
+		&& (topLeft.y + vecSize.y > center.y - blocksY*factor);
 }
 
 // Magical function inspired by http://olivers.posterous.com/linear-depth-in-glsl-for-real, but reversed

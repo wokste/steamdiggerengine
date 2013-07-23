@@ -57,8 +57,8 @@ void World::logic(double time){
 	skybox->logic(time);
 }
 
-void World::render(){
-	map->render(skybox->getLightColor());
+void World::render(const Screen& screen){
+	map->render(screen, skybox->getLightColor());
 
 	for (auto& entity : entities)
 		entity->render();

@@ -20,6 +20,7 @@ public:
 	// TODO: Function name unclear
 	Vector2d mousePos(const int layer = -1) const;
 	Vector2i getSize() const {return size;}
+	bool containsArea(Vector2i topLeft, Vector2i vecSize) const;
 protected:
 	Vector2d center;
 	Vector2i size;

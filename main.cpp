@@ -94,7 +94,7 @@ int main(){
 		screen->startScene();
 		glPushMatrix();
 			screen->centerOn(*player);
-			world->render();
+			world->render(*screen);
 		glPopMatrix();
 
 		hud->draw(*screen, *player);

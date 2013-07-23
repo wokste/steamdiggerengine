@@ -35,7 +35,7 @@ public:
 	~Map();
 
 	void generateAround(const Vector2d& pos);
-	void render(const sf::Color& outsideColor) const;
+	void render(const Screen& screen, const sf::Color& outsideColor) const;
 	void logic(double time);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)>);
 	bool blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)>);

@@ -48,12 +48,14 @@ void Map::generateAround(const Vector2d& pos){
 void Map::logic(double time){
 }
 
-void Map::render(const sf::Color& skyColor) const{
+void Map::render(const Screen& screen, const sf::Color& skyColor) const{
 	if(tileSet == nullptr) return;
 
 	tileSet->bind();
 	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
-		iter->second->render(skyColor, iter->first);
+		// iter->first : Vector2; iter->second : Chunk
+		if (screen.containsArea(iter->first, Vector2i(Chunk::width, Chunk::height)))
+			iter->second->render(skyColor, iter->first);
 	}
 }
 
