@@ -1,5 +1,7 @@
 #include "hud.h"
 #include "../entities/player.h"
+#include "../items/itemdefmanager.h"
+#include "../items/item.h"
 #include "../utils/texture.h"
 #include "../screen.h"
 #include "../game.h"
@@ -104,8 +106,11 @@ void HealthBarHUD::draw(const Player& player){
    * Inventory HUD *
    ***************** */
 
+#include <iostream>
+
 InventoryHUD::InventoryHUD(){
-	texture.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
+	background.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
+	itemTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
 	isOpen = true;
 	toggleOpen();
 	docking = Vector2d(0.5, 1);
@@ -115,15 +120,29 @@ InventoryHUD::~InventoryHUD(){
 }
 
 void InventoryHUD::draw(const Player& player){
-	texture->bind();
+	background->bind();
+	int rows, rowOffset;
 	// Draw background
 	if (isOpen){
-		texture->draw(Vector2i(0, 0), size, Vector2i(0, 0));
+		background->draw(Vector2i(0, 0), size, Vector2i(0, 0));
+		rows = Inventory::height;
+		rowOffset = 0;
 	} else {
-		texture->draw(Vector2i(0, 165), size, Vector2i(0, 0));
+		background->draw(Vector2i(0, 165), size, Vector2i(0, 0));
+		rows = 1;
+		rowOffset = Inventory::height - rows;
 	}
-
-	// TODO: Draw inventory
+	itemTexture->bind();
+	for (int x = 0; x < Inventory::width;++x){
+		for (int y = 0; y < rows;++y){
+			int id = x + (3 - y - rowOffset) * Inventory::width;
+			if (player.inventory.items[id].count > 0){
+				int framesPerRow = itemTexture->size.x / 32;
+				int frame = (*GameGlobals::itemDefs)[player.inventory.items[id].id].frameID;
+				itemTexture->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), Vector2i(x * 40 + 7, y * 40 + 7));
+			}
+		}
+	}
 }
 
 void InventoryHUD::toggleOpen(){

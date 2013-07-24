@@ -118,3 +118,14 @@ void ConfigNode::forEachNode(std::function<void (ConfigNode&)> elem_func){
 		elem_func(*this);
 	}
 }
+
+ConfigNode ConfigNode::operator[](int id){
+	if (m_Node != nullptr && json_is_array(m_Node)){
+		unsigned int count = json_array_size(m_Node);
+		if (id < count)
+			return ConfigNode(json_array_get(m_Node, id));
+	} else if (m_Node != nullptr && !json_is_null(m_Node)){
+		return *this;
+	}
+	return ConfigNode(nullptr);
+}

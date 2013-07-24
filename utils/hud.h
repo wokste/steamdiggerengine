@@ -57,7 +57,8 @@ public:
 	virtual void draw(const Player& player);
 	void toggleOpen();
 private:
-	std::shared_ptr<Texture> texture;
+	std::shared_ptr<Texture> background;
+	std::shared_ptr<Texture> itemTexture;
 	bool isOpen;
 };
 

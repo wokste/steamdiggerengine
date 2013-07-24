@@ -15,6 +15,7 @@ public:
 	bool use(Entity& owner, const Screen& screen);
 
 	int maxStack;
+	int frameID;
 	bool consumable;
 	double useTime;
 	EffectSlot onUse;

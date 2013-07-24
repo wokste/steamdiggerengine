@@ -40,7 +40,7 @@ BlockTypeManager::BlockTypeManager(std::string jsonFileName){
 			std::string dropTag = json.getString("drop","_default");
 			if (dropTag == "_default"){
 				int blockID = blocks.size();
-				int iconFrame = 1;// TODO: FIX
+				int iconFrame = json.getNode("frame")[0].getInt("id");
 				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame);
 				block.addDrop(dropID);
 			} else if (dropTag != ""){

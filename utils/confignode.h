@@ -27,4 +27,5 @@ public:
 	ConfigNode getNode(const std::string& name);
 	const ConfigNode getNodeConst(const std::string& name) const;
 	void forEachNode(std::function<void (ConfigNode&)> elem_func);
+	ConfigNode operator[](int id);
 };

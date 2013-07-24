@@ -12,12 +12,14 @@ ItemType::ItemType(ConfigNode& config){
 	useTime=config.getDouble("use-time",0.2);
 	auto onUseNode = config.getNode("on-use");
 	onUse.load(onUseNode);
+	frameID=config.getInt("frame");
 }
 
-ItemType::ItemType(int frameID){
+ItemType::ItemType(int newFrameID){
 	maxStack=250;
 	consumable=true;
 	useTime=0.2;
+	frameID=newFrameID;
 }
 
 ItemType::~ItemType(){

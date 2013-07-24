@@ -6,16 +6,10 @@
 
 class ConfigNode;
 
-class Texture{
-private:
+struct Texture{
 	GLuint ID;
 	Vector2i size;
-	Vector2i frameSize;
-	sf::Vector2f sizeGL;
-	int framesPerRow;
-	//bool bAlpha;
 
-public:
 	static Texture* load(const ConfigNode& config);
 	Texture(std::string fileName);
 	~Texture();

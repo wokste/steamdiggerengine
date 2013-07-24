@@ -7,6 +7,7 @@ class ItemDef;
 class Player;
 class ItemDefManager;
 class Screen;
+class InventoryHUD;
 
 struct ItemStack{
 	ItemStack();
@@ -15,12 +16,14 @@ struct ItemStack{
 };
 
 class Inventory{
-	constexpr static int width = 9;
+	constexpr static int width = 10;
 	constexpr static int height = 4;
 
 	ItemStack items[width * height];
 	int selectedItem;
 	Cooldown cooldown;
+
+	friend InventoryHUD;
 public:
 	Inventory();
 	void logic(double time);
