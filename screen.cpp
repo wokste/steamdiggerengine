@@ -33,8 +33,6 @@ void Screen::startScene(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	//double blocksX = std::sqrt(blocksOnScreen * size.x / size.y);
-	//double blocksY = std::sqrt(blocksOnScreen * size.y / size.x);
 	constexpr double factor = (nearPlane / eyedist) / 2;
 	glFrustum(-blocksX*factor, blocksX*factor, blocksY*factor, -blocksY*factor, nearPlane, farPlane);
 	gluLookAt(0,0,1,0,0,0,0,1,0);

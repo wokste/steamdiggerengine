@@ -52,11 +52,17 @@ void Map::render(const Screen& screen, const sf::Color& skyColor) const{
 	if(tileSet == nullptr) return;
 
 	tileSet->bind();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY );
+
 	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
 		// iter->first : Vector2; iter->second : Chunk
 		if (screen.containsArea(iter->first, Vector2i(Chunk::width, Chunk::height)))
 			iter->second->render(skyColor, iter->first);
 	}
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY );
 }
 
 MapNode* Map::getMapNode(int x, int y) const{

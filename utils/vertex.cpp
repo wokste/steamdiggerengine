@@ -61,11 +61,7 @@ void VertexArray::addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, c
 }
 
 void VertexArray::render() const{
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY );
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &(vertices[0].x));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &(vertices[0].textureX));
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY );
 }
