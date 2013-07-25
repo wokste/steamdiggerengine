@@ -22,10 +22,6 @@ BlockType::BlockType(const ConfigNode& config){
 	});
 }
 
-void BlockType::addDrop(int itemID, float chance){
-	//TODO: Implement using effects
-}
-
 int BlockType::getModelId() const{
 	// TODO: Make it possible to have rare variants
 	if (models.empty())
@@ -42,11 +38,11 @@ BlockTypeManager::BlockTypeManager(std::string jsonFileName){
 				int blockID = blocks.size();
 				int iconFrame = json.getNode("frame")[0].getInt("id");
 				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame);
-				block.addDrop(dropID);
+				block.drops.emplace_back(dropID);
 			} else if (dropTag != ""){
 				// TODO: Exception handling
 				// TODO: Lazy evaluation of dropTag
-				block.addDrop(GameGlobals::itemDefs->at(dropTag));
+				block.drops.emplace_back(dropTag);
 			}
 			blocks.push_back(block);
 		});

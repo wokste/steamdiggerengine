@@ -15,7 +15,7 @@ ItemStack::ItemStack(){
 Inventory::Inventory() : cooldown(){
 	selectedItem=0;
 
-	for (int i = 0; i < GameGlobals::itemDefs->size(); i++){
+	for (int i = 0; i < 2; i++){
 		add(i, (*GameGlobals::itemDefs)[i].maxStack);
 	}
 }

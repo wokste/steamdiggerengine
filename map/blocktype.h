@@ -2,9 +2,11 @@
 #include "../enums.h"
 #include <vector>
 #include "../utils/vertex.h"
+#include "../utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
 
 class ConfigNode;
+class World;
 
 class BlockType{
 public:
@@ -16,8 +18,9 @@ public:
 	std::vector<VertexArray> models;
 
 	BlockType(const ConfigNode& config);
-	void addDrop(int itemID, float chance = 1);
 	int getModelId() const;
+
+	DropList drops;
 };
 
 class BlockTypeManager{

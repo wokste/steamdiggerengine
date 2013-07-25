@@ -33,7 +33,6 @@ public:
 	std::unique_ptr<MonsterSpawner> monsterSpawner;
 
 	void removeEntity(Entity* entity);
-private:
 	void addEntity(Entity* entity);
 public:
 	template <class T>
