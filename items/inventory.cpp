@@ -49,8 +49,13 @@ void Inventory::selectItem(int nr, bool relative){
 bool Inventory::add(int itemId, int count){
 	for (int i = 0; i < width * height; ++i){
 		if (items[i].id == itemId && items[i].count > 0){
-			items[i].count += count;
-			return true;
+			if (items[i].count + count <= (*GameGlobals::itemDefs)[items[i].id].maxStack){
+				items[i].count += count;
+				return true;
+			} else {
+				count -= (*GameGlobals::itemDefs)[items[i].id].maxStack - items[i].count;
+				items[i].count = (*GameGlobals::itemDefs)[items[i].id].maxStack;
+			}
 		}
 	}
 
