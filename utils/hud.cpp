@@ -11,9 +11,19 @@
    * HUD *
    ******* */
 
+#include "font.h"
+#include "confignode.h"
+#include <sstream>
+
+Font HUD::font;
+
 HUD::HUD(){
 	hudElements.emplace_back(new HealthBarHUD());
 	hudElements.emplace_back(new InventoryHUD());
+
+	ConfigNode::load(GameGlobals::fileSystem.fullpath("font.json"), [&] (ConfigNode& json){
+		font.load(json);
+	});
 }
 
 HUD::~HUD(){
@@ -106,8 +116,6 @@ void HealthBarHUD::draw(const Player& player){
    * Inventory HUD *
    ***************** */
 
-#include <iostream>
-
 InventoryHUD::InventoryHUD(){
 	background.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
 	itemTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
@@ -140,6 +148,18 @@ void InventoryHUD::draw(const Player& player){
 				int framesPerRow = itemTexture->size.x / 32;
 				int frame = (*GameGlobals::itemDefs)[player.inventory.items[id].id].frameID;
 				itemTexture->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), Vector2i(x * 40 + 7, y * 40 + 7));
+			}
+		}
+	}
+
+	HUD::font.texture->bind();
+	for (int x = 0; x < Inventory::width;++x){
+		for (int y = 0; y < rows;++y){
+			int id = x + (3 - y - rowOffset) * Inventory::width;
+			if (player.inventory.items[id].count > 1){
+				std::stringstream text;
+				text << player.inventory.items[id].count;
+				HUD::font.draw(text.str(),Rect4i(x * 40 + 7, y * 40 + 7,32,32));
 			}
 		}
 	}

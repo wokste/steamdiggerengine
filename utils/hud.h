@@ -9,6 +9,7 @@ class Texture;
 class Screen;
 class Player;
 class HUDElement;
+class Font;
 
 class HUD{
 public:
@@ -19,6 +20,7 @@ public:
 	void draw(const Screen& screen, const Player& player);
 	void escapePressed();
 	bool onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
+	static Font font;
 
 private:
 	std::vector<std::unique_ptr<HUDElement>> hudElements;
