@@ -34,7 +34,8 @@ bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 	const BlockType& minedBlock = node->getBlock(targetLayer);
 	if (node->damageBlock(targetLayer, damageHigh, damageLow, materialType)){
 		LightingEngine::recalcAreaAround(map, pos);
-		minedBlock.drops.dropStuff(*owner.world, targetPos);
+		auto dropPos = Vector2::iToD(pos) + Vector2d(0.5,0.5);
+		minedBlock.drops.dropStuff(*owner.world, dropPos);
 	}
 	return true;
 }

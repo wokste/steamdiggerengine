@@ -118,7 +118,7 @@ void HealthBarHUD::draw(const Player& player){
 
 InventoryHUD::InventoryHUD(){
 	background.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
-	itemTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
+	itemTexture = GameGlobals::tileSet;
 	isOpen = true;
 	toggleOpen();
 	docking = Vector2d(0.5, 1);

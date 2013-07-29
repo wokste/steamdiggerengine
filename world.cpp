@@ -60,8 +60,10 @@ void World::logic(double time){
 void World::render(const Screen& screen){
 	map->render(screen, skybox->getLightColor());
 
-	for (auto& entity : entities)
-		entity->render();
+	for (auto& entity : entities){
+		sf::Color color = map->getColor(skybox->getLightColor(), entity->pos);
+		entity->render(color);
+	}
 }
 
 bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){

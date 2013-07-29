@@ -6,6 +6,7 @@
 class ItemDefManager;
 class World;
 class BlockTypeManager;
+class Texture;
 
 class FileSystem{
 public:
@@ -23,4 +24,5 @@ public:
 	static FileSystem fileSystem;
 	static std::mt19937 rnd;
 	static std::unique_ptr<BlockTypeManager> blockDefs;
+	static std::shared_ptr<Texture> tileSet;
 };

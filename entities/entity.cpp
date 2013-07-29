@@ -10,9 +10,7 @@
 #include "../utils/vector2.h"
 #include "../utils/assert.h"
 #include "../game.h"
-#include <SFML/Graphics/Color.hpp>
 #include "../enums.h"
-#include "../utils/skybox.h"
 
 int floorInt(double);
 
@@ -45,13 +43,10 @@ void Entity::logic(double time){
 	move(speed * time);
 }
 
-void Entity::render(){
+void Entity::render(const sf::Color& skyColor){
 	if (texture != nullptr){
 		texture->bind();
-
-		sf::Color color = world->map->getColor(world->skybox->getLightColor(), pos);
-		glColor3ub(color.r,color.g,color.b);
-		// TODO: Stuff
+		glColor3ub(skyColor.r,skyColor.g,skyColor.b);
 		texture->draw(Vector2i(0,0),size,Vector2d(pos.x + frameOffset.x, pos.y + frameOffset.y),Vector2d(size.x / 16.0,size.y / 16.0));
 	}
 }

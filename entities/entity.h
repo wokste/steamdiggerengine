@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../utils/vector2.h"
+#include <SFML/Graphics/Color.hpp>
 #include <memory>
 
 class Attack;
@@ -21,7 +22,7 @@ public:
 	bool isInArea(Vector2d px1, Vector2d px2);
 
 	virtual void logic(double time);
-	void render();
+	virtual void render(const sf::Color& skyColor);
 	void startAnim(std::string animName);
 	void move(Vector2d change);
 	void push(Vector2d dir, double force);
