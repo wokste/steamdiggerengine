@@ -2,11 +2,14 @@
 #include "entity.h"
 #include "../cooldown.h"
 
+#include <memory>
+
 class Attack;
 class Texture;
 class Entity;
 class ConfigNode;
 class World;
+class DropList;
 
 struct Stat{
 	int cur;
@@ -27,8 +30,8 @@ class Creature : public Entity{
 public:
 	Creature();
 	virtual ~Creature();
-	virtual void load(const ConfigNode& config);
-	virtual void logic(double time);
+	void load(const ConfigNode& config) override;
+	void logic(double time) override;
 	void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature& other);

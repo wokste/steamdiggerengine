@@ -37,7 +37,7 @@ BlockTypeManager::BlockTypeManager(std::string jsonFileName){
 			if (dropTag == "_default"){
 				int blockID = blocks.size();
 				int iconFrame = json.getNode("frame")[0].getInt("id");
-				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame);
+				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, json.getString("tag",""));
 				block.drops.emplace_back(dropID);
 			} else if (dropTag != ""){
 				// TODO: Exception handling

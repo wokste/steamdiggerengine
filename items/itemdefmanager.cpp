@@ -35,3 +35,8 @@ int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string
 	item->onUse.add(std::unique_ptr<Effect>(new BuildEffect(blockID)));
 	return insert(std::move(item), tag);
 }
+
+int ItemDefManager::at(std::string& tag)
+{
+	return tags.at(tag);
+}

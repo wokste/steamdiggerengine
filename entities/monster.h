@@ -21,6 +21,7 @@ public:
 public:
 	Attack hitAttack;
 	std::shared_ptr<MovementType> movementType;
+	std::shared_ptr<DropList> dropList;
 	Cooldown cooldown;
 
 	Creature* target;

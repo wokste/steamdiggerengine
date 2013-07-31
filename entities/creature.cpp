@@ -1,8 +1,6 @@
 #include "creature.h"
 #include <sstream>
-
 #include "../attack.h"
-
 #include "../utils/vector2.h"
 #include "../utils/confignode.h"
 #include "../game.h"
@@ -50,7 +48,9 @@ std::string Stat::asText() const{
 
 Creature::Creature(){}
 
-Creature::~Creature(){}
+Creature::~Creature(){
+
+}
 
 void Creature::load(const ConfigNode& config)
 {

@@ -4,6 +4,7 @@
 #include "player.h"
 #include "../world.h"
 #include "../utils/confignode.h"
+#include "../utils/drop.h"
 
 #include <iostream>
 
@@ -20,10 +21,16 @@ void Monster::load(const ConfigNode& config){
 	team = config.getInt("team", 1);
 
 	movementType.reset(MovementType::staticLoad(config));
+
+	dropList.reset(new DropList);
+	const_cast<ConfigNode&>(config).getNode("drops").forEachNode([&](ConfigNode& node){
+		dropList->emplace_back(node.getString("tag"));
+	});
 }
 
 void Monster::logic(double time){
 	if (!alive()){
+		dropList->dropStuff(*world, pos);
 		world->removeEntity(this);
 		return;
 	}

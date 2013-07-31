@@ -31,7 +31,6 @@ public:
 	virtual void hitTerrain(bool hitWall);
 	virtual void onCreatureDied(Creature* other){}
 
-
 public:
 	// Variables
 	Vector2d pos;
