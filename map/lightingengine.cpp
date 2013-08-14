@@ -116,9 +116,8 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			MapNode* node = map.getMapNode(x, y);
 			if (node == nullptr)
 				continue;
-
-			node->light[LightType::placed] = sf::Color::Black;
-			node->light[LightType::sky] = sf::Color::Black;
+			for (int lightType = 0; lightType < LightType::count; lightType++)
+				node->light[lightType] = sf::Color::Black;
 		}
 	}
 
@@ -128,10 +127,11 @@ void LightingEngine::recalcArea(Map& map, const Vector2i& pos1, const Vector2i& 
 			MapNode* node = map.getMapNode(x, y);
 			if (node == nullptr)
 				continue;
-
-			const BlockType& frontBlock = node->getBlock(Layer::front);
-			if (node->isset(Layer::front) && frontBlock.lightColor != sf::Color::Black){
-				applyLight(map, Vector2i(x,y), frontBlock.lightColor, LightType::placed);
+			for (int layer = 0; layer < Layer::count; layer++){
+			const BlockType& frontBlock = node->getBlock(layer);
+				if (node->isset(layer) && frontBlock.lightColor != sf::Color::Black){
+					applyLight(map, Vector2i(x,y), frontBlock.lightColor, LightType::placed);
+				}
 			}
 
 			if (!node->isset(Layer::back)){

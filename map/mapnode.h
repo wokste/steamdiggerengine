@@ -1,4 +1,5 @@
 #pragma once;
+#include "../enums.h"
 #include "../utils/vector2.h"
 #include <SFML/Graphics/Color.hpp>
 
@@ -19,10 +20,8 @@ public:
 	sf::Color light[2];
 	sf::Color getLight(const sf::Color& skyColor) const;
 	bool damageBlock(int layer, int damageHigh, int damageLow, int damageTypeSet);
-
-	static constexpr int MAX_LAYERS = 2;
 private:
-	int modelId[MAX_LAYERS];
-	int blockId[MAX_LAYERS];
-	int HP[MAX_LAYERS];
+	int modelId[Layer::count];
+	int blockId[Layer::count];
+	int HP[Layer::count];
 };

@@ -8,13 +8,13 @@
 #include "../game.h"
 
 MapNode::MapNode(){
-	for (int i = 0; i < MAX_LAYERS; ++i){
+	for (int i = 0; i < Layer::count; ++i){
 		modelId[i] = -1;
 		blockId[i] = 0;
 		HP[i] = 0;
 	}
-	light[0] = sf::Color::Black;
-	light[1] = sf::Color::Black;
+	for (int i = 0; i < LightType::count; ++i)
+		light[i] = sf::Color::Black;
 }
 
 void MapNode::setBlock(int newBlockId, int layer){
@@ -34,20 +34,14 @@ sf::Color MapNode::getLight(const sf::Color& skyColor) const{
 
 void MapNode::render(const sf::Color& skyColor, Vector2i pos) const{
 	sf::Color currentLight = getLight(skyColor);
-	glColor3ub(currentLight.r, currentLight.g, currentLight.b);
-	if (modelId[Layer::front] >= 0){
-		glPushMatrix();
-		glTranslated(pos.x, pos.y, Layer::front);
-		(*GameGlobals::blockDefs)[blockId[Layer::front]].models[modelId[Layer::front]].render();
-		glPopMatrix();
-	}
-
-	glColor3ub(currentLight.r * 0.8, currentLight.g * 0.8, currentLight.b * 0.8);
-	if (modelId[Layer::back] >= 0){
-		glPushMatrix();
-		glTranslated(pos.x, pos.y, Layer::back);
-		(*GameGlobals::blockDefs)[blockId[Layer::back]].models[modelId[Layer::back]].render();
-		glPopMatrix();
+	for (int layer = 0; layer < Layer::count; ++layer){
+		glColor3ub(currentLight.r, currentLight.g, currentLight.b);
+		if (modelId[layer] >= 0){
+			glPushMatrix();
+			glTranslated(pos.x, pos.y, layer);
+			(*GameGlobals::blockDefs)[blockId[layer]].models[modelId[layer]].render();
+			glPopMatrix();
+		}
 	}
 }
 
