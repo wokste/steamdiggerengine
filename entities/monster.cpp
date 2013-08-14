@@ -11,8 +11,6 @@
 Monster::Monster() : target(nullptr){}
 Monster::~Monster(){}
 
-// TODO: Hitwall
-
 void Monster::load(const ConfigNode& config){
 	Creature::load(config);
 	ConfigNode onHit = config.getNodeConst("on-hit");

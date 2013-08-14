@@ -15,7 +15,7 @@ BlockType::BlockType(const ConfigNode& config){
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 
 	const_cast<ConfigNode&>(config).getNode("frame").forEachNode([&] (const ConfigNode& json) {
-		auto framesPerSheet = sf::Vector2i(4,4);
+		auto framesPerSheet = sf::Vector2i(8,8);
 		auto id      = json.getInt("id",-1);
 		auto display = json.getString("display","cube");
 		models.push_back(VertexArray(display,id,framesPerSheet));

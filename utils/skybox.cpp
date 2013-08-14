@@ -12,8 +12,8 @@ SkyboxStateData::SkyboxStateData(double newStateTime, double newTransitionTime, 
 {}
 
 Skybox::Skybox(){
-	states.push_back(SkyboxStateData(20.0,5.0,sf::Color(50,100,200),sf::Color(200,200,150),1));
-	states.push_back(SkyboxStateData(20.0,5.0,sf::Color(0,0,20), sf::Color(20,20,50),0));
+	states.push_back(SkyboxStateData(300.0,60.0,sf::Color(50,100,200),sf::Color(200,200,150),1));
+	states.push_back(SkyboxStateData(300.0,60.0,sf::Color(0,0,20), sf::Color(20,20,50),0));
 	currentState = 0;
 	timeToNextState = states[currentState].stateTime;
 }
