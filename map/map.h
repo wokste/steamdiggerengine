@@ -26,7 +26,6 @@ struct ChunkSorter{
 
 class Map{
 public:
-	Vector2i  tileSize;
 	double    gravity = 25;
 
 public:

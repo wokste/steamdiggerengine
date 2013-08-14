@@ -20,8 +20,7 @@ bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 	return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
 
-Map::Map(int seed) :
-	tileSize(32,32)
+Map::Map(int seed)
 {
 	tileSet = GameGlobals::tileSet;
 	generator.reset(new MapGenerator(seed, *this));
