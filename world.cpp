@@ -52,6 +52,17 @@ void World::logic(double time){
 	}
 	toDelete.clear();
 
+	// == Addition of entities ==
+	for (auto adding: toAdd){
+		auto creature = dynamic_cast<Creature*>(adding);
+
+		if (creature != nullptr){
+			creatures.push_back(creature);
+		}
+		entities.push_back(adding);
+	}
+	toAdd.clear();
+
 	// == Final logic ==
 	monsterSpawner->logic(this, time);
 	skybox->logic(time);
@@ -82,12 +93,7 @@ bool World::areaHasEntity(Vector2i px1, Vector2i px2){
 }
 
 void World::addEntity(Entity* entity){
-	auto creature = dynamic_cast<Creature*>(entity);
-
-	if (creature != nullptr){
-		creatures.push_back(creature);
-	}
-	entities.push_back(entity);
+	toAdd.push_back(entity);
 }
 
 void World::removeEntity(Entity* entity){

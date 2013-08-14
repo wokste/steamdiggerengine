@@ -27,8 +27,9 @@ public:
 	std::vector<Entity*> entities;
 	// A subset of entities containing all creatures
 	std::vector<Creature*> creatures;
-	// A subset of entities containing all entities that will be deleted. This is added because removing from entities or creatures at the wrong moment invalidates an iterator.
+	// A subset of entities containing all entities that will be added/deleted. This is added because adding/removing from entities or creatures at the wrong moment invalidates an iterator.
 	std::vector<Entity*> toDelete;
+	std::vector<Entity*> toAdd;
 	std::unique_ptr<Skybox> skybox;
 	std::unique_ptr<MonsterSpawner> monsterSpawner;
 
