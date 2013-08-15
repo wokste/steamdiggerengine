@@ -46,7 +46,8 @@ void Player::checkInput(double time, Screen& screen){
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 			pos.x = 2;
 			pos.y = -2;
-			HP = 100;
+			HP.cur = HP.max;
+			shield.cur = shield.max;
 		}
 	}
 
@@ -88,4 +89,17 @@ void Player::load(const ConfigNode& config){
 
 bool Player::pickupItem(int id, int count){
 	return inventory.add(id,count);
+}
+
+void Player::render(const sf::Color& skyColor){
+	if (alive())
+		Entity::render(skyColor);
+}
+
+void Player::takeDamage(const Attack& attack, Vector2d source){
+	if (alive()){
+		Creature::takeDamage(attack, source);
+		if (!alive())
+			inventory.dropStuff(0.5, *world, pos);
+	}
 }

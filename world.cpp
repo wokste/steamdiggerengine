@@ -100,3 +100,14 @@ void World::removeEntity(Entity* entity){
 	if (std::find(toDelete.begin(), toDelete.end(), entity)==toDelete.end())
 		toDelete.push_back(entity);
 }
+
+void World::forEachEntity(std::function<void(Entity&)> func){
+	for(auto& e: entities)
+		func(*e);
+}
+
+void World::forEachCreature(std::function<void(Creature&)> func){
+	for(auto& e: creatures)
+		if (e->alive())
+			func(*e);
+}

@@ -48,24 +48,27 @@ void MonsterSpawner::logic(World* world, double time){
 		std::vector<Creature*> spawnAround;
 
 		// Step 1: Find the creatures it should spawn around.
-		for(auto test: world->creatures){
-			if (test->isPlayer){
+		world->forEachCreature([&](Creature& test){
+			if (test.isPlayer){
 				// This is a creature on the player team and monsters should be spawned around it
-				int numMonsters = std::count_if(world->creatures.begin(), world->creatures.end(),[&](Creature* other) {
-					return (other->aggressiveTo(*test) && Vector2::length(other->pos - test->pos) < despawnRadius);
+				int numMonsters = 0;
+				world->forEachCreature([&](Creature& other){
+					if (other.aggressiveTo(test) && Vector2::length(other.pos - test.pos) < despawnRadius)
+						numMonsters++;
 				});
-				if (numMonsters >= spawnConfig.maxMonsters)
-					continue;
-				spawnAround.push_back(test);
+				if (numMonsters < spawnConfig.maxMonsters)
+					spawnAround.push_back(&test);
 			} else {
 				// Testing whether this creature should be deleted
-				if(std::all_of(world->creatures.begin(), world->creatures.end(),[&](Creature* other) {
-					return (!other->aggressiveTo(*test) || Vector2::length(other->pos - test->pos) > despawnRadius);
-				})){
-					world->removeEntity(test);
-				}
+				bool playerNear = false;
+				world->forEachCreature([&](Creature& other){
+					if (other.aggressiveTo(test) && Vector2::length(other.pos - test.pos) < despawnRadius)
+						playerNear = true;
+				});
+				if (!playerNear)
+					world->removeEntity(&test);
 			}
-		}
+		});
 
 		// Step 2: Spawn around those creatures
 		for(auto player: spawnAround){

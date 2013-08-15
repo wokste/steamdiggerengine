@@ -6,6 +6,8 @@
 #include "../screen.h"
 #include "../entities/player.h"
 #include "../game.h"
+#include "../entities/droppeditem.h"
+#include "../world.h"
 
 ItemStack::ItemStack(){
 	id = 0;
@@ -47,26 +49,39 @@ void Inventory::selectItem(int nr, bool relative){
 }
 
 bool Inventory::add(int itemId, int count){
-	for (int i = 0; i < width * height; ++i){
-		if (items[i].id == itemId && items[i].count > 0){
-			if (items[i].count + count <= (*GameGlobals::itemDefs)[items[i].id].maxStack){
-				items[i].count += count;
+	for (auto& i: items){
+		if (i.id == itemId && i.count > 0){
+			if (i.count + count <= (*GameGlobals::itemDefs)[i.id].maxStack){
+				i.count += count;
 				return true;
 			} else {
-				count -= (*GameGlobals::itemDefs)[items[i].id].maxStack - items[i].count;
-				items[i].count = (*GameGlobals::itemDefs)[items[i].id].maxStack;
+				count -= (*GameGlobals::itemDefs)[i.id].maxStack - i.count;
+				i.count = (*GameGlobals::itemDefs)[i.id].maxStack;
 			}
 		}
 	}
 
 	// Find empty slots
-	for (int i = 0; i < width * height; ++i){
-		if (items[i].count <= 0){
-			items[i].id = itemId;
-			items[i].count = count;
+	for (auto& i: items){
+		if (i.count <= 0){
+			i.id = itemId;
+			i.count = count;
 			return true;
 		}
 	}
 
 	return false;
+}
+
+void Inventory::dropStuff(double proportion, World& world, Vector2d position){
+	for (auto& i: items){
+		int dropCount = i.count * proportion;
+		if (dropCount > 0){
+			i.count -= dropCount;
+
+			auto drop = new DroppedItem(i.id, dropCount);
+			drop->setPos(&world, position);
+			world.addEntity(drop);
+		}
+	}
 }

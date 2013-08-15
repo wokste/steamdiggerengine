@@ -47,12 +47,13 @@ void DroppedItem::logic(double time){
 
 	// Check for collisions
 	Rect4d boundingBox = getBoundingBox();
-	for (auto& creature : world->creatures){
-		if (boundingBox.intersects(creature->getBoundingBox()) && creature->pickupItem(itemId, count)){
+	bool pickedUp = false;
+	world->forEachCreature([&](Creature& creature){
+		if (!pickedUp && boundingBox.intersects(creature.getBoundingBox()) && creature.pickupItem(itemId, count)){
 			world->removeEntity(this);
-			return;
+			pickedUp = true;
 		}
-	}
+	});
 }
 
 void DroppedItem::hitTerrain(bool hitWall){

@@ -24,15 +24,6 @@ public:
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
 
-	std::vector<Entity*> entities;
-	// A subset of entities containing all creatures
-	std::vector<Creature*> creatures;
-	// A subset of entities containing all entities that will be added/deleted. This is added because adding/removing from entities or creatures at the wrong moment invalidates an iterator.
-	std::vector<Entity*> toDelete;
-	std::vector<Entity*> toAdd;
-	std::unique_ptr<Skybox> skybox;
-	std::unique_ptr<MonsterSpawner> monsterSpawner;
-
 	void removeEntity(Entity* entity);
 	void addEntity(Entity* entity);
 public:
@@ -46,4 +37,16 @@ public:
 		}
 		return spawned;
 	}
+
+	void forEachEntity(std::function<void(Entity&)>);
+	void forEachCreature(std::function<void(Creature&)>);
+private:
+	std::vector<Entity*> entities;
+	// A subset of entities containing all creatures
+	std::vector<Creature*> creatures;
+	// A subset of entities containing all entities that will be added/deleted. This is added because adding/removing from entities or creatures at the wrong moment invalidates an iterator.
+	std::vector<Entity*> toDelete;
+	std::vector<Entity*> toAdd;
+	std::unique_ptr<Skybox> skybox;
+	std::unique_ptr<MonsterSpawner> monsterSpawner;
 };

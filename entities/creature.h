@@ -32,7 +32,7 @@ public:
 	virtual ~Creature();
 	void load(const ConfigNode& config) override;
 	void logic(double time) override;
-	void takeDamage(const Attack& attack, Vector2d source);
+	virtual void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature& other);
 	virtual bool pickupItem(int id, int count){return false;}

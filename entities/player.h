@@ -9,9 +9,10 @@ class Player : public Creature{
 public:
 	Player();
 	virtual ~Player();
-	virtual void logic(double time);
+	void logic(double time) override;
 	virtual void checkInput(double time, Screen& screen);
-
+	void render(const sf::Color& skyColor) override;
+	void takeDamage(const Attack& attack, Vector2d source) override;
 	void onMouseWheel(int delta);
 	void selectItem(int nr);
 	bool useItem(Screen& screen);
