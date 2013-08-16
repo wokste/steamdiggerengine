@@ -133,13 +133,16 @@ void InventoryHUD::draw(const Player& player){
 	// Draw background
 	if (isOpen){
 		background->draw(Vector2i(0, 0), size, Vector2i(0, 0));
+		background->draw(Vector2i(406, 0), Vector2i(48,48), Vector2i(40 * player.inventory.selectedItem, 165));
 		rows = Inventory::height;
 		rowOffset = 0;
 	} else {
 		background->draw(Vector2i(0, 165), size, Vector2i(0, 0));
+		background->draw(Vector2i(406, 0), Vector2i(48,48), Vector2i(40 * player.inventory.selectedItem, 0));
 		rows = 1;
 		rowOffset = Inventory::height - rows;
 	}
+	// Drawing items
 	itemTexture->bind();
 	for (int x = 0; x < Inventory::width;++x){
 		for (int y = 0; y < rows;++y){
@@ -152,6 +155,7 @@ void InventoryHUD::draw(const Player& player){
 		}
 	}
 
+	// Drawing the text
 	HUD::font.texture->bind();
 	for (int x = 0; x < Inventory::width;++x){
 		for (int y = 0; y < rows;++y){
