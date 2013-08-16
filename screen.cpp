@@ -1,5 +1,6 @@
 #include "screen.h"
 #include "entities/entity.h"
+#include "enums.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SFML/Window.hpp>
@@ -89,4 +90,11 @@ Vector2d Screen::mousePos(const int layer) const{
 
     gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
     return Vector2d(posX + center.x, posY + center.y);
+}
+
+int Screen::getSelectedLayer() const{
+	return
+		(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+		? Layer::back
+		: Layer::front;
 }

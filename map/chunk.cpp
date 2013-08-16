@@ -1,10 +1,10 @@
 #include "chunk.h"
 #include "mapgenerator.h"
 
-void Chunk::render(const sf::Color& skyColor, const Vector2i& topLeft) const{
+void Chunk::render(const sf::Color& skyColor, const Vector2i& topLeft, int focussedLayer) const{
 	for(int y = 0; y < height; ++y){
 		for(int x = 0; x < width; ++x){
-			nodes[x][y].render(skyColor, Vector2i(x,y) + topLeft);
+			nodes[x][y].render(skyColor, Vector2i(x,y) + topLeft, focussedLayer);
 		}
 	}
 }

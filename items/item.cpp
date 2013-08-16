@@ -26,10 +26,6 @@ ItemType::~ItemType(){
 }
 
 bool ItemType::use(Entity& user, const Screen& screen){
-	int layer = Layer::front;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
-		layer = Layer::back;
-
+	int layer = screen.getSelectedLayer();
 	return onUse.run(user, user.pos, screen.mousePos(layer), layer);
 }

@@ -13,7 +13,7 @@ public:
 	MapNode nodes[width][height];
 
 	Chunk(const MapGenerator& generator, const Vector2i& topLeft);
-	void render(const sf::Color& skyColor, const Vector2i& topLeft) const;
+	void render(const sf::Color& skyColor, const Vector2i& topLeft, int focussedLayer) const;
 };
 
 // == Constraints ==

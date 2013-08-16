@@ -54,10 +54,12 @@ void Map::render(const Screen& screen, const sf::Color& skyColor) const{
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY );
 
+	bool selectedLayer  = screen.getSelectedLayer();
 	for (auto iter = chunks.begin(); iter != chunks.end(); iter++) {
-		// iter->first : Vector2; iter->second : Chunk
-		if (screen.containsArea(iter->first, Vector2i(Chunk::width, Chunk::height)))
-			iter->second->render(skyColor, iter->first);
+		auto& topLeftCorner = iter->first;
+		auto& chunk         = iter->second;
+		if (screen.containsArea(topLeftCorner, Vector2i(Chunk::width, Chunk::height)))
+			chunk->render(skyColor, topLeftCorner, selectedLayer);
 	}
 
 	glDisableClientState(GL_VERTEX_ARRAY);
