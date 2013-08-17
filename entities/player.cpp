@@ -57,9 +57,9 @@ void Player::checkInput(double time, Screen& screen){
 }
 
 void Player::onMouseWheel(int delta){
-	if (delta > 0){
+	if (delta < 0){
 		inventory.selectItem(1, true);
-	} else if (delta < 0){
+	} else if (delta > 0){
 		inventory.selectItem(-1, true);
 	}
 }

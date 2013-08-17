@@ -18,7 +18,7 @@ public:
 	~HUD();
 
 	void draw(const Screen& screen, const Player& player);
-	void escapePressed();
+	void toggleInventory();
 	bool onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
 	static Font font;
 
@@ -52,15 +52,23 @@ private:
 
 class InventoryHUD : public HUDElement{
 public:
+	static constexpr int celSize = 32, celBorder = 8, outsideBorder = 7;
+	int rowsShown = 1;
+
 	InventoryHUD();
 	InventoryHUD(const InventoryHUD& that) = delete;
 	virtual ~InventoryHUD();
 
 	virtual void draw(const Player& player);
-	void toggleOpen();
+	void toggle();
 private:
 	std::shared_ptr<Texture> background;
 	std::shared_ptr<Texture> itemTexture;
 	bool isOpen;
+
+	Vector2i slotMarkerSize;
+	int rows;
+	int cols;
+	int backgroundTop;
 };
 

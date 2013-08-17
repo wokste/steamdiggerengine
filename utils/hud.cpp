@@ -55,8 +55,13 @@ void HUD::draw(const Screen& screen, const Player& player){
 	glPopMatrix();
 }
 
-void HUD::escapePressed(){
-
+void HUD::toggleInventory(){
+	for (auto& elem: hudElements){
+		auto inventoryElem = dynamic_cast<InventoryHUD*>(elem.get());
+		if (inventoryElem){
+			inventoryElem->toggle();
+		}
+	}
 }
 
 bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos){
@@ -120,8 +125,9 @@ InventoryHUD::InventoryHUD(){
 	background.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
 	itemTexture = GameGlobals::tileSet;
 	isOpen = true;
-	toggleOpen();
+	toggle();
 	docking = Vector2d(0.5, 1);
+	slotMarkerSize = Vector2i(46,46);
 }
 
 InventoryHUD::~InventoryHUD(){
@@ -129,26 +135,21 @@ InventoryHUD::~InventoryHUD(){
 
 void InventoryHUD::draw(const Player& player){
 	background->bind();
-	int rows, rowOffset;
+	int rowOffset;
+
 	// Draw background
-	if (isOpen){
-		background->draw(Vector2i(0, 0), size, Vector2i(0, 0));
-		background->draw(Vector2i(406, 0), Vector2i(48,48), Vector2i(40 * player.inventory.selectedItem, 165));
-		rows = Inventory::height;
-		rowOffset = 0;
-	} else {
-		background->draw(Vector2i(0, 165), size, Vector2i(0, 0));
-		background->draw(Vector2i(406, 0), Vector2i(48,48), Vector2i(40 * player.inventory.selectedItem, 0));
-		rows = 1;
-		rowOffset = Inventory::height - rows;
-	}
+
+	background->draw(Vector2i(0, backgroundTop), size, Vector2i(0, 0));
+	background->draw(Vector2i(406, 0), slotMarkerSize, Vector2i((celSize + celBorder) * player.inventory.selectedItem, size.y - slotMarkerSize.y));
+
+	rowOffset = Inventory::height - rows;
 	// Drawing items
 	itemTexture->bind();
 	for (int x = 0; x < Inventory::width;++x){
 		for (int y = 0; y < rows;++y){
 			int id = x + (3 - y - rowOffset) * Inventory::width;
 			if (player.inventory.items[id].count > 0){
-				int framesPerRow = itemTexture->size.x / 32;
+				int framesPerRow = itemTexture->size.x / celSize;
 				int frame = (*GameGlobals::itemDefs)[player.inventory.items[id].id].frameID;
 				itemTexture->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), Vector2i(x * 40 + 7, y * 40 + 7));
 			}
@@ -163,17 +164,19 @@ void InventoryHUD::draw(const Player& player){
 			if (player.inventory.items[id].count > 1){
 				std::stringstream text;
 				text << player.inventory.items[id].count;
-				HUD::font.draw(text.str(),Rect4i(x * 40 + 7, y * 40 + 7,32,32));
+				HUD::font.draw(text.str(),Rect4i(x * (celSize + celBorder) + outsideBorder, y * (celSize + celBorder) + outsideBorder,celSize,celSize));
 			}
 		}
 	}
 }
 
-void InventoryHUD::toggleOpen(){
+void InventoryHUD::toggle(){
 	isOpen = !isOpen;
-	if (isOpen){
-		size = Vector2i(405, 164);
-	} else {
-		size = Vector2i(405, 46);
-	}
+
+	cols = Inventory::width;
+	rows = (isOpen) ? (Inventory::height) : 1;
+	backgroundTop = (isOpen) ? 0 : (Inventory::height * celSize + (Inventory::height - 1) * celBorder + 2 * outsideBorder);
+	size = Vector2i(cols * celSize + (cols - 1) * celBorder + 2 * outsideBorder,
+	                rows * celSize + (rows - 1) * celBorder + 2 * outsideBorder);
+
 }

@@ -31,6 +31,10 @@ void doWindowEvents(){
 				player->tryJump();
 			else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
 				player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
+			else if (event.key.code == sf::Keyboard::Key::Num0)
+				player->selectItem(9);
+			else if (event.key.code == sf::Keyboard::Key::E)
+				hud->toggleInventory();
 		}
 	}
 
