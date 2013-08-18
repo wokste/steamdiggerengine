@@ -90,13 +90,11 @@ void Map::render(const Screen& screen, const sf::Color& skyColor) const{
 
 MapNode* Map::getMapNode(int x, int y) const{
 	Vector2i key = Vector2i(x & ~(Chunk::widthMask),y & ~(Chunk::heightMask));
-	// TODO: This can be optimized. One lookup too much
-	if (chunks.find(key) == chunks.end()) {
+	auto iterator = chunks.find(key);
+	if (iterator == chunks.end()) {
 		return nullptr;
 	} else {
-		Map* mutableThis = const_cast<Map*>(this);
-		Chunk* chunk = mutableThis->chunks[key];
-		return &(chunk->nodes[x & Chunk::widthMask][y & Chunk::heightMask]);
+		return &(iterator->second->nodes[x & Chunk::widthMask][y & Chunk::heightMask]);
 	}
 }
 
