@@ -87,14 +87,15 @@ void MonsterSpawner::logic(World* world, double time){
 					if (other.aggressiveTo(test) && Vector2::length(other.pos - test.pos) < despawnRadius)
 						playerNear = true;
 				});
-				if (!playerNear)
+				if (!playerNear){
 					world->removeEntity(&test);
+				}
 			}
 		});
 
 		// Step 2: Spawn around those creatures
 		for(auto player: spawnAround){
-			for (int attempt = 0; attempt < 50; ++attempt ){
+			for (int attempt = 0; attempt < spawnAttempts; ++attempt ){
 				if (trySpawn(world, player)){
 					break;
 				}

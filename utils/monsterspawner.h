@@ -50,7 +50,8 @@ private:
 	Cooldown cooldown;
 	SpawnConfig basicSpawnConfig;
 	bool trySpawn(World* world, Creature* player);
-	const int despawnRadius = 48;
-	const int spawnRadiusMin = 28;
-	const int spawnRadiusMax = 32;
+	static constexpr int despawnRadius = 48;
+	static constexpr int spawnRadiusMin = 28;
+	static constexpr int spawnRadiusMax = 32;
+	static constexpr int spawnAttempts = 256;
 };
