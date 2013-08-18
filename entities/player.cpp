@@ -91,6 +91,8 @@ void Player::selectItem(int nr){
 }
 
 bool Player::useItem(Screen& screen){
+	if (!alive())
+		return false;
 	return inventory.use(*this, screen);
 }
 
