@@ -28,15 +28,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-int ItemReference::getID() const{
-	if (id < 0 && tag != "") {
-		id = GameGlobals::itemDefs->at(tag);
-		if (id < 0){
-			std::cerr << "Inventory tag " << tag << " not found\n";
-		}
-		tag = "";
+void ItemReference::calcID(){
+	if (tag == "")
+		return;
+
+	id = GameGlobals::itemDefs->at(tag);
+	if (id < 0){
+		std::cerr << "Inventory tag " << tag << " not found\n";
+		return;
 	}
-	return id;
+	tag = "";
 }
 
 Drop::Drop(int id) : ref(id)
@@ -57,8 +58,16 @@ void DropList::dropStuff(World& world, Vector2d pos) const{
 	for(auto& item: *this){
 		// TODO: stack sizes
 		// TODO: chances
-		auto drop = new DroppedItem(item.ref.getID(), 1);
-		drop->setPos(&world, pos);
-		world.addEntity(drop);
+		if (item.ref.id >= 0){
+			auto drop = new DroppedItem(item.ref.id, 1);
+			drop->setPos(&world, pos);
+			world.addEntity(drop);
+		}
+	}
+}
+
+void DropList::postLoad(){
+	for(auto& item: *this){
+		item.ref.calcID();
 	}
 }

@@ -62,13 +62,17 @@ BlockTypeManager::BlockTypeManager(std::string jsonFileName){
 				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, json.getString("tag",""));
 				block.drops.emplace_back(dropID);
 			} else if (dropTag != ""){
-				// TODO: Exception handling
-				// TODO: Lazy evaluation of dropTag
 				block.drops.emplace_back(dropTag);
 			}
 			blocks.push_back(block);
 		});
 	});
+}
+
+void BlockTypeManager::postLoad(){
+	for(auto& block: blocks){
+		block.drops.postLoad();
+	}
 }
 
 BlockTypeManager::~BlockTypeManager(){

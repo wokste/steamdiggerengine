@@ -31,10 +31,10 @@ class ItemReference{
 public:
 	inline ItemReference(int id) : id(id){}
 	inline ItemReference(std::string tag) : id(-1), tag(tag){}
-	int getID() const;
+	void calcID();
+	int id = -1;
 private:
-	mutable int id;
-	mutable std::string tag;
+	std::string tag;
 };
 
 struct Drop{
@@ -52,4 +52,5 @@ private:
 class DropList : public std::vector<Drop>{
 public:
 	void dropStuff(World& world, Vector2d pos) const;
+	void postLoad();
 };

@@ -46,6 +46,7 @@ void Monster::load(const ConfigNode& config){
 	const_cast<ConfigNode&>(config).getNode("drops").forEachNode([&](ConfigNode& node){
 		dropList->emplace_back(node.getString("tag"));
 	});
+	dropList->postLoad();
 }
 
 void Monster::logic(double time){

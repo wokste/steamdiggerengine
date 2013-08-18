@@ -37,6 +37,9 @@ void GameGlobals::init(){
 	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
 	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.json")));
 	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.json")));
+
+	// Actions that require the itemDefs to be loaded
+	blockDefs->postLoad();
 }
 
 FileSystem::FileSystem(){

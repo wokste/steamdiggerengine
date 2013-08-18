@@ -51,4 +51,5 @@ public:
 	BlockTypeManager(std::string jsonFileName);
 	~BlockTypeManager();
 	BlockType& operator[](int id);
+	void postLoad();
 };
