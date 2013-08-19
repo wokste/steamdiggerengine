@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "perlinnoise.h"
 #include <cmath>
 #include <iostream>
+#include "../utils/mathplus.h"
 
 PerlinNoise::PerlinNoise(int newSeed, int newOctaves, double newPersistence, double newScale) :
 	seed(newSeed),
@@ -42,33 +43,17 @@ double PerlinNoise::random2D(int x,int y) const{
 	return 1.0-((double)nn/1073741824.0);
 }
 
-/// Interpolation between the given values.
-/// Pre: fraction must be between 0 and 1.
-double PerlinNoise::interpolate(double value0, double value1, double fraction) const{
-	constexpr double PI = 3.1415927;
-
-	//Smooth fraction with cosine
-	fraction = (1 - std::cos(fraction * PI)) / 2.0;
-	return value0 * (1.0 - fraction) + value1 * (fraction);
-}
-
-///This is kinda a cheap way to floor a double integer.
-int PerlinNoise::floorInt(double x) const{
-  int i = (int)x; // truncate
-  return i - ( i > x ); // convert trunc to floor
-}
-
 double PerlinNoise::noiseIteration2d(double x,double y) const{
-	int xFloored=floorInt(x);
-	int yFloored=floorInt(y);
+	int xFloored = MathPlus::floorInt(x);
+	int yFloored = MathPlus::floorInt(y);
 	double topLeft    =random2D(xFloored  ,yFloored);
 	double topRight   =random2D(xFloored+1,yFloored);
 	double bottomLeft =random2D(xFloored  ,yFloored+1);
 	double bottomRight=random2D(xFloored+1,yFloored+1);
 
-	double top   =interpolate(topLeft,   topRight,   x-xFloored);
-	double bottom=interpolate(bottomLeft,bottomRight,x-xFloored);
-	return        interpolate(top,       bottom,     y-yFloored);
+	double top    = MathPlus::interpolate(topLeft,   topRight,   x-xFloored);
+	double bottom = MathPlus::interpolate(bottomLeft,bottomRight,x-xFloored);
+	return          MathPlus::interpolate(top,       bottom,     y-yFloored);
 }
 
 double PerlinNoise::noise2d(double x, double y) const{

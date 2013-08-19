@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "vector2.h"
-#include <cmath>
+#include "mathplus.h"
 
 Vector2d Vector2::setLength(Vector2d source, double lengthNew){
 	double lengthOld = length(source);
@@ -44,17 +44,8 @@ Vector2d Vector2::iToD(Vector2i source){
 	return Vector2d(source.x, source.y);
 }
 
-inline int int_floor(double x)
-{
-	int i = (int)x; /* truncate */
-	return i - ( i > x ); /* convert trunc to floor */
-}
-
 Vector2i Vector2::dToI(Vector2d source){
-	Vector2i ret;
-	ret.x = int_floor(source.x);
-	ret.y = int_floor(source.y);
-	return ret;
+	return Vector2i(MathPlus::floorInt(source.x),MathPlus::floorInt(source.y));
 }
 
 Vector2i Vector2::uToI(sf::Vector2u source){

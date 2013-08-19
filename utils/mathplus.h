@@ -20,19 +20,23 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
 
-class PerlinNoise{
-public:
-	PerlinNoise(int newSeed, int newOctaves, double newPersistence, double newScale = 1);
-	double noise2d(double x, double y) const;
-private:
-	double random2D(int x,int y) const;
-	int floorInt(double x) const;
-	double noiseIteration2d(double x,double y) const;
+#include <cmath>
 
-	int seed;
-	int octaves;
-	double persistence;
-	double scale;
+namespace MathPlus{
+	///This is kinda a cheap way to floor a double integer.
+	inline int floorInt(double x){
+		int i = (int)x; // truncate
+		return i - ( i > x ); // convert trunc to floor
+	}
+
+	/// Interpolation between the given values.
+	/// Pre: fraction must be between 0 and 1.
+	inline double interpolate(double value0, double value1, double fraction){
+		constexpr double PI = 3.1415927;
+
+		//Smooth fraction with cosine
+		fraction = (1 - std::cos(fraction * PI)) / 2.0;
+		return value0 * (1.0 - fraction) + value1 * (fraction);
+	}
 };

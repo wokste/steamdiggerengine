@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/confignode.h"
 #include "../utils/vector2.h"
 #include "../utils/assert.h"
+#include "../utils/mathplus.h"
 #include "../game.h"
 #include "../enums.h"
 
@@ -90,15 +91,23 @@ void Entity::startAnim(std::string animName){
 
 /// Moves the entity. Checks for collision in the process.
 void Entity::move(Vector2d movement){
-	if (validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
-		pos.y += movement.y;
-	}else{
-		hitTerrain(false); // Hit floor / ceiling
+	pos.y += movement.y;
+	if (!validPos(*world, pos)){
+		if (movement.y > 0)
+			// TODO: Fix
+			pos.y = MathPlus::floorInt(pos.y + collision.y) - collision.y - 0.01;
+		else
+			pos.y = MathPlus::floorInt(pos.y - collision.y) + collision.y + 1;
+		hitTerrain(false); // Hit a floor/ceiling
 	}
 
-	if (validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
-		pos.x += movement.x;
-	}else{
+	pos.x += movement.x;
+	if (!validPos(*world, pos)){
+		if (movement.x > 0)
+			// TODO: Fix
+			pos.x = MathPlus::floorInt(pos.x + collision.x) - collision.x - 0.01;
+		else
+			pos.x = MathPlus::floorInt(pos.x - collision.x) + collision.x + 1;
 		hitTerrain(true); // Hit a wall
 	}
 }
