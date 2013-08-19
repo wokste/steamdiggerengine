@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 #include <string>
 #include "vector2.h"
+#include <pugixml.hpp>
 
 class ConfigNode;
 class Texture;
@@ -35,7 +36,7 @@ struct FontChar{
 	int width   :8;
 	int xOffset :8;
 
-	FontChar(const ConfigNode& node);
+	FontChar(pugi::xml_node& node);
 	~FontChar();
 };
 
@@ -50,6 +51,6 @@ public:
 	Font();
 	~Font();
 	std::shared_ptr<Texture> texture;
-	void load(const ConfigNode& node);
+	void load(pugi::xml_node& node);
 	void draw(const std::string& text, Rect4i area) const;
 };

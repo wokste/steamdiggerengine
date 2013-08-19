@@ -21,15 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "font.h"
-#include "confignode.h"
 #include "texture.h"
 #include "../game.h"
 
-FontChar::FontChar(const ConfigNode& node){
-	x = node.getInt("x");
-	y = node.getInt("y");
-	width = node.getInt("width");
-	xOffset = node.getInt("xoffset");
+FontChar::FontChar(pugi::xml_node& node){
+	x = node.attribute("x").as_int();
+	y = node.attribute("y").as_int();
+	width = node.attribute("width").as_int();
+	xOffset = node.attribute("xoffset").as_int();
 }
 
 FontChar::~FontChar(){}
@@ -44,17 +43,18 @@ Font::Font(){
 Font::~Font(){
 }
 
-void Font::load(const ConfigNode& config){
-	const std::string textureName = config.getString("texture");
+void Font::load(pugi::xml_node& node){
+	const std::string textureName = node.attribute("texture").value();
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
 
-	const_cast<ConfigNode&>(config).getNode("chars").forEachNode([&](const ConfigNode& charNode){
-		charsData.emplace_back(charNode);
-	});
+	for (auto child: node.children())
+    {
+        charsData.emplace_back(FontChar(child));
+    }
 
-	height  = config.getInt("height");
-	yOffset = config.getInt("yoffset");
-	firstID = config.getInt("start");
+	height  = node.attribute("height").as_int();
+	yOffset = node.attribute("yoffset").as_int();
+	firstID =node.attribute("start").as_int();
 	lastID  = firstID + charsData.size() - 1;
 }
 

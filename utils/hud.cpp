@@ -34,8 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    ******* */
 
 #include "font.h"
-#include "confignode.h"
+#include <pugixml.hpp>
 #include <sstream>
+#include <iostream>
 
 Font HUD::font;
 
@@ -43,9 +44,16 @@ HUD::HUD(){
 	hudElements.emplace_back(new HealthBarHUD());
 	hudElements.emplace_back(new InventoryHUD());
 
-	ConfigNode::load(GameGlobals::fileSystem.fullpath("font.json"), [&] (ConfigNode& json){
-		font.load(json);
-	});
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file(GameGlobals::fileSystem.fullpath("font.xml").c_str());
+
+	if (result){
+		auto root = doc.child("font");
+		font.load(root);
+	} else {
+		std::cout << "Error description: " << result.description() << "\n";
+		std::cout << "Error offset: " << result.offset << "\n\n";
+	}
 }
 
 HUD::~HUD(){
