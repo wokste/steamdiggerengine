@@ -35,7 +35,7 @@ DroppedItem::DroppedItem(int itemId, int count) :
 	count(count)
 {
 	TTL = 5 * 60; // 5 minutes in seconds
-	bGravity = true;
+	physicsMode = PhysicsMode::Falling;
 	maxSpeed = 200;
 	bMapCollision = true;
 	texture = GameGlobals::tileSet;

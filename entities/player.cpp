@@ -56,7 +56,7 @@ void Player::checkKeyboardMovement(double time){
 	} else if (keyRight && !keyLeft){
 		speed.x += (accelSpeed * time);
 		if (speed.x > walkSpeed) speed.x = walkSpeed;
-	} else {
+	} else if (physicsMode == PhysicsMode::Walking) {
 		speed.x = 0;
 	}
 }
@@ -97,8 +97,8 @@ bool Player::useItem(Screen& screen){
 }
 
 void Player::tryJump(){
-	if (!validPos(*world, Vector2d(pos.x, pos.y + 0.1))){
-		speed.y = -jumpHeight;
+	if (physicsMode == PhysicsMode::Walking){
+		push(Vector2d(0,1), jumpHeight);
 	}
 }
 

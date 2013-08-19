@@ -39,7 +39,7 @@ int floorInt(double);
 Entity::Entity() :
 	maxSpeed(0),
 	bMapCollision(true),
-	bGravity(true),
+	physicsMode(PhysicsMode::Falling),
 	world(nullptr)
 {
 	size = Vector2i(16,32);
@@ -54,8 +54,15 @@ void Entity::setPos(World* newWorld, Vector2d newPos){
 }
 
 void Entity::logic(double time){
-	if (bGravity)
+	if (physicsMode == PhysicsMode::Walking
+		&& !world->areaHasBlocks(Vector2::dToI(pos + Vector2d(-collision.x, collision.y)), Vector2::dToI(pos + Vector2d(collision.x, collision.y + 1))))
+	{
+		physicsMode = PhysicsMode::Falling;
+	}
+
+	if (physicsMode == PhysicsMode::Falling){
 		speed.y += world->map->gravity * time;
+	}
 
 	if (speed.x < -maxSpeed) speed.x = -maxSpeed;
 	if (speed.x > maxSpeed) speed.x = maxSpeed;
@@ -86,7 +93,7 @@ void Entity::move(Vector2d movement){
 	if (validPos(*world, Vector2d(pos.x, pos.y + movement.y))){
 		pos.y += movement.y;
 	}else{
-		hitTerrain(false); // Hit no wall
+		hitTerrain(false); // Hit floor / ceiling
 	}
 
 	if (validPos(*world, Vector2d(pos.x + movement.x, pos.y))){
@@ -111,23 +118,33 @@ bool Entity::isInArea(Vector2d px1, Vector2d px2){
 }
 
 void Entity::hitTerrain(bool hitWall){
-	if (hitWall)
+	if (hitWall){
 		speed.x = 0;
-	else
+	}else{
+		if (speed.y > 0){
+			physicsMode = PhysicsMode::Walking;
+		}
 		speed.y = 0;
+	}
 }
 
 void Entity::push(Vector2d dir , double force){
-	speed += force * Vector2::normalize(dir);
+	speed = force * Vector2::normalize(dir);
+	if (physicsMode == PhysicsMode::Walking){
+		physicsMode = PhysicsMode::Falling;
+		speed.y = std::min(speed.y, -force);
+	}
 }
 
 void Entity::load(const ConfigNode& config){
 	maxSpeed      = config.getDouble("max-speed");
 	bMapCollision = config.getBool("mapcollison",true);
-	bGravity      = config.getBool("gravity",true);
 	size          = config.getVector2i("size");
 	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
 	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
 	const std::string textureName = config.getString("texture");
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
+
+	std::map<std::string,PhysicsMode> modeLookupTable = {{"none",PhysicsMode::None},{"walking",PhysicsMode::Walking},{"flying",PhysicsMode::Flying},{"falling",PhysicsMode::Falling}};
+	physicsMode   = modeLookupTable[config.getString("physics", "falling")];
 }

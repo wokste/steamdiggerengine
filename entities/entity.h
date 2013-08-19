@@ -33,6 +33,13 @@ class ConfigNode;
 class World;
 class Creature;
 
+enum class PhysicsMode{
+	None,
+	Walking,
+	Flying,
+	Falling
+};
+
 class Entity{
 public:
 	Entity();
@@ -62,7 +69,7 @@ public:
 
 	double maxSpeed;
 	bool bMapCollision;
-	bool bGravity;
+	PhysicsMode physicsMode;
 	Vector2i size;
 	Vector2d frameOffset;
 	Vector2d collision;
