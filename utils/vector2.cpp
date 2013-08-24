@@ -44,8 +44,12 @@ Vector2d Vector2::iToD(Vector2i source){
 	return Vector2d(source.x, source.y);
 }
 
-Vector2i Vector2::dToI(Vector2d source){
+Vector2i Vector2::floorVec(Vector2d source){
 	return Vector2i(MathPlus::floorInt(source.x),MathPlus::floorInt(source.y));
+}
+
+Vector2i Vector2::ceilVec(Vector2d source){
+	return Vector2i(MathPlus::ceilInt(source.x),MathPlus::ceilInt(source.y));
 }
 
 Vector2i Vector2::uToI(sf::Vector2u source){

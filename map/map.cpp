@@ -119,9 +119,9 @@ bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(const BlockT
 
 bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)> pred){
 	int x1 = (int)(px1.x);
-	int x2 = (int)(px2.x) + 1;
+	int x2 = (int)(px2.x);
 	int y1 = (int)(px1.y);
-	int y2 = (int)(px2.y) + 1;
+	int y2 = (int)(px2.y);
 
 	for(int y = y1; y < y2; ++y){
 		for(int x = x1; x < x2; ++x){

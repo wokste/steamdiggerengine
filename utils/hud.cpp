@@ -100,7 +100,7 @@ bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::
 		Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
 		pos.x *= elem->docking.x;
 		pos.y *= elem->docking.y;
-		Vector2i relativeMousePos = mousePos - Vector2::dToI(pos);
+		Vector2i relativeMousePos = mousePos - Vector2::floorVec(pos);
 		if (relativeMousePos.x < 0 || relativeMousePos.y < 0 || relativeMousePos.x >= elem->size.x || relativeMousePos.y >= elem->size.y)
 			continue;
 

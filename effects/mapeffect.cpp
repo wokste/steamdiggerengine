@@ -42,7 +42,7 @@ MineEffect::MineEffect(pugi::xml_node& node){
 
 bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
-	const Vector2i pos = Vector2::dToI(targetPos);
+	const Vector2i pos = Vector2::floorVec(targetPos);
 	MapNode* node = map.getMapNode(pos.x, pos.y);
 
 	if (!node || !node->isset(targetLayer)){
@@ -64,7 +64,7 @@ bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int 
 
 bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
-	const Vector2i pos = Vector2::dToI(targetPos);
+	const Vector2i pos = Vector2::floorVec(targetPos);
 	MapNode* node = map.getMapNode(pos.x, pos.y);
 
 	if (!node || node->isset(targetLayer)){

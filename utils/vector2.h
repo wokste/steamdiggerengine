@@ -36,7 +36,8 @@ namespace Vector2{
     Vector2d setLength(Vector2d source, double newLength);
     double length(Vector2d source);
     Vector2d iToD(Vector2i source);
-    Vector2i dToI(Vector2d source);
+    Vector2i floorVec(Vector2d source);
+    Vector2i ceilVec(Vector2d source);
     Vector2i uToI(sf::Vector2u source);
     Vector2d normalize(Vector2d source);
 }

@@ -26,8 +26,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace MathPlus{
 	///This is kinda a cheap way to floor a double integer.
 	inline int floorInt(double x){
-		int i = (int)x; // truncate
-		return i - ( i > x ); // convert trunc to floor
+		int i = (int)x;
+		return i - ( i > x );
+	}
+
+	///This is kinda a cheap way to ceil a double integer.
+	inline int ceilInt(double x){
+		int i = (int)(x);
+		return i + ( i < x );
 	}
 
 	/// Interpolation between the given values.

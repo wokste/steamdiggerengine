@@ -58,7 +58,7 @@ void Entity::setPos(World* newWorld, Vector2d newPos){
 
 void Entity::logic(double time){
 	if (physicsMode == PhysicsMode::Walking
-		&& !world->areaHasBlocks(Vector2::dToI(pos + Vector2d(-collision.x, collision.y)), Vector2::dToI(pos + Vector2d(collision.x, collision.y + 1))))
+		&& !world->areaHasBlocks(Vector2::floorVec(pos + Vector2d(-collision.x, collision.y)), Vector2::ceilVec(pos + Vector2d(collision.x, collision.y))))
 	{
 		physicsMode = PhysicsMode::Falling;
 	}
@@ -97,7 +97,7 @@ void Entity::move(Vector2d movement){
 	if (!validPos(*world, pos)){
 		if (movement.y > 0)
 			// TODO: Fix
-			pos.y = MathPlus::floorInt(pos.y + collision.y) - collision.y - 0.01;
+			pos.y = MathPlus::floorInt(pos.y + collision.y) - collision.y;
 		else
 			pos.y = MathPlus::floorInt(pos.y - collision.y) + collision.y + 1;
 		hitTerrain(false); // Hit a floor/ceiling
@@ -107,7 +107,7 @@ void Entity::move(Vector2d movement){
 	if (!validPos(*world, pos)){
 		if (movement.x > 0)
 			// TODO: Fix
-			pos.x = MathPlus::floorInt(pos.x + collision.x) - collision.x - 0.01;
+			pos.x = MathPlus::floorInt(pos.x + collision.x) - collision.x;
 		else
 			pos.x = MathPlus::floorInt(pos.x - collision.x) + collision.x + 1;
 		hitTerrain(true); // Hit a wall
@@ -117,7 +117,7 @@ void Entity::move(Vector2d movement){
 bool Entity::validPos(World& world, Vector2d newPos){
 	if (!bMapCollision)
 		return true;
-	return !world.areaHasBlocks(Vector2::dToI(newPos - collision), Vector2::dToI(newPos + collision));
+	return !world.areaHasBlocks(Vector2::floorVec(newPos - collision), Vector2::ceilVec(newPos + collision));
 }
 
 bool Entity::isInArea(Vector2d px1, Vector2d px2){

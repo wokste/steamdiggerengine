@@ -39,10 +39,10 @@ bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 	if (shot == nullptr)
 		return false;
 
-	//auto target = dynamic_cast<Creature*>(&owner);
-	//if (target){
-		shot->team = 0;//target->team;
-	//}
+	auto target = dynamic_cast<Creature*>(&owner);
+	if (target){
+		shot->team = target->team;
+	}
 	shot->moveTo(targetPos);
 	return true;
 }
