@@ -45,7 +45,7 @@ void Monster::load(pugi::xml_node& node){
 	dropList.reset(new DropList);
 	auto dropNode = node.child("drops");
 	for (auto childNode : dropNode){
-		dropList->emplace_back(childNode.attribute("tag").as_string());
+		dropList->emplace_back(childNode.attribute("tag").as_string(), childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
 	}
 	dropList->postLoad();
 }

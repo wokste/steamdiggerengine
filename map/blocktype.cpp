@@ -65,7 +65,7 @@ BlockTypeManager::BlockTypeManager(std::string fileName){
 				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, childNode.attribute("tag").as_string());
 				block.drops.emplace_back(dropID);
 			} else if (dropTag != ""){
-				block.drops.emplace_back(dropTag);
+				block.drops.emplace_back(dropTag, 1.0, 1);
 			}
 			blocks.push_back(block);
 		}

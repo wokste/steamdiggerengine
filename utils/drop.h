@@ -30,7 +30,7 @@ class World;
 class ItemReference{
 public:
 	inline ItemReference(int id) : id(id){}
-	inline ItemReference(std::string tag) : id(-1), tag(tag){}
+	inline ItemReference(const std::string tag) : id(-1), tag(tag){}
 	void calcID();
 	int id = -1;
 private:
@@ -39,12 +39,11 @@ private:
 
 struct Drop{
 	Drop(int id);
-	Drop(std::string tag);
+	Drop(const std::string tag, const double newChance, const int newCount);
 private:
 	ItemReference ref;
 	double chance;
-	int minSize;
-	int maxSize;
+	int count;
 
 	friend class DropList;
 };
