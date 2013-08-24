@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "projectile.h"
 #include "../attack.h"
 #include "../world.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 
 Projectile::Projectile(){
 	bounce = 0;
@@ -76,11 +76,10 @@ void Projectile::moveTo(Vector2d targetPos){
 	speed = Vector2::normalize(targetPos - pos) * projectileSpeed;
 }
 
-void Projectile::load(const ConfigNode& config){
-	Entity::load(config);
-	projectileSpeed = config.getInt("speed");
-	ConfigNode onHit = config.getNodeConst("on-hit");
-	hitAttack.load(onHit);
-	TTL = config.getDouble("ttl", 5);
-	bounce = config.getDouble("bounce", -1);
+void Projectile::load(pugi::xml_node& configNode){
+	Entity::load(configNode);
+	projectileSpeed = configNode.attribute("speed").as_int();
+	hitAttack.load(configNode);
+	TTL = configNode.attribute("ttl").as_double(5);
+	bounce = configNode.attribute("bounce").as_double(-1);
 }

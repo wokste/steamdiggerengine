@@ -35,7 +35,7 @@ class Projectile : public Entity{
 public:
 	Projectile();
 	virtual ~Projectile();
-	virtual void load(const ConfigNode& config);
+	virtual void load(pugi::xml_node& configNode);
 
 	virtual void hitTerrain(bool hitWall);
 	virtual void logic(double time);

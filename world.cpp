@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "items/itemdefmanager.h"
 #include "game.h"
 #include <stdlib.h>
-#include "utils/confignode.h"
+#include <pugixml.hpp>
 #include "utils/skybox.h"
 #include "entities/player.h"
 #include "entities/projectile.h"

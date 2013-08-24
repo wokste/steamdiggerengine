@@ -32,7 +32,7 @@ public:
 
 class MineEffect : public Effect{
 public:
-	MineEffect(const ConfigNode& node);
+	MineEffect(pugi::xml_node& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 	int damageLow;
 	int damageHigh;

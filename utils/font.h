@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "vector2.h"
 #include <pugixml.hpp>
 
-class ConfigNode;
 class Texture;
 
 struct FontChar{

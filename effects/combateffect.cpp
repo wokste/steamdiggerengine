@@ -23,13 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "combateffect.h"
 #include "../entities/entity.h"
 #include "../world.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../utils/vector2.h"
 #include "../entities/projectile.h"
 
-ShootEffect::ShootEffect(const ConfigNode& config){
+ShootEffect::ShootEffect(pugi::xml_node& node){
 	projectile.reset(new Projectile());
-	projectile->load(config);
+	projectile->load(node);
 }
 
 bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
@@ -47,9 +47,9 @@ bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 	return true;
 }
 
-HealEffect::HealEffect(const ConfigNode& config){
-	hpGain = config.getInt("hp",0);
-	shieldGain = config.getInt("shield",0);
+HealEffect::HealEffect(pugi::xml_node& node){
+	hpGain = node.attribute("hp").as_int();
+	shieldGain = node.attribute("shield").as_int();
 }
 
 bool HealEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){

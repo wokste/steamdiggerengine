@@ -28,12 +28,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cmath>
 #include <algorithm>
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../utils/vector2.h"
 #include "../utils/assert.h"
 #include "../utils/mathplus.h"
 #include "../game.h"
 #include "../enums.h"
+#include <sstream>
+#include <string>
 
 int floorInt(double);
 
@@ -145,15 +147,35 @@ void Entity::push(Vector2d dir , double force){
 	}
 }
 
-void Entity::load(const ConfigNode& config){
-	maxSpeed      = config.getDouble("max-speed");
-	bMapCollision = config.getBool("mapcollison",true);
-	size          = config.getVector2i("size");
-	frameOffset   =-(config.getVector2d("collision", 1) + config.getVector2d("collision", 0)) / 2.0;
-	collision     = (config.getVector2d("collision", 1) - config.getVector2d("collision", 0)) / 2.0;
-	const std::string textureName = config.getString("texture");
+template <class T>
+std::vector<T> stringToArray(const std::string& source, char delim) {
+	std::vector<T> elems;
+	std::stringstream sourceStream(source);
+
+	while (!sourceStream.eof()) {
+		T item;
+		sourceStream >> item;
+		elems.push_back(item);
+	}
+	return elems;
+}
+
+void Entity::load(pugi::xml_node& configNode){
+	maxSpeed      = configNode.attribute("max-speed").as_double();
+	bMapCollision = configNode.attribute("mapcollison").as_bool(true);
+
+	auto sizeArray = stringToArray<int>(configNode.attribute("size").as_string(), ' ');
+	//assert(sizeArray.size() == 2);
+	size = Vector2i(sizeArray[0],sizeArray[1]);
+
+	auto frameArray = stringToArray<double>(configNode.attribute("collision").as_string(), ' ');
+	//assert(frameArray.size() == 4);
+	frameOffset = Vector2d(frameArray[2] + frameArray[0], frameArray[3] + frameArray[1]) / -2.0;
+	collision   = Vector2d(frameArray[2] - frameArray[0], frameArray[3] - frameArray[1]) / 2.0;
+
+	const std::string textureName = configNode.attribute("texture").as_string();
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
 
 	std::map<std::string,PhysicsMode> modeLookupTable = {{"none",PhysicsMode::None},{"walking",PhysicsMode::Walking},{"flying",PhysicsMode::Flying},{"falling",PhysicsMode::Falling}};
-	physicsMode   = modeLookupTable[config.getString("physics", "falling")];
+	physicsMode   = modeLookupTable[configNode.attribute("physics").as_string("falling")];
 }

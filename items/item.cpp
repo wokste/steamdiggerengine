@@ -24,17 +24,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../entities/entity.h"
 #include "../screen.h"
 #include "../effects/effect.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../enums.h"
 #include <SFML/Window/Keyboard.hpp>
 
-ItemType::ItemType(ConfigNode& config){
-	maxStack=config.getInt("stack",1);
-	consumable=config.getBool("consumable",false);
-	useTime=config.getDouble("use-time",0.2);
-	auto onUseNode = config.getNode("on-use");
+ItemType::ItemType(pugi::xml_node& configNode){
+	maxStack=configNode.attribute("stack").as_int(1);
+	consumable=configNode.attribute("consumable").as_bool(false);
+	useTime=configNode.attribute("use-time").as_double(0.2);
+	auto onUseNode = configNode.child("on-use");
 	onUse.load(onUseNode);
-	frameID=config.getInt("frame");
+	frameID=configNode.attribute("frame").as_int();
 }
 
 ItemType::ItemType(int newFrameID){

@@ -45,7 +45,7 @@ HUD::HUD(){
 	hudElements.emplace_back(new InventoryHUD());
 
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(GameGlobals::fileSystem.fullpath("font.xml").c_str());
+	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("font.xml").c_str());
 
 	if (result){
 		auto root = doc.child("font");

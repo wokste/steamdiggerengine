@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../entities/player.h"
 
 #include "../world.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../screen.h"
 #include "../game.h"
 #include "../map/blocktype.h"
@@ -34,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../map/lightingengine.h"
 #include "../enums.h"
 
-MineEffect::MineEffect(const ConfigNode& config){
-	damageHigh = config.getInt("damage-high", 10);
-	damageLow = config.getInt("damage-low", (damageHigh + 1) / 2);
+MineEffect::MineEffect(pugi::xml_node& node){
+	damageHigh = node.attribute("damage-high").as_int();
+	damageLow = node.attribute("damage-low").as_int((damageHigh + 1) / 2);
 	materialType = 255; //TODO
 }
 

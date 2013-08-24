@@ -26,8 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/vertex.h"
 #include "../utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
+#include <pugixml.hpp>
 
-class ConfigNode;
 class World;
 
 class BlockType{
@@ -39,7 +39,7 @@ public:
 	sf::Color blockedLight;
 	std::vector<VertexArray> models;
 
-	BlockType(const ConfigNode& config);
+	BlockType(pugi::xml_node& configNode);
 	int getModelId() const;
 
 	DropList drops;
@@ -48,7 +48,7 @@ public:
 class BlockTypeManager{
 	std::vector<BlockType> blocks;
 public:
-	BlockTypeManager(std::string jsonFileName);
+	BlockTypeManager(std::string fileName);
 	~BlockTypeManager();
 	BlockType& operator[](int id);
 	void postLoad();

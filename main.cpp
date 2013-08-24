@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "utils/hud.h"
 #include "utils/assert.h"
 #include "game.h"
-#include "utils/confignode.h"
+#include <pugixml.hpp>
 
 std::unique_ptr<Screen> screen;
 std::unique_ptr<World> world;
@@ -95,10 +95,16 @@ int main(){
 	world.reset(new World());
 	std::unique_ptr<Player> stats;
 	stats.reset(new Player());
- 	ConfigNode::load(GameGlobals::fileSystem.fullpath("player.json"),[&] (ConfigNode& config){
-		stats->load(config);
+
+	pugi::xml_document doc;
+	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("player.xml").c_str());
+	if (result){
+		auto playerNode = doc.child("player");
+		stats->load(playerNode);
 		player = world->spawn(*stats,Vector2d(20,-10));
- 	});
+	} else {
+		std::cerr << result.description();
+	}
 
 	ASSERT(player != nullptr, "Main", "player = NULL");
 

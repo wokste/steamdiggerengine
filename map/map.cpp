@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "map.h"
 #include "../utils/texture.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../screen.h"
 #include "../items/itemdefmanager.h"
 #include "../game.h"

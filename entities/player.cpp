@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../world.h"
 #include "../game.h"
 
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../items/itemdefmanager.h"
 #include <iostream>
 
@@ -102,13 +102,13 @@ void Player::tryJump(){
 	}
 }
 
-void Player::load(const ConfigNode& config){
-	Creature::load(config);
-	jumpHeight = config.getDouble("jump-height");
-	accelSpeed = config.getDouble("acceleration");
-	walkSpeed = config.getDouble("walk-speed");
+void Player::load(pugi::xml_node& configNode){
+	Creature::load(configNode);
+	jumpHeight = configNode.attribute("jump-height").as_double();
+	accelSpeed = configNode.attribute("acceleration").as_double();
+	walkSpeed = configNode.attribute("walk-speed").as_double();
 
-	team = config.getInt("team", 0);
+	team = configNode.attribute("team").as_int(0);
 }
 
 bool Player::pickupItem(int id, int count){

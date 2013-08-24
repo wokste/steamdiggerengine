@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "player.h"
 #include "../world.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../utils/drop.h"
 
 #include <iostream>
@@ -33,19 +33,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Monster::Monster() : target(nullptr){}
 Monster::~Monster(){}
 
-void Monster::load(const ConfigNode& config){
-	Creature::load(config);
-	ConfigNode onHit = config.getNodeConst("on-hit");
+void Monster::load(pugi::xml_node& node){
+	Creature::load(node);
+	pugi::xml_node onHit = node.child("attack");
 	hitAttack.load(onHit);
 
-	team = config.getInt("team", 1);
+	team = node.attribute("team").as_int(1);
 
-	movementType.reset(MovementType::staticLoad(config));
+	movementType.reset(MovementType::staticLoad(node));
 
 	dropList.reset(new DropList);
-	const_cast<ConfigNode&>(config).getNode("drops").forEachNode([&](ConfigNode& node){
-		dropList->emplace_back(node.getString("tag"));
-	});
+	auto dropNode = node.child("drops");
+	for (auto childNode : dropNode){
+		dropList->emplace_back(childNode.attribute("tag").as_string());
+	}
 	dropList->postLoad();
 }
 

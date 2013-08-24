@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class Attack;
 class Texture;
 class Entity;
-class ConfigNode;
+
 class World;
 class DropList;
 
@@ -52,7 +52,7 @@ class Creature : public Entity{
 public:
 	Creature();
 	virtual ~Creature();
-	void load(const ConfigNode& config) override;
+	void load(pugi::xml_node& configNode) override;
 	void logic(double time) override;
 	virtual void takeDamage(const Attack& attack, Vector2d source);
 	bool alive() {return HP.cur > 0;}

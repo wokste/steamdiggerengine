@@ -24,11 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "effect.h"
 
 #include <memory>
+#include <pugixml.hpp>
 class Projectile;
 
 class ShootEffect : public Effect{
 public:
-	ShootEffect(const ConfigNode& node);
+	ShootEffect(pugi::xml_node& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 private:
 	std::unique_ptr<Projectile> projectile;
@@ -36,7 +37,7 @@ private:
 
 class HealEffect : public Effect{
 public:
-	HealEffect(const ConfigNode& node);
+	HealEffect(pugi::xml_node& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 private:
 	int hpGain;

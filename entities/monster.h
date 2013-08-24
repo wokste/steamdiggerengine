@@ -36,7 +36,7 @@ public:
 
 	void logic(double time) override;
 
-	void load(const ConfigNode& config) override;
+	void load(pugi::xml_node& configNode) override;
 	void hitTerrain(bool hitWall) override;
 	void hitCreature(Creature& other);
 	void onCreatureDied(Creature* other) override;

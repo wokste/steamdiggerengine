@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "attack.h"
-#include "utils/confignode.h"
 
 Attack::Attack() :
 	damage(0),
@@ -29,8 +28,8 @@ Attack::Attack() :
 	type(0){
 }
 
-void Attack::load(const ConfigNode& config){
-	damage = config.getInt("damage");
-	push = config.getInt("push",0);
-	type = config.getInt("type",0);
+void Attack::load(pugi::xml_node& node){
+	damage = node.attribute("damage").as_int();
+	push = node.attribute("push").as_int();
+	type = node.attribute("type").as_int();
 }

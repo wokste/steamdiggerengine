@@ -30,9 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include "../utils/confignode.h"
-
-extern std::string dataDirectory;
+#include <pugixml.hpp>
 
 Texture::Texture(std::string fileName){
 	if (loadTexture(fileName)){

@@ -48,7 +48,7 @@ struct ChunkSorter{
 
 class Map{
 public:
-	double    gravity = 25;
+	const double gravity = 25;
 
 public:
 	Map(int seed);

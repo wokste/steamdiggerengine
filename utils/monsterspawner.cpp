@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../game.h"
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 Monster* SpawnConfig::getMonsterType(){
 	std::discrete_distribution<> monsterOdds({40, 10});
@@ -40,18 +41,24 @@ Monster* SpawnConfig::getMonsterType(){
 }
 
 SpawnConfig::SpawnConfig(){
-	ConfigNode::load(GameGlobals::fileSystem.fullpath("monsters.json"),[&] (ConfigNode& configFile){
-		configFile.forEachNode([&] (ConfigNode& monsterConfig) {
-			auto stats = new Monster();
-			stats->load(monsterConfig);
-			prototypes.push_back(std::move(std::unique_ptr<Monster>(stats)));
-		});
-	});
-
 	newWaveChance = 0.4;
 	delayWaves = 15;
 	delaySpawns = 1;
 	maxMonsters = 5;
+
+	pugi::xml_document doc;
+	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("monsters.xml").c_str());
+	if (result){
+		auto spawnConfigNode = doc.first_child();
+		// TODO: Add more properties
+		for(auto monsterNode : spawnConfigNode){
+			auto stats = new Monster();
+			stats->load(monsterNode);
+			prototypes.push_back(std::move(std::unique_ptr<Monster>(stats)));
+		}
+	} else {
+		std::cerr << result.description();
+	}
 }
 
 MonsterSpawner::MonsterSpawner() : basicSpawnConfig()

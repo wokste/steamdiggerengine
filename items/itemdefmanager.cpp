@@ -23,18 +23,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "itemdefmanager.h"
 #include "item.h"
 
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../utils/texture.h"
 #include "../map/blocktype.h"
 #include "../effects/mapeffect.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(const std::string& jsonFileName){
-	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
-		jsonArray.forEachNode([&] (ConfigNode& json) {
-			insert(std::unique_ptr<ItemType>(new ItemType(json)), json.getString("tag",""));
-		});
-	});
+ItemDefManager::ItemDefManager(const std::string& fileName){
+	pugi::xml_document doc;
+
+	auto result = doc.load_file(fileName.c_str());
+	if (result){
+		auto rootNode = doc.child("root");
+		for (auto childNode : rootNode){
+			insert(std::unique_ptr<ItemType>(new ItemType(childNode)), childNode.attribute("tag").as_string());
+		}
+	} else {
+		std::cerr << result.description();
+	}
 }
 
 ItemDefManager::~ItemDefManager(){

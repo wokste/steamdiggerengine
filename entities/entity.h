@@ -25,11 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/vector2.h"
 #include <SFML/Graphics/Color.hpp>
 #include <memory>
+#include <pugixml.hpp>
 
 class Attack;
 class Texture;
 class Entity;
-class ConfigNode;
 class World;
 class Creature;
 
@@ -45,7 +45,7 @@ public:
 	Entity();
 	virtual ~Entity() {}
 
-	virtual void load(const ConfigNode& config);
+	virtual void load(pugi::xml_node& configNode);
 	bool validPos(World& world, Vector2d newPos);
 	void setPos(World* newWorld, Vector2d newPos);
 	bool isInArea(Vector2d px1, Vector2d px2);

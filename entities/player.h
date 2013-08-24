@@ -40,7 +40,7 @@ public:
 	bool useItem(Screen& screen);
 	void tryJump();
 
-	virtual void load(const ConfigNode& config);
+	virtual void load(pugi::xml_node& configNode);
 	bool pickupItem(int id, int count) override;
 
 	Inventory inventory;

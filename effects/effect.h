@@ -23,24 +23,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include "../utils/vector2.h"
 #include <memory>
+#include <pugixml.hpp>
 
 class Entity;
 class Screen;
-class ConfigNode;
 
 class Effect{
 public:
 	Effect(){};
 	~Effect(){};
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
-	static std::unique_ptr<Effect> loadEffect(ConfigNode& node);
+	static std::unique_ptr<Effect> loadEffect(pugi::xml_node& node);
 };
 
 class EffectSlot{
 public:
 	EffectSlot();
 	~EffectSlot();
-	void load(ConfigNode& node);
+	void load(pugi::xml_node& node);
 	bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 	void add(std::unique_ptr<Effect> effect);
 private:

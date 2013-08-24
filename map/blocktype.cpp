@@ -24,24 +24,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "lightingengine.h"
 #include "../enums.h"
-#include "../utils/confignode.h"
 #include "../game.h"
 #include "../items/itemdefmanager.h"
+#include <iostream>
 
-BlockType::BlockType(const ConfigNode& config){
-	collisionType = getBlockCollisionType(config.getString("collision", "Air"));
-	materialType = getBlockMaterialType(config.getString("material", "None"));
-	HP = config.getDouble("hp", -1);
-	lightColor = LightingEngine::makeColor(config.getString("light", "0"));
-	unsigned char blockedLightByte = config.getInt("blocked-light", 100);
+BlockType::BlockType(pugi::xml_node& configNode){
+	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));
+	materialType = getBlockMaterialType(configNode.attribute("material").as_string("None"));
+	HP = configNode.attribute("hp").as_int(-1);
+	lightColor = LightingEngine::makeColor(configNode.attribute("light").as_string("0"));
+	unsigned char blockedLightByte = configNode.attribute("blocked-light").as_int(100);
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 
-	const_cast<ConfigNode&>(config).getNode("frame").forEachNode([&] (const ConfigNode& json) {
+	for( auto childNode : configNode) {
 		auto framesPerSheet = sf::Vector2i(8,8);
-		auto id      = json.getInt("id",-1);
-		auto display = json.getString("display","cube");
+		auto id      = childNode.attribute("id").as_int(-1);
+		auto display = childNode.attribute("display").as_string("cube");
 		models.push_back(VertexArray(display,id,framesPerSheet));
-	});
+	}
 }
 
 int BlockType::getModelId() const{
@@ -51,22 +51,27 @@ int BlockType::getModelId() const{
 	return rand() % models.size();
 }
 
-BlockTypeManager::BlockTypeManager(std::string jsonFileName){
-	ConfigNode::load(jsonFileName, [&] (ConfigNode& jsonArray){
-		jsonArray.forEachNode([&] (ConfigNode& json) {
-			BlockType block = BlockType(json);
-			std::string dropTag = json.getString("drop","_default");
-			if (dropTag == "_default"){
+BlockTypeManager::BlockTypeManager(std::string fileName){
+	pugi::xml_document doc;
+	auto result = doc.load_file(fileName.c_str());
+	if (result){
+		auto parentNode = doc.child("root");
+		for (auto childNode : parentNode){
+			BlockType block = BlockType(childNode);
+			std::string dropTag = childNode.attribute("drop").as_string("DEFAULT");
+			if (dropTag == "DEFAULT"){
 				int blockID = blocks.size();
-				int iconFrame = json.getNode("frame")[0].getInt("id");
-				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, json.getString("tag",""));
+				int iconFrame = childNode.child("frame").attribute("id").as_int();
+				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, childNode.attribute("tag").as_string());
 				block.drops.emplace_back(dropID);
 			} else if (dropTag != ""){
 				block.drops.emplace_back(dropTag);
 			}
 			blocks.push_back(block);
-		});
-	});
+		}
+	} else {
+		std::cerr << result.description();
+	}
 }
 
 void BlockTypeManager::postLoad(){

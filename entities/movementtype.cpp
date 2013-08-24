@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "player.h"
 #include "../world.h"
 #include <math.h>
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 
 // == FlyingMovement ==
 
@@ -33,14 +33,14 @@ struct FlyingMovement : public MovementType{
 	double accelSpeed;
 	double bounceSpeed;
 
-	FlyingMovement(const ConfigNode& config);
+	FlyingMovement(pugi::xml_node& configNode);
 	virtual void moveTo(Monster& self, Vector2d position, double time);
 	virtual void hitTerrain(Monster& self, bool hitWall);
 };
 
-FlyingMovement::FlyingMovement(const ConfigNode& config){
-	accelSpeed = config.getInt("acceleration");
-	bounceSpeed = config.getInt("bounce-speed");
+FlyingMovement::FlyingMovement(pugi::xml_node& configNode){
+	accelSpeed = configNode.attribute("acceleration").as_int();
+	bounceSpeed = configNode.attribute("bounce-speed").as_int();
 }
 
 void FlyingMovement::moveTo(Monster& monster, Vector2d pos, double time){
@@ -72,6 +72,6 @@ void FlyingMovement::hitTerrain(Monster& monster, bool hitWall){
 
 // == Factory ==
 
-MovementType* MovementType::staticLoad(const ConfigNode& config){
-	return new FlyingMovement(config);
+MovementType* MovementType::staticLoad(pugi::xml_node& configNode){
+	return new FlyingMovement(configNode);
 }

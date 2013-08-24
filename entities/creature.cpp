@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include "../attack.h"
 #include "../utils/vector2.h"
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include "../game.h"
 
 Stat::Stat(): cur(0), max(0){}
@@ -74,11 +74,11 @@ Creature::~Creature(){
 
 }
 
-void Creature::load(const ConfigNode& config)
+void Creature::load(pugi::xml_node& configNode)
 {
-	Entity::load(config);
-	HP = config.getInt("hp",100);
-	shield = config.getInt("shield",0);
+	Entity::load(configNode);
+	HP = configNode.attribute("hp").as_int(100);
+	shield = configNode.attribute("shield").as_int();
 }
 
 void Creature::logic(double time)

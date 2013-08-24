@@ -27,11 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class Entity;
 class Screen;
-class ConfigNode;
 
 class ItemType{
 public:
-	ItemType(ConfigNode& config);
+	ItemType(pugi::xml_node& configNode);
 	ItemType(int frameID);
 	~ItemType();
 	bool use(Entity& owner, const Screen& screen);

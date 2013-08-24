@@ -25,14 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <GL/gl.h>
 #include <string>
 #include "vector2.h"
-
-class ConfigNode;
+#include <pugixml.hpp>
 
 struct Texture{
 	GLuint ID;
 	Vector2i size;
 
-	static Texture* load(const ConfigNode& config);
+	static Texture* load(pugi::xml_node& configNode);
 	Texture(std::string fileName);
 	~Texture();
 	bool loadTexture(std::string fileName);

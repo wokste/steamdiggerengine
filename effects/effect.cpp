@@ -24,19 +24,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "mapeffect.h"
 #include "combateffect.h"
 
-#include "../utils/confignode.h"
+#include <pugixml.hpp>
 #include <iostream>
 
-std::unique_ptr<Effect> Effect::loadEffect(ConfigNode& config){
+std::unique_ptr<Effect> Effect::loadEffect(pugi::xml_node& node){
 	std::unique_ptr<Effect> effect;
-	std::string typeName = config.getString("type","");
+	std::string typeName = node.name();
 
 	if (typeName == "mine")
-		effect.reset(new MineEffect(config));
+		effect.reset(new MineEffect(node));
 	if (typeName == "shoot")
-		effect.reset(new ShootEffect(config));
+		effect.reset(new ShootEffect(node));
 	if (typeName == "heal")
-		effect.reset(new HealEffect(config));
+		effect.reset(new HealEffect(node));
 
 	return effect;
 }
@@ -50,10 +50,10 @@ EffectSlot::~EffectSlot(){
 
 }
 
-void EffectSlot::load(ConfigNode& jsonArray){
-	jsonArray.forEachNode([&] (ConfigNode& jsonEffect) {
-		add(Effect::loadEffect(jsonEffect));
-	});
+void EffectSlot::load(pugi::xml_node& array){
+	for(auto childNode : array){
+		add(Effect::loadEffect(childNode));
+	}
 }
 
 void EffectSlot::add(std::unique_ptr<Effect> newEffect){

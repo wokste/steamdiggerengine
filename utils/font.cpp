@@ -47,9 +47,9 @@ void Font::load(pugi::xml_node& node){
 	const std::string textureName = node.attribute("texture").value();
 	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
 
-	for (auto child: node.children())
+	for (auto childNode: node.children())
     {
-        charsData.emplace_back(FontChar(child));
+        charsData.emplace_back(FontChar(childNode));
     }
 
 	height  = node.attribute("height").as_int();

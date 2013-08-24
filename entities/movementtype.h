@@ -22,15 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include "../utils/vector2.h"
+#include <pugixml.hpp>
 
 class Game;
-class ConfigNode;
 class Monster;
 
 struct MovementType{
 	MovementType(){}
 	~MovementType(){}
-	static MovementType* staticLoad(const ConfigNode& config);
+	static MovementType* staticLoad(pugi::xml_node& configNode);
 	virtual void moveTo(Monster& self, Vector2d position, double time) = 0;
 	virtual void hitTerrain(Monster& self, bool hitWall) = 0;
 };

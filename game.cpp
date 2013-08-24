@@ -35,8 +35,8 @@ std::mt19937 GameGlobals::rnd;
 
 void GameGlobals::init(){
 	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
-	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.json")));
-	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.json")));
+	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.xml")));
+	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.xml")));
 
 	// Actions that require the itemDefs to be loaded
 	blockDefs->postLoad();
