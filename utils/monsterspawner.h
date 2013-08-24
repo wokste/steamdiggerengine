@@ -39,6 +39,7 @@ public:
 	int maxMonsters;
 private:
 	std::vector<std::unique_ptr<Monster>> prototypes;
+	std::vector<double> probs;
 };
 
 class MonsterSpawner{

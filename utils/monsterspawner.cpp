@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 
 Monster* SpawnConfig::getMonsterType(){
-	std::discrete_distribution<> monsterOdds({40, 10});
+	std::discrete_distribution<> monsterOdds(probs.begin(), probs.end());
 	unsigned int index = monsterOdds(GameGlobals::rnd);
 	if (index >= prototypes.size())
 		return nullptr;
@@ -41,20 +41,21 @@ Monster* SpawnConfig::getMonsterType(){
 }
 
 SpawnConfig::SpawnConfig(){
-	newWaveChance = 0.4;
-	delayWaves = 15;
-	delaySpawns = 1;
-	maxMonsters = 5;
-
 	pugi::xml_document doc;
 	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("monsters.xml").c_str());
 	if (result){
 		auto spawnConfigNode = doc.first_child();
+		newWaveChance = spawnConfigNode.attribute("long-delay-odd").as_double();
+		delayWaves = spawnConfigNode.attribute("long-delay").as_double();
+		delaySpawns = spawnConfigNode.attribute("short-delay").as_double(5);
+		maxMonsters = spawnConfigNode.attribute("max-monsters").as_int(5);
+
 		// TODO: Add more properties
 		for(auto monsterNode : spawnConfigNode){
 			auto stats = new Monster();
 			stats->load(monsterNode);
 			prototypes.push_back(std::move(std::unique_ptr<Monster>(stats)));
+			probs.push_back(monsterNode.attribute("odds-weight").as_double());
 		}
 	} else {
 		std::cerr << result.description();
