@@ -109,6 +109,9 @@ void Player::load(pugi::xml_node& configNode){
 	walkSpeed = configNode.attribute("walk-speed").as_double();
 
 	team = configNode.attribute("team").as_int(0);
+	for (auto& childNode : configNode){
+		inventory.add(childNode.attribute("tag").as_string(), childNode.attribute("count").as_int());
+	}
 }
 
 bool Player::pickupItem(int id, int count){

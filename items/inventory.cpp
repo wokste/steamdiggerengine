@@ -38,11 +38,8 @@ ItemStack::ItemStack(){
 
 Inventory::Inventory() : cooldown(){
 	selectedItem=0;
-
-	for (int i = 0; i < 2; i++){
-		add(i, (*GameGlobals::itemDefs)[i].maxStack);
-	}
 }
+
 bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
@@ -70,7 +67,14 @@ void Inventory::selectItem(int nr, bool relative){
 		selectedItem = nr;
 }
 
+bool Inventory::add(std::string itemTag, int count){
+	return add(GameGlobals::itemDefs->at(itemTag), count);
+}
+
 bool Inventory::add(int itemId, int count){
+	if (itemId < 0)
+		return false;
+
 	for (auto& i: items){
 		if (i.id == itemId && i.count > 0){
 			if (i.count + count <= (*GameGlobals::itemDefs)[i.id].maxStack){

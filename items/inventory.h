@@ -55,5 +55,6 @@ public:
 	bool use(Player& owner, const Screen& screen);
 	void selectItem(int delta, bool relative = false);
 	bool add(int itemId, int count = 1);
+	bool add(std::string itemTag, int count = 1);
 	void dropStuff(double proportion, World& world, Vector2d position);
 };
