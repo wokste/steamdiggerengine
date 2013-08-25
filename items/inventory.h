@@ -48,6 +48,8 @@ class Inventory{
 
 	friend InventoryHUD;
 public:
+	ItemStack mouseHeldItem;
+
 	Inventory();
 	void logic(double time);
 	bool use(Player& owner, const Screen& screen);

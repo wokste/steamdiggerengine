@@ -41,33 +41,50 @@ Player* player;
 
 void doWindowEvents(){
 	sf::Event event;
+
+	bool mouseJustPressed = false;
+
 	while (screen->window->pollEvent(event)){
-		if (event.type == sf::Event::EventType::Closed){
-			exit(0); // TODO: make this nicer.
-		} else if (event.type == sf::Event::EventType::Resized){
-			screen->resize(Vector2::uToI(screen->window->getSize()));
-		} else if (event.type == sf::Event::EventType::MouseWheelMoved) {
-			player->onMouseWheel(event.mouseWheel.delta);
-		} else if (event.type == sf::Event::EventType::KeyPressed){
-			if (event.key.code == sf::Keyboard::Key::Space)
-				player->tryJump();
-			else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
-				player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
-			else if (event.key.code == sf::Keyboard::Key::Num0)
-				player->selectItem(9);
-			else if (event.key.code == sf::Keyboard::Key::E)
-				hud->toggleInventory();
+		switch (event.type){
+			case sf::Event::EventType::Closed:
+				exit(0); // TODO: make this nicer.
+				break;
+			case sf::Event::EventType::Resized:
+				screen->resize(Vector2::uToI(screen->window->getSize()));
+				break;
+			case sf::Event::EventType::MouseWheelMoved:
+				player->onMouseWheel(event.mouseWheel.delta);
+				break;
+			case sf::Event::EventType::MouseEntered:
+				screen->mouseInWindow = true;
+				break;
+			case sf::Event::EventType::MouseLeft:
+				screen->mouseInWindow = false;
+				break;
+			case sf::Event::EventType::MouseButtonPressed:
+				if (screen->mouseInWindow){
+					hud->onMouseEvent(event, *screen, *player);
+				}
+				break;
+			case sf::Event::EventType::KeyPressed:
+				if (event.key.code == sf::Keyboard::Key::Space)
+					player->tryJump();
+				else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
+					player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
+				else if (event.key.code == sf::Keyboard::Key::Num0)
+					player->selectItem(9);
+				else if (event.key.code == sf::Keyboard::Key::E)
+					hud->toggleInventory();
+				break;
 		}
 	}
 
-	Vector2i mousePos = sf::Mouse::getPosition(*screen->window);
-	Vector2i windowSize = Vector2::uToI(screen->window->getSize());
-	if (mousePos.x >= 0 && mousePos.x < windowSize.x && mousePos.y >= 0 && mousePos.y < windowSize.y){
+	if (screen->mouseInWindow){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-			bool handled = hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos);
-			if (!handled){
+			//hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos, mouseJustPressed);
+			//if (!handled){
 				player->useItem(*screen.get());
-			}
+			//}
 		}
 	}
 }

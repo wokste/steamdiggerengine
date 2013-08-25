@@ -40,8 +40,9 @@ public:
 	~HUD();
 
 	void draw(const Screen& screen, const Player& player);
+	void drawMouseItem(const Screen& screen, const Player& player);
 	void toggleInventory();
-	bool onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
+	bool onMouseEvent(sf::Event& event, const Screen& screen, Player& player);
 	static Font font;
 
 private:
@@ -55,7 +56,7 @@ public:
 	virtual ~HUDElement(){}
 
 	virtual void draw(const Player& player) = 0;
-	virtual bool onMousePressed(Player& player, const sf::Mouse::Button& button, const Vector2i mousePos);
+	virtual bool onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos);
 	Vector2i size;
 	Vector2d docking;
 };
@@ -83,6 +84,7 @@ public:
 
 	virtual void draw(const Player& player);
 	void toggle();
+	bool onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos) override;
 private:
 	std::shared_ptr<Texture> background;
 	std::shared_ptr<Texture> itemTexture;

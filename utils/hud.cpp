@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Font HUD::font;
 
+
 HUD::HUD(){
 	hudElements.emplace_back(new HealthBarHUD());
 	hudElements.emplace_back(new InventoryHUD());
@@ -78,11 +79,23 @@ void HUD::draw(const Screen& screen, const Player& player){
 				glTranslated(pos.x, pos.y, 0);
 				elem->draw(player);
 			}
+			glLoadIdentity();
+			drawMouseItem(screen, player);
 			glDisable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+}
+
+void HUD::drawMouseItem(const Screen& screen, const Player& player){
+	Vector2i mousePos = sf::Mouse::getPosition(*screen.window);
+	GameGlobals::tileSet->bind();
+	if (player.inventory.mouseHeldItem.count > 0){
+		int framesPerRow = GameGlobals::tileSet->size.x / 32;
+		int frame = (*GameGlobals::itemDefs)[player.inventory.mouseHeldItem.id].frameID;
+		GameGlobals::tileSet->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), mousePos);
+	}
 }
 
 void HUD::toggleInventory(){
@@ -94,7 +107,8 @@ void HUD::toggleInventory(){
 	}
 }
 
-bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::Button& button, const Vector2i mousePos){
+bool HUD::onMouseEvent(sf::Event& event, const Screen& screen, Player& player){
+	Vector2i mousePos = sf::Mouse::getPosition(*screen.window);
 	for (int i = hudElements.size() - 1; i >= 0; --i){
 		auto& elem = hudElements[i];
 		Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
@@ -104,7 +118,7 @@ bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::
 		if (relativeMousePos.x < 0 || relativeMousePos.y < 0 || relativeMousePos.x >= elem->size.x || relativeMousePos.y >= elem->size.y)
 			continue;
 
-		if (elem->onMousePressed(player, button, relativeMousePos))
+		if (elem->onMouseEvent(event, player, relativeMousePos))
 			return true;
 	}
 	return false;
@@ -114,8 +128,8 @@ bool HUD::onMousePressed(const Screen& screen, Player& player, const sf::Mouse::
    * Hud Element *
    *************** */
 
-bool HUDElement::onMousePressed(Player& player, const sf::Mouse::Button& button, const Vector2i mousePos){
-	return true;
+bool HUDElement::onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos){
+	return false;
 }
 
 /* ****************
@@ -209,4 +223,16 @@ void InventoryHUD::toggle(){
 	size = Vector2i(cols * celSize + (cols - 1) * celBorder + 2 * outsideBorder,
 	                rows * celSize + (rows - 1) * celBorder + 2 * outsideBorder);
 
+}
+
+bool InventoryHUD::onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos){
+	int celX = (mousePos.x - outsideBorder + celBorder / 2) / (celSize + celBorder);
+	int celY = (mousePos.y - outsideBorder + celBorder / 2) / (celSize + celBorder);
+	celY = rows - celY - 1;
+	if (celX < 0 || celX >= cols || celY < 0 || celY > rows)
+		return false;
+	int cel = celX + (celY * cols);
+	if (event.type == sf::Event::EventType::MouseButtonPressed)
+		std::swap(player.inventory.items[cel], player.inventory.mouseHeldItem);
+	return true;
 }
