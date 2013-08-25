@@ -99,7 +99,7 @@ void Entity::move(Vector2d movement){
 			// TODO: Fix
 			pos.y = MathPlus::floorInt(pos.y + collision.y) - collision.y;
 		else
-			pos.y = MathPlus::floorInt(pos.y - collision.y) + collision.y + 1;
+			pos.y = MathPlus::ceilInt(pos.y - collision.y) + collision.y;
 		hitTerrain(false); // Hit a floor/ceiling
 	}
 
@@ -109,7 +109,7 @@ void Entity::move(Vector2d movement){
 			// TODO: Fix
 			pos.x = MathPlus::floorInt(pos.x + collision.x) - collision.x;
 		else
-			pos.x = MathPlus::floorInt(pos.x - collision.x) + collision.x + 1;
+			pos.x = MathPlus::ceilInt(pos.x - collision.x) + collision.x;
 		hitTerrain(true); // Hit a wall
 	}
 }
