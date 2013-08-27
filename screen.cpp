@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "screen.h"
 #include "entities/entity.h"
 #include "enums.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
 

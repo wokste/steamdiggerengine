@@ -22,9 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "texture.h"
 
-#include <windows.h>
-#include <gl/gl.h>
-#include <gl/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <SFML/Graphics.hpp>

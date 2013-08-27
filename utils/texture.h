@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 
-#include <GL/gl.h>
+#include <SFML/OpenGL.hpp>
 #include <string>
 #include "vector2.h"
 #include <pugixml.hpp>

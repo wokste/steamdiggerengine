@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/texture.h"
 #include "../screen.h"
 #include "../game.h"
-#include <GL/gl.h>
+#include <SFML/OpenGL.hpp>
 
 /* *******
    * HUD *
