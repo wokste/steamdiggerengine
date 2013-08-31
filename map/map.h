@@ -59,7 +59,7 @@ public:
 	void render(const Screen& screen, const sf::Color& outsideColor) const;
 	void logic(double time);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)>);
-	bool blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)>);
+	int blocksAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)>);
 	MapNode* getMapNode(int x, int y) const;
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;

@@ -33,6 +33,7 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	materialType = getBlockMaterialType(configNode.attribute("material").as_string("None"));
 	HP = configNode.attribute("hp").as_int(-1);
 	lightColor = LightingEngine::makeColor(configNode.attribute("light").as_string("0"));
+	artificial = configNode.attribute("artificial").as_bool(false);
 	unsigned char blockedLightByte = configNode.attribute("blocked-light").as_int(100);
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 

@@ -45,6 +45,7 @@ public:
 	void render(const Screen& screen);
 	bool areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType = BlockCollisionType::Solid);
 	bool areaHasEntity(Vector2i px1, Vector2i px2);
+	bool damageBlock(Vector2i pos, int targetLayer, int damageHigh, int damageLow, int materialType);
 
 	void removeEntity(Entity* entity);
 	void addEntity(Entity* entity);

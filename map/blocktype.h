@@ -38,6 +38,7 @@ public:
 	sf::Color lightColor;
 	sf::Color blockedLight;
 	std::vector<VertexArray> models;
+	bool artificial;
 
 	BlockType(pugi::xml_node& configNode);
 	int getModelId() const;

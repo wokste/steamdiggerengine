@@ -103,7 +103,8 @@ sf::Color Map::getColor(const sf::Color& skyColor, Vector2d pos) const{
 	return node ? (node->getLight(skyColor)) : skyColor;
 }
 
-bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)> pred){
+int Map::blocksAdjacent(int x, int y, int layer, std::function<bool(const BlockType&)> pred){
+	int count = 0;
 	// Test all adjacent tiles
 	for (int i = 0 ; i < 4; i++){
 		MapNode* node = getMapNode(x + (i == 0) - (i == 1),y + (i == 2) - (i == 3));
@@ -111,10 +112,10 @@ bool Map::blockAdjacent(int x, int y, int layer, std::function<bool(const BlockT
 			continue;
 		}
 		if (pred(node->getBlock(layer))){
-			return true;
+			count++;
 		}
 	}
-	return false;
+	return count;
 }
 
 bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const BlockType&)> pred){

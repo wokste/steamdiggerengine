@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include "effect.h"
 
+class Map;
+
 class BuildEffect : public Effect{
 public:
 	int blockTypeID;
@@ -34,6 +36,7 @@ class MineEffect : public Effect{
 public:
 	MineEffect(pugi::xml_node& node);
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	Vector2i chooseBlockToMine(Map& map, Vector2d& sourcePos, Vector2d& targetPos, int& targetLayer);
 	int damageLow;
 	int damageHigh;
 	int materialType;

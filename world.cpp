@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "world.h"
 #include "entities/entity.h"
 #include "map/map.h"
+#include "map/mapnode.h"
+#include "map/lightingengine.h"
 #include "items/itemdefmanager.h"
 #include "game.h"
 #include <stdlib.h>
@@ -132,4 +134,21 @@ void World::forEachCreature(std::function<void(Creature&)> func){
 	for(auto& e: creatures)
 		if (e->alive())
 			func(*e);
+}
+
+bool World::damageBlock(Vector2i pos, int targetLayer, int damageHigh, int damageLow, int materialType){
+	MapNode* node = map->getMapNode(pos.x, pos.y);
+	if (!node || !node->isset(targetLayer))
+		return false;
+
+	const BlockType& minedBlock = node->getBlock(targetLayer);
+	if (targetLayer == Layer::back && !minedBlock.artificial && (map->blocksAdjacent(pos.x, pos.y, targetLayer,
+			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}) < 2))
+		return false;
+
+	if (node->damageBlock(targetLayer, damageHigh, damageLow, materialType)){
+		LightingEngine::recalcAreaAround(*map, pos);
+		auto dropPos = Vector2::iToD(pos) + Vector2d(0.5,0.5);
+		minedBlock.drops.dropStuff(*this, dropPos);
+	}
 }
