@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "entities/projectile.h"
 #include "entities/monster.h"
 #include "map/blocktype.h"
+#include "attack.h"
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 #include <assert.h>
@@ -136,7 +137,7 @@ void World::forEachCreature(std::function<void(Creature&)> func){
 			func(*e);
 }
 
-bool World::damageBlock(Vector2i pos, int targetLayer, int damageHigh, int damageLow, int materialType){
+bool World::damageBlock(Vector2i pos, int targetLayer, const Attack& attack){
 	MapNode* node = map->getMapNode(pos.x, pos.y);
 	if (!node || !node->isset(targetLayer))
 		return false;
@@ -146,7 +147,7 @@ bool World::damageBlock(Vector2i pos, int targetLayer, int damageHigh, int damag
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}) < 2))
 		return false;
 
-	if (node->damageBlock(targetLayer, damageHigh, damageLow, materialType)){
+	if (node->damageBlock(targetLayer, attack)){
 		LightingEngine::recalcAreaAround(*map, pos);
 		auto dropPos = Vector2::iToD(pos) + Vector2d(0.5,0.5);
 		minedBlock.drops.dropStuff(*this, dropPos);

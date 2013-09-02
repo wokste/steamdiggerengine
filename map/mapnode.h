@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/vector2.h"
 #include <SFML/Graphics/Color.hpp>
 
+class Attack;
 class Block;
 class ItemDefManager;
 class Texture;
@@ -41,7 +42,7 @@ public:
 	bool isset(int layer) const{ return blockId[layer] != 0;}
 	sf::Color light[2];
 	sf::Color getLight(const sf::Color& skyColor) const;
-	bool damageBlock(int layer, int damageHigh, int damageLow, int damageTypeSet);
+	bool damageBlock(int layer, const Attack& attack);
 private:
 	int modelId[Layer::count];
 	int blockId[Layer::count];

@@ -24,12 +24,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Attack::Attack() :
 	damage(0),
-	push(0),
-	type(0){
+	push(0){
 }
 
 void Attack::load(pugi::xml_node& node){
 	damage = node.attribute("damage").as_int();
 	push = node.attribute("push").as_int();
-	type = node.attribute("type").as_int();
+	for (auto& bonusNode : node){
+		AttackBonus bonus;
+		bonus.type = bonusNode.attribute("type").as_int();
+		bonus.damage = bonusNode.attribute("damage").as_int();
+		bonus.push = bonusNode.attribute("push").as_int();
+		bonusses.push_back(bonus);
+	}
 }

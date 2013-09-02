@@ -29,10 +29,10 @@ enum class BlockCollisionType
 };
 BlockCollisionType getBlockCollisionType(std::string str);
 
-enum class BlockMaterialType{
+enum class MaterialType{
 	None = 0, Wood = 1, Dirt = 2, Stone = 4, Plant = 8
 };
-BlockMaterialType getBlockMaterialType(std::string str);
+MaterialType getMaterialType(std::string str);
 
 namespace Layer{
 	constexpr int front = 0;

@@ -22,11 +22,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include <pugixml.hpp>
+#include <vector>
+
+struct AttackBonus{
+	int type;
+	int damage;
+	int push;
+};
 
 struct Attack{
 	int damage;
 	int push;
-	int type;
+	std::vector<AttackBonus> bonusses;
 
 	void load(pugi::xml_node& configNode);
 

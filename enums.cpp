@@ -32,16 +32,16 @@ BlockCollisionType getBlockCollisionType(std::string name){
 	return BlockCollisionType::Air;
 }
 
-BlockMaterialType getBlockMaterialType(std::string name){
+MaterialType getMaterialType(std::string name){
 	if (name == "none")
-		return BlockMaterialType::None;
+		return MaterialType::None;
 	if (name == "wood")
-		return BlockMaterialType::Wood;
+		return MaterialType::Wood;
 	if (name == "dirt")
-		return BlockMaterialType::Dirt;
+		return MaterialType::Dirt;
 	if (name == "stone")
-		return BlockMaterialType::Stone;
+		return MaterialType::Stone;
 	if (name == "plant")
-		return BlockMaterialType::Plant;
-	return BlockMaterialType::None;
+		return MaterialType::Plant;
+	return MaterialType::None;
 }

@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "map.h"
 #include <iostream>
 #include "../game.h"
+#include "../attack.h"
 
 MapNode::MapNode(){
 	for (int i = 0; i < Layer::count; ++i){
@@ -68,9 +69,9 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer)
 	}
 }
 
-bool MapNode::damageBlock(int layer, int damageHigh, int damageLow, int preferredMaterial){
+bool MapNode::damageBlock(int layer, const Attack& attack){
 	auto blockMaterial = (*GameGlobals::blockDefs)[blockId[layer]].materialType;
-	auto damage = ((preferredMaterial & (int)blockMaterial) != 0) ? damageHigh : damageLow;
+	auto damage = attack.damage;
 
 	HP[layer] -= damage;
 	if (HP[layer] <= 0){

@@ -35,15 +35,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../enums.h"
 
 MineEffect::MineEffect(pugi::xml_node& node){
-	damageHigh = node.attribute("damage-high").as_int();
-	damageLow = node.attribute("damage-low").as_int((damageHigh + 1) / 2);
-	materialType = 255; //TODO
+	mineAttack.load(node);
 }
 
 bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	const Vector2i pos = chooseBlockToMine(*owner.world->map, sourcePos, targetPos, targetLayer);
 
-	owner.world->damageBlock(pos, targetLayer, damageHigh, damageLow, materialType);
+	owner.world->damageBlock(pos, targetLayer, mineAttack);
 	return true;
 }
 
