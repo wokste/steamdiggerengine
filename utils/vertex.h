@@ -24,7 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 #include "vector2.h"
 #include <SFML/OpenGL.hpp>
-#include <SFML/Graphics/Color.hpp>
+#include <pugixml.hpp>
+
+class TileSet;
 
 struct Vertex
 {
@@ -41,13 +43,13 @@ class VertexArray{
 public:
 	std::vector<Vertex> vertices;
 	VertexArray(){}
-	VertexArray(std::string type, int frameNum, Vector2i& framesPerSheet);
+	VertexArray(pugi::xml_node& configNode, const TileSet& tileset);
 	~VertexArray(){}
 
 	void clear();
 
-	void addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, const sf::Vector3f& dir2, int frameNum, Vector2i& framesPerSheet);
-	void addCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet);
+	void addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, const sf::Vector3f& dir2, int frameNum, const TileSet& tileset);
+	void addCube(pugi::xml_node& configNode, const TileSet& tileset);
 
 	void render() const;
 };

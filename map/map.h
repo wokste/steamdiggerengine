@@ -64,7 +64,6 @@ public:
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 private:
-	std::shared_ptr<Texture> tileSet;
 	std::map<Vector2i, Chunk*, ChunkSorter> chunks;
 	std::unique_ptr<MapGenerator> generator;
 

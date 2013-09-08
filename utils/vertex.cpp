@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "vertex.h"
+#include "texture.h"
 
 Vertex::Vertex(sf::Vector3f pos, float textureX, float textureY) : x(pos.x), y(pos.y), z(pos.z), textureX(textureX), textureY(textureY)
 {
@@ -34,52 +35,44 @@ void VertexArray::clear(){
 	vertices.clear();
 };
 
-VertexArray::VertexArray(std::string type, int frameNum, Vector2i& framesPerSheet){
+VertexArray::VertexArray(pugi::xml_node& configNode, const TileSet& tileset){
+	auto id   = configNode.attribute("id").as_int(-1);
+	auto type = configNode.attribute("display").as_string("cube");
 	if (type == "cube"){
-		addCube(sf::Vector3f(0,0,0), frameNum, framesPerSheet);
+		addCube(configNode, tileset);
 	}else if (type == "plant"){
-		addSheet(sf::Vector3f(0,0,0), sf::Vector3f(0,1,0), sf::Vector3f(1,0,1), frameNum, framesPerSheet);
-		addSheet(sf::Vector3f(0,0,1), sf::Vector3f(0,1,0), sf::Vector3f(1,0,-1), frameNum, framesPerSheet);
+		addSheet(sf::Vector3f(0,0,0), sf::Vector3f(0,1,0), sf::Vector3f(1,0,1), id, tileset);
+		addSheet(sf::Vector3f(0,0,1), sf::Vector3f(0,1,0), sf::Vector3f(1,0,-1), id, tileset);
+	}else if (type == "sheet"){
+		addSheet(sf::Vector3f(0,0,0.5), sf::Vector3f(0,1,0), sf::Vector3f(1,0,0), id, tileset);
 	}
 }
 
-void VertexArray::addCube(sf::Vector3f pos, int frameNum, Vector2i& framesPerSheet){
+void VertexArray::addCube(pugi::xml_node& configNode, const TileSet& tileset){
+	const sf::Vector3f base  = sf::Vector3f(0,0,0);
 	const sf::Vector3f AxisX = sf::Vector3f(1,0,0);
 	const sf::Vector3f AxisY = sf::Vector3f(0,1,0);
 	const sf::Vector3f AxisZ = sf::Vector3f(0,0,1);
 
-	// Back Face
-	//addSheet(pos + AxisZ, AxisX, AxisY, frameNum, framesPerSheet);
+	auto id   = configNode.attribute("id").as_int(-1);
 
-	// Front Face
-	addSheet(pos        , AxisY, AxisX, frameNum, framesPerSheet);
-
-	// Bottom Face
-	addSheet(pos + AxisY, AxisZ, AxisX, frameNum, framesPerSheet);
-
-	// Top Face
-	addSheet(pos        , AxisX, AxisZ, frameNum, framesPerSheet);
-
-	// Right face
-	addSheet(pos + AxisX, AxisY, AxisZ, frameNum, framesPerSheet);
-
-	// Left Face
-	addSheet(pos + AxisY,-AxisY, AxisZ, frameNum, framesPerSheet);
+	addSheet(base        , AxisY, AxisX, configNode.attribute("id-front").as_int(id) , tileset);
+	addSheet(base + AxisY, AxisZ, AxisX, configNode.attribute("id-bottom").as_int(id), tileset);
+	addSheet(base        , AxisX, AxisZ, configNode.attribute("id-top").as_int(id)   , tileset);
+	addSheet(base + AxisX, AxisY, AxisZ, configNode.attribute("id-right").as_int(id) , tileset);
+	addSheet(base + AxisZ, AxisY,-AxisZ, configNode.attribute("id-left").as_int(id)  , tileset);
 }
 
-void VertexArray::addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, const sf::Vector3f& dir2, int frameNum, Vector2i& framesPerSheet){
-	GLfloat texLeft = (GLfloat)(frameNum % framesPerSheet.x) / framesPerSheet.x;
-	GLfloat texRight = texLeft + (1.0 / framesPerSheet.x);
-	GLfloat texTop = (GLfloat)(frameNum / framesPerSheet.x) / framesPerSheet.y;
-	GLfloat texBottom = texTop + (1.0 / framesPerSheet.y);
+void VertexArray::addSheet(const sf::Vector3f start, const sf::Vector3f& dir1, const sf::Vector3f& dir2, int frameNum, const TileSet& tileset){
+	auto rect = tileset.getBounds(frameNum);
 
-	vertices.push_back(Vertex(start              , texLeft , texTop));
-	vertices.push_back(Vertex(start + dir1       , texLeft , texBottom));
-	vertices.push_back(Vertex(start + dir2       , texRight, texTop));
+	vertices.push_back(Vertex(start              , rect.left,              rect.top));
+	vertices.push_back(Vertex(start + dir1       , rect.left,              rect.top + rect.height));
+	vertices.push_back(Vertex(start + dir2       , rect.left + rect.width, rect.top));
 
-	vertices.push_back(Vertex(start + dir1       , texLeft , texBottom));
-	vertices.push_back(Vertex(start + dir1 + dir2, texRight, texBottom));
-	vertices.push_back(Vertex(start + dir2       , texRight, texTop));
+	vertices.push_back(Vertex(start + dir1       , rect.left,              rect.top + rect.height));
+	vertices.push_back(Vertex(start + dir1 + dir2, rect.left + rect.width, rect.top + rect.height));
+	vertices.push_back(Vertex(start + dir2       , rect.left + rect.width, rect.top));
 }
 
 void VertexArray::render() const{

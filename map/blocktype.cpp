@@ -38,10 +38,7 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 
 	for( auto childNode : configNode) {
-		auto framesPerSheet = sf::Vector2i(8,8);
-		auto id      = childNode.attribute("id").as_int(-1);
-		auto display = childNode.attribute("display").as_string("cube");
-		models.push_back(VertexArray(display,id,framesPerSheet));
+		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));
 	}
 }
 

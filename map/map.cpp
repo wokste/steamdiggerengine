@@ -44,7 +44,6 @@ bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 
 Map::Map(int seed)
 {
-	tileSet = GameGlobals::tileSet;
 	generator.reset(new MapGenerator(seed, *this));
 }
 
@@ -70,9 +69,9 @@ void Map::logic(double time){
 }
 
 void Map::render(const Screen& screen, const sf::Color& skyColor) const{
-	if(tileSet == nullptr) return;
+	if(GameGlobals::tileSet == nullptr) return;
 
-	tileSet->bind();
+	GameGlobals::tileSet->bind();
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY );
 

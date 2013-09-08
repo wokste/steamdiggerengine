@@ -27,14 +27,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <cstdlib>
 
-std::shared_ptr<Texture> GameGlobals::tileSet;
+std::shared_ptr<TileSet> GameGlobals::tileSet;
 std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
 std::unique_ptr<BlockTypeManager> GameGlobals::blockDefs;
 FileSystem GameGlobals::fileSystem;
 std::mt19937 GameGlobals::rnd;
 
 void GameGlobals::init(){
-	tileSet.reset(new Texture(GameGlobals::fileSystem.fullpath("tileset.png")));
+	tileSet.reset(new TileSet(Vector2i(8,8), GameGlobals::fileSystem.fullpath("tileset.png")));
 	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.xml")));
 	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.xml")));
 

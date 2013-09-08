@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <memory>
 
 class Texture;
+class TileSet;
 class Screen;
 class Player;
 class HUDElement;
@@ -87,7 +88,7 @@ public:
 	bool onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos) override;
 private:
 	std::shared_ptr<Texture> background;
-	std::shared_ptr<Texture> itemTexture;
+	std::shared_ptr<TileSet> itemTexture;
 	bool isOpen;
 
 	Vector2i slotMarkerSize;

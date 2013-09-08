@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ItemDefManager;
 class World;
 class BlockTypeManager;
-class Texture;
+class TileSet;
 
 class FileSystem{
 public:
@@ -46,5 +46,5 @@ public:
 	static FileSystem fileSystem;
 	static std::mt19937 rnd;
 	static std::unique_ptr<BlockTypeManager> blockDefs;
-	static std::shared_ptr<Texture> tileSet;
+	static std::shared_ptr<TileSet> tileSet;
 };

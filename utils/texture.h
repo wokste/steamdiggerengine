@@ -31,11 +31,16 @@ struct Texture{
 	GLuint ID;
 	Vector2i size;
 
-	static Texture* load(pugi::xml_node& configNode);
 	Texture(std::string fileName);
 	~Texture();
 	bool loadTexture(std::string fileName);
 	void bind();
 	void draw(Vector2i src, Vector2i imgSize, Vector2i dest) const;
 	void draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const;
+};
+
+struct TileSet : public Texture{
+	TileSet(Vector2i framesPerSheet, std::string fileName);
+	Vector2i framesPerSheet;
+	sf::Rect<float> getBounds(int tileNum) const;
 };

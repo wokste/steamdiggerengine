@@ -97,3 +97,17 @@ bool Texture::loadTexture(std::string fileName){
 	size = Vector2i(imgSize.x , imgSize.y);
 	return true;
 }
+
+TileSet::TileSet(Vector2i newFramesPerSheet, std::string fileName) :
+	Texture (fileName),
+	framesPerSheet(newFramesPerSheet)
+{}
+
+sf::Rect<float> TileSet::getBounds(int tileNum) const{
+	sf::Rect<float> rect;
+	rect.left = (float)(tileNum % framesPerSheet.x) / framesPerSheet.x;
+	rect.width = (1.0 / framesPerSheet.x);
+	rect.top = (float)(tileNum / framesPerSheet.x) / framesPerSheet.y;
+	rect.height = (1.0 / framesPerSheet.y);
+	return rect;
+}
