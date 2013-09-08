@@ -66,5 +66,10 @@ int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string
 
 int ItemDefManager::at(std::string& tag)
 {
-	return tags.at(tag);
+	auto iterator = tags.find(tag);
+	if (iterator == tags.end()) {
+		return -1;
+	} else {
+		return iterator->second;
+	}
 }
