@@ -64,10 +64,10 @@ int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string
 	return insert(std::move(item), tag);
 }
 
-int ItemDefManager::at(std::string& tag)
-{
+int ItemDefManager::at(std::string& tag){
 	auto iterator = tags.find(tag);
 	if (iterator == tags.end()) {
+		std::cerr << "item tag: " << tag << " not found\n";
 		return -1;
 	} else {
 		return iterator->second;
