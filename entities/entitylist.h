@@ -20,50 +20,54 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 #pragma once
 #include <string>
 #include <vector>
 #include <memory>
-#include "utils/vector2.h"
-#include "enums.h"
-#include "utils/monsterspawner.h"
-#include "entities/entitylist.h"
+#include "../utils/vector2.h"
+#include "../enums.h"
+#include <SFML/Graphics/Color.hpp>
 
 class Attack;
 class Map;
-class EntityList;
 class Entity;
 class Creature;
 class Skybox;
 class Screen;
+class EntityListCreatureView;
+class World;
 
-class World{
+class EntityList{
 public:
-	std::unique_ptr<Map> map;
-	std::unique_ptr<EntityList> entities;
-	World();
-	World(const World& that) = delete;
-	~World();
+	EntityList();
+	EntityList(const EntityList& that) = delete;
+	~EntityList();
 
-	void logic(double time);
-	void render(const Screen& screen);
-	EntityListCreatureView creatures() {return entities->getCreatures();};
-	bool damageBlock(Vector2i pos, int targetLayer, const Attack& attack);
-	bool areaOccupied(Vector2d pos1, Vector2d pos2);
+	void logic(double time, World& world);
+	void render(const Screen& screen, const Map& map, sf::Color dayLightColor);
+	void remove(Entity* entity);
+	void add(Entity* entity);
+	void forEach(std::function<void(Entity&)>);
+	EntityListCreatureView getCreatures();
+private:
+	std::vector<Entity*> entities;
+	// A subset of entities containing all creatures
+	std::vector<Creature*> creatures;
+	// A subset of entities containing all entities that will be added/deleted. This is added because adding/removing from entities or creatures at the wrong moment invalidates an iterator.
+	std::vector<Entity*> toDelete;
+	std::vector<Entity*> toAdd;
 
-	template <class T>
-	T* spawn(T& prototype, Vector2d newPos){
-		T* spawned = nullptr;
-		if (prototype.validPos(*this, newPos)){
-			spawned = new T(prototype);
-			spawned->setPos(this, newPos);
-			entities->add(spawned);
-		}
-		return spawned;
-	}
+	friend class EntityListCreatureView;
+};
 
+// This allows looping over only
+class EntityListCreatureView{
+public:
+	EntityListCreatureView(EntityList* newList);
+	void forEach(std::function<void(Creature&)>);
+	bool areaHasCreature(Vector2i px1, Vector2i px2);
 
 private:
-	std::unique_ptr<Skybox> skybox;
-	std::unique_ptr<MonsterSpawner> monsterSpawner;
+	EntityList* list;
 };

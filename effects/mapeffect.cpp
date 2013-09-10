@@ -64,7 +64,7 @@ bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int
 	}
 
 	if (targetLayer == Layer::front){
-		if (owner.world->areaHasEntity(pos, pos + Vector2i(1,1)))
+		if (owner.world->creatures().areaHasCreature(pos, pos + Vector2i(1,1)))
 			return false;
 	}
 

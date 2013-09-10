@@ -42,99 +42,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 World::World()
 {
 	map.reset(new Map(rand()));
+	entities.reset(new EntityList());
 	monsterSpawner.reset(new MonsterSpawner());
 	skybox.reset(new Skybox());
 }
 
 World::~World(){
-	for (auto entity: entities){
-		delete entity;
-	}
 }
 
 void World::logic(double time){
 	map->logic(time);
-
-	for (auto entity: entities){
-		entity->logic(time);
-
-		if (entity->isPlayer)
-			map->generateAround(entity->pos);
-	}
-
-	// == Removal of entities ==
-	for (auto removing: toDelete){
-		entities.erase(std::remove(entities.begin(), entities.end(), removing),entities.end());
-
-		auto removingCreature = dynamic_cast<Creature*>(removing);
-		if (removingCreature != nullptr){
-			creatures.erase(std::remove(creatures.begin(), creatures.end(), removingCreature),creatures.end());
-			for (auto entity: entities)
-				entity->onCreatureDied(removingCreature);
-		}
-
-		delete removing;
-	}
-	toDelete.clear();
-
-	// == Addition of entities ==
-	for (auto adding: toAdd){
-		auto creature = dynamic_cast<Creature*>(adding);
-
-		if (creature != nullptr){
-			creatures.push_back(creature);
-		}
-		entities.push_back(adding);
-	}
-	toAdd.clear();
-
-	// == Final logic ==
+	entities->logic(time, *this);
 	monsterSpawner->logic(this, time);
 	skybox->logic(time);
 }
 
 void World::render(const Screen& screen){
 	map->render(screen, skybox->getLightColor());
-
-	for (auto& entity : entities){
-		sf::Color color = map->getColor(skybox->getLightColor(), entity->pos);
-		entity->render(color);
-	}
-}
-
-bool World::areaHasBlocks(Vector2i px1, Vector2i px2, BlockCollisionType colType){
-	return map->areaHasBlocks(px1,px2,
-		[&](const BlockType& block){
-			return (block.collisionType == colType);
-		});
-}
-
-bool World::areaHasEntity(Vector2i px1, Vector2i px2){
-	Vector2d px1d = Vector2::iToD(px1);
-	Vector2d px2d = Vector2::iToD(px2);
-	for (auto creature : creatures)
-		if (creature->isInArea(px1d, px2d)) return true;
-	return false;
-}
-
-void World::addEntity(Entity* entity){
-	toAdd.push_back(entity);
-}
-
-void World::removeEntity(Entity* entity){
-	if (std::find(toDelete.begin(), toDelete.end(), entity)==toDelete.end())
-		toDelete.push_back(entity);
-}
-
-void World::forEachEntity(std::function<void(Entity&)> func){
-	for(auto& e: entities)
-		func(*e);
-}
-
-void World::forEachCreature(std::function<void(Creature&)> func){
-	for(auto& e: creatures)
-		if (e->alive())
-			func(*e);
+	entities->render(screen, *map, skybox->getLightColor());
 }
 
 bool World::damageBlock(Vector2i pos, int targetLayer, const Attack& attack){
@@ -152,4 +77,12 @@ bool World::damageBlock(Vector2i pos, int targetLayer, const Attack& attack){
 		auto dropPos = Vector2::iToD(pos) + Vector2d(0.5,0.5);
 		minedBlock.drops.dropStuff(*this, dropPos);
 	}
+	return true;
+}
+
+bool World::areaOccupied(Vector2d pos1, Vector2d pos2){
+	return map->areaHasBlocks(Vector2::floorVec(pos1),Vector2::ceilVec(pos2),
+		[&](const BlockType& block){
+			return (block.collisionType == BlockCollisionType::Solid);
+		});
 }

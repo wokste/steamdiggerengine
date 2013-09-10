@@ -58,7 +58,7 @@ void Entity::setPos(World* newWorld, Vector2d newPos){
 
 void Entity::logic(double time){
 	if (physicsMode == PhysicsMode::Walking
-		&& !world->areaHasBlocks(Vector2::floorVec(pos + Vector2d(-collision.x, collision.y)), Vector2::ceilVec(pos + Vector2d(collision.x, collision.y))))
+		&& !world->areaOccupied(pos + Vector2d(-collision.x, collision.y), pos + Vector2d(collision.x, collision.y)))
 	{
 		physicsMode = PhysicsMode::Falling;
 	}
@@ -117,7 +117,7 @@ void Entity::move(Vector2d movement){
 bool Entity::validPos(World& world, Vector2d newPos){
 	if (!bMapCollision)
 		return true;
-	return !world.areaHasBlocks(Vector2::floorVec(newPos - collision), Vector2::ceilVec(newPos + collision));
+	return !world.areaOccupied(newPos - collision, newPos + collision);
 }
 
 bool Entity::isInArea(Vector2d px1, Vector2d px2){

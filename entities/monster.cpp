@@ -53,7 +53,7 @@ void Monster::load(pugi::xml_node& node){
 void Monster::logic(double time){
 	if (!alive()){
 		dropList->dropStuff(*world, pos);
-		world->removeEntity(this);
+		world->entities->remove(this);
 		return;
 	}
 
@@ -66,7 +66,7 @@ void Monster::logic(double time){
 
 	if (cooldown.done()){
 		Rect4d boundingBox = getBoundingBox();
-		world->forEachCreature([&](Creature& creature){
+		world->creatures().forEach([&](Creature& creature){
 			if (aggressiveTo(creature) && boundingBox.intersects(creature.getBoundingBox()))
 				hitCreature(creature);
 		});

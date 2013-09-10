@@ -78,11 +78,11 @@ void MonsterSpawner::logic(World* world, double time){
 		std::vector<Creature*> spawnAround;
 
 		// Step 1: Find the creatures it should spawn around.
-		world->forEachCreature([&](Creature& test){
+		world->creatures().forEach([&](Creature& test){
 			if (test.isPlayer){
 				// This is a creature on the player team and monsters should be spawned around it
 				int numMonsters = 0;
-				world->forEachCreature([&](Creature& other){
+				world->creatures().forEach([&](Creature& other){
 					if (other.aggressiveTo(test) && Vector2::length(other.pos - test.pos) < despawnRadius)
 						numMonsters++;
 				});
@@ -91,12 +91,12 @@ void MonsterSpawner::logic(World* world, double time){
 			} else {
 				// Testing whether this creature should be deleted
 				bool playerNear = false;
-				world->forEachCreature([&](Creature& other){
+				world->creatures().forEach([&](Creature& other){
 					if (other.aggressiveTo(test) && Vector2::length(other.pos - test.pos) < despawnRadius)
 						playerNear = true;
 				});
 				if (!playerNear){
-					world->removeEntity(&test);
+					world->entities->remove(&test);
 				}
 			}
 		});

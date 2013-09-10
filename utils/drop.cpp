@@ -62,7 +62,7 @@ void DropList::dropStuff(World& world, Vector2d pos) const{
 				count *= (rand() * 1.0 / RAND_MAX + 0.5); // Slightly randomize count
 			auto drop = new DroppedItem(item.ref.id, count);
 			drop->setPos(&world, pos);
-			world.addEntity(drop);
+			world.entities->add(drop);
 		}
 	}
 }

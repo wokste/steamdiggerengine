@@ -39,14 +39,14 @@ Projectile::~Projectile(){}
 void Projectile::logic(double time){
 	TTL -= time;
 	if (TTL < 0)
-		world->removeEntity(this);
+		world->entities->remove(this);
 
 	Entity::logic(time);
 
 	// Check for collisions
 	if (state == ProjectileState::Flying){
 		Rect4d boundingBox = getBoundingBox();
-		world->forEachCreature([&](Creature& creature){
+		world->creatures().forEach([&](Creature& creature){
 			if (team != creature.team && boundingBox.intersects(creature.getBoundingBox())){
 				hitCreature(creature);
 				return;
@@ -62,13 +62,13 @@ void Projectile::hitTerrain(bool hitWall){
 		else
 			speed.y = -speed.y * bounce;
 	} else {
-		world->removeEntity(this);
+		world->entities->remove(this);
 	}
 }
 
 void Projectile::hitCreature(Creature& other){
 	other.takeDamage(hitAttack, pos);
-	world->removeEntity(this);
+	world->entities->remove(this);
 }
 
 void Projectile::moveTo(Vector2d targetPos){

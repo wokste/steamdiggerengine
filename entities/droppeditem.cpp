@@ -63,16 +63,16 @@ void DroppedItem::render(const sf::Color& skyColor){
 void DroppedItem::logic(double time){
 	TTL -= time;
 	if (TTL < 0)
-		world->removeEntity(this);
+		world->entities->remove(this);
 
 	Entity::logic(time);
 
 	// Check for collisions
 	Rect4d boundingBox = getBoundingBox();
 	bool pickedUp = false;
-	world->forEachCreature([&](Creature& creature){
+	world->creatures().forEach([&](Creature& creature){
 		if (!pickedUp && boundingBox.intersects(creature.getBoundingBox()) && creature.pickupItem(itemId, count)){
-			world->removeEntity(this);
+			world->entities->remove(this);
 			pickedUp = true;
 		}
 	});

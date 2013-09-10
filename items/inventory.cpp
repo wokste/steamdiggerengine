@@ -107,7 +107,7 @@ void Inventory::dropStuff(double proportion, World& world, Vector2d position){
 
 			auto drop = new DroppedItem(i.id, dropCount);
 			drop->setPos(&world, position);
-			world.addEntity(drop);
+			world.entities->add(drop);
 		}
 	}
 }
