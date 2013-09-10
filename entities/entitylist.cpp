@@ -94,9 +94,12 @@ void EntityList::remove(Entity* entity){
 		toDelete.push_back(entity);
 }
 
-void EntityList::forEach(std::function<void(Entity&)> func){
-	for(auto& e: entities)
-		func(*e);
+std::vector<Entity*>::iterator EntityList::begin(){
+	return entities.begin();
+}
+
+std::vector<Entity*>::iterator EntityList::end(){
+	return entities.end();
 }
 
 EntityListCreatureView EntityList::getCreatures(){
@@ -105,10 +108,12 @@ EntityListCreatureView EntityList::getCreatures(){
 
 EntityListCreatureView::EntityListCreatureView(EntityList* newList) : list(newList){}
 
-void EntityListCreatureView::forEach(std::function<void(Creature&)> func){
-	for(auto& e: list->creatures)
-		if (e->alive())
-			func(*e);
+std::vector<Creature*>::iterator EntityListCreatureView::begin(){
+	return list->creatures.begin();
+}
+
+std::vector<Creature*>::iterator EntityListCreatureView::end(){
+	return list->creatures.end();
 }
 
 // Deprecated

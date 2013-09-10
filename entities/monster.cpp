@@ -66,10 +66,10 @@ void Monster::logic(double time){
 
 	if (cooldown.done()){
 		Rect4d boundingBox = getBoundingBox();
-		world->creatures().forEach([&](Creature& creature){
-			if (aggressiveTo(creature) && boundingBox.intersects(creature.getBoundingBox()))
-				hitCreature(creature);
-		});
+		for (auto creature : world->creatures()){
+			if (creature->alive() && aggressiveTo(creature) && boundingBox.intersects(creature->getBoundingBox()))
+				hitCreature(*creature);
+		}
 	}
 }
 

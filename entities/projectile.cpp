@@ -46,12 +46,12 @@ void Projectile::logic(double time){
 	// Check for collisions
 	if (state == ProjectileState::Flying){
 		Rect4d boundingBox = getBoundingBox();
-		world->creatures().forEach([&](Creature& creature){
-			if (team != creature.team && boundingBox.intersects(creature.getBoundingBox())){
-				hitCreature(creature);
-				return;
+		for (auto creature : world->creatures()){
+			if (team != creature->team && boundingBox.intersects(creature->getBoundingBox())){
+				hitCreature(*creature);
+				break;
 			}
-		});
+		}
 	}
 }
 

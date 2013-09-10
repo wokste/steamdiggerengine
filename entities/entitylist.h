@@ -48,7 +48,8 @@ public:
 	void render(const Screen& screen, const Map& map, sf::Color dayLightColor);
 	void remove(Entity* entity);
 	void add(Entity* entity);
-	void forEach(std::function<void(Entity&)>);
+	std::vector<Entity*>::iterator begin();
+	std::vector<Entity*>::iterator end();
 	EntityListCreatureView getCreatures();
 private:
 	std::vector<Entity*> entities;
@@ -65,7 +66,8 @@ private:
 class EntityListCreatureView{
 public:
 	EntityListCreatureView(EntityList* newList);
-	void forEach(std::function<void(Creature&)>);
+	std::vector<Creature*>::iterator begin();
+	std::vector<Creature*>::iterator end();
 	bool areaHasCreature(Vector2i px1, Vector2i px2);
 
 private:
