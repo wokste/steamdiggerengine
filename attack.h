@@ -26,16 +26,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 struct AttackBonus{
 	int type;
-	int damage;
-	int push;
+	float perc;
 };
 
 struct Attack{
+	constexpr static int FlagDamageTerrain = 1;
+	constexpr static int FlagDamageEntities = 2;
+
 	int damage;
 	int push;
+	int flags;
 	std::vector<AttackBonus> bonusses;
 
-	void load(pugi::xml_node& configNode);
+	void load(pugi::xml_node& configNode, int newFlags = FlagDamageEntities);
 
 	Attack();
+	float getBonus(int type);
 };
