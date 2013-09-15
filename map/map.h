@@ -41,6 +41,8 @@ class MapGenerator;
 class MapNode;
 class Chunk;
 class BlockType;
+class Attack;
+class World;
 
 struct ChunkSorter{
 	bool operator()(const Vector2i& a, const Vector2i& b) const;
@@ -63,6 +65,9 @@ public:
 	MapNode* getMapNode(int x, int y) const;
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
+
+	void damageBlock(Vector2i pos, int targetLayer, const Attack& attack, World& world);
+
 private:
 	std::map<Vector2i, Chunk*, ChunkSorter> chunks;
 	std::unique_ptr<MapGenerator> generator;

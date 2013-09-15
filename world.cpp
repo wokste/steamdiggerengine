@@ -38,6 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 #include <assert.h>
+#include "utils/mathplus.h"
 
 World::World()
 {
@@ -62,22 +63,18 @@ void World::render(const Screen& screen){
 	entities->render(screen, *map, skybox->getLightColor());
 }
 
-bool World::damageBlock(Vector2i pos, int targetLayer, const Attack& attack){
-	MapNode* node = map->getMapNode(pos.x, pos.y);
-	if (!node || !node->isset(targetLayer))
-		return false;
-
-	const BlockType& minedBlock = node->getBlock(targetLayer);
-	if (targetLayer == Layer::back && !minedBlock.artificial && (map->blocksAdjacent(pos.x, pos.y, targetLayer,
-			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}) < 2))
-		return false;
-
-	if (node->damageBlock(targetLayer, attack)){
-		LightingEngine::recalcAreaAround(*map, pos);
-		auto dropPos = Vector2::iToD(pos) + Vector2d(0.5,0.5);
-		minedBlock.drops.dropStuff(*this, dropPos);
+bool World::damageArea(Vector2d pos, double radius, int targetLayer, const Attack& attack){
+	if (attack.flags & Attack::FlagDamageTerrain){
+		for (int x = MathPlus::floorInt(pos.x - radius); x < MathPlus::ceilInt(pos.x + radius); x++){
+			for (int y = MathPlus::floorInt(pos.y - radius); y < MathPlus::ceilInt(pos.y + radius); y++){
+				map->damageBlock(Vector2i(x,y), targetLayer, attack, *this);
+			}
+		}
 	}
-	return true;
+
+	for (auto other: creatures())
+		if (Vector2::length(other->pos - pos) < radius)
+			other->takeDamage(attack, pos);
 }
 
 bool World::areaOccupied(Vector2d pos1, Vector2d pos2){

@@ -48,7 +48,7 @@ public:
 	void logic(double time);
 	void render(const Screen& screen);
 	EntityListCreatureView creatures() {return entities->getCreatures();};
-	bool damageBlock(Vector2i pos, int targetLayer, const Attack& attack);
+	bool damageArea(Vector2d pos, double radius, int targetLayer, const Attack& attack);
 	bool areaOccupied(Vector2d pos1, Vector2d pos2);
 
 	template <class T>

@@ -35,23 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../enums.h"
 
 MineEffect::MineEffect(pugi::xml_node& node){
-	mineAttack.load(node);
+	mineAttack.load(node,Attack::FlagDamageTerrain);
 }
 
 bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	const Vector2i pos = chooseBlockToMine(*owner.world->map, sourcePos, targetPos, targetLayer);
-
-	owner.world->damageBlock(pos, targetLayer, mineAttack);
+	owner.world->damageArea(targetPos, 0, targetLayer, mineAttack);
 	return true;
-}
-
-Vector2i MineEffect::chooseBlockToMine(Map& map, Vector2d& sourcePos, Vector2d& targetPos, int& targetLayer){
-	Vector2i pos = Vector2::floorVec(targetPos);
-	MapNode* node = map.getMapNode(pos.x, pos.y);
-	if (node && node->isset(Layer::front)){
-		targetLayer = Layer::front;
-	}
-	return pos;
 }
 
 bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
