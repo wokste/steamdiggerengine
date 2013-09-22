@@ -27,8 +27,9 @@ Attack::Attack() :
 	push(0){
 }
 
-void Attack::load(pugi::xml_node& node, int newFlags){
-	flags = newFlags;
+void Attack::load(pugi::xml_node& node){
+	damageTerrain = node.attribute("damage-terrain").as_bool();
+
 	damage = node.attribute("damage").as_int();
 	push = node.attribute("push").as_int();
 	for (auto& bonusNode : node){

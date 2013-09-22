@@ -63,20 +63,6 @@ void World::render(const Screen& screen){
 	entities->render(screen, *map, skybox->getLightColor());
 }
 
-bool World::damageArea(Vector2d pos, double radius, int targetLayer, const Attack& attack){
-	if (attack.flags & Attack::FlagDamageTerrain){
-		for (int x = MathPlus::floorInt(pos.x - radius); x < MathPlus::ceilInt(pos.x + radius); x++){
-			for (int y = MathPlus::floorInt(pos.y - radius); y < MathPlus::ceilInt(pos.y + radius); y++){
-				map->damageBlock(Vector2i(x,y), targetLayer, attack, *this);
-			}
-		}
-	}
-
-	for (auto other: creatures())
-		if (Vector2::length(other->pos - pos) < radius)
-			other->takeDamage(attack, pos);
-}
-
 bool World::areaOccupied(Vector2d pos1, Vector2d pos2){
 	return map->areaHasBlocks(Vector2::floorVec(pos1),Vector2::ceilVec(pos2),
 		[&](const BlockType& block){

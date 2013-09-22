@@ -32,11 +32,3 @@ public:
 	BuildEffect(int blockTypeID){this->blockTypeID = blockTypeID;}
 	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
 };
-
-class MineEffect : public Effect{
-public:
-	MineEffect(pugi::xml_node& node);
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
-	Vector2i chooseBlockToMine(Map& map, Vector2d& sourcePos, Vector2d& targetPos, int& targetLayer);
-	Attack mineAttack;
-};

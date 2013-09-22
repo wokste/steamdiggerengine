@@ -34,15 +34,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../map/lightingengine.h"
 #include "../enums.h"
 
-MineEffect::MineEffect(pugi::xml_node& node){
-	mineAttack.load(node,Attack::FlagDamageTerrain);
-}
-
-bool MineEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	owner.world->damageArea(targetPos, 0, targetLayer, mineAttack);
-	return true;
-}
-
 bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
 	Map& map = *owner.world->map;
 	const Vector2i pos = Vector2::floorVec(targetPos);

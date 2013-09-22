@@ -30,15 +30,13 @@ struct AttackBonus{
 };
 
 struct Attack{
-	constexpr static int FlagDamageTerrain = 1;
-	constexpr static int FlagDamageEntities = 2;
+	bool damageTerrain;
 
 	int damage;
 	int push;
-	int flags;
 	std::vector<AttackBonus> bonusses;
 
-	void load(pugi::xml_node& configNode, int newFlags = FlagDamageEntities);
+	void load(pugi::xml_node& configNode);
 
 	Attack();
 	float getBonus(int type);

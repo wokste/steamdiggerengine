@@ -20,49 +20,35 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include <string>
-#include <vector>
-#include <memory>
-#include "utils/vector2.h"
-#include "enums.h"
-#include "utils/monsterspawner.h"
-#include "entities/entitylist.h"
+#include "attackeffect.h"
+#include "../entities/creature.h"
+#include "../world.h"
+#include <pugixml.hpp>
+#include "../utils/vector2.h"
+#include "../utils/mathplus.h"
+#include "../map/map.h"
 
-class Attack;
-class Map;
-class EntityList;
-class Entity;
-class Creature;
-class Skybox;
-class Screen;
+AttackEffect::AttackEffect(pugi::xml_node& node){
+	attack.load(node);
+	radius = node.attribute("radius").as_float(0);
+}
 
-class World{
-public:
-	std::unique_ptr<Map> map;
-	std::unique_ptr<EntityList> entities;
-	World();
-	World(const World& that) = delete;
-	~World();
+bool AttackEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+	//Find position to target.
+	Vector2d pos = targetPos;
 
-	void logic(double time);
-	void render(const Screen& screen);
-	EntityListCreatureView creatures() {return entities->getCreatures();};
-	bool areaOccupied(Vector2d pos1, Vector2d pos2);
-
-	template <class T>
-	T* spawn(T& prototype, Vector2d newPos){
-		T* spawned = nullptr;
-		if (prototype.validPos(*this, newPos)){
-			spawned = new T(prototype);
-			spawned->setPos(this, newPos);
-			entities->add(spawned);
+	// Attack the nodes on the map
+	if (attack.damageTerrain){
+		for (int x = MathPlus::floorInt(pos.x - radius); x < MathPlus::ceilInt(pos.x + radius); x++){
+			for (int y = MathPlus::floorInt(pos.y - radius); y < MathPlus::ceilInt(pos.y + radius); y++){
+				owner.world->map->damageBlock(Vector2i(x,y), targetLayer, attack, *owner.world);
+			}
 		}
-		return spawned;
 	}
 
-
-private:
-	std::unique_ptr<Skybox> skybox;
-	std::unique_ptr<MonsterSpawner> monsterSpawner;
-};
+	// Attack the entities near me
+	for (auto other: owner.world->creatures())
+		if ((abs(other->pos.x - pos.x) < radius + other->collision.x) && (abs(other->pos.y - pos.y) < radius + other->collision.y))
+			other->takeDamage(attack, pos);
+	return true;
+}

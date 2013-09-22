@@ -21,48 +21,16 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include <string>
-#include <vector>
-#include <memory>
-#include "utils/vector2.h"
-#include "enums.h"
-#include "utils/monsterspawner.h"
-#include "entities/entitylist.h"
+#include "effect.h"
+#include "../attack.h"
 
+#include <pugixml.hpp>
 class Attack;
-class Map;
-class EntityList;
-class Entity;
-class Creature;
-class Skybox;
-class Screen;
 
-class World{
+class AttackEffect : public Effect{
 public:
-	std::unique_ptr<Map> map;
-	std::unique_ptr<EntityList> entities;
-	World();
-	World(const World& that) = delete;
-	~World();
-
-	void logic(double time);
-	void render(const Screen& screen);
-	EntityListCreatureView creatures() {return entities->getCreatures();};
-	bool areaOccupied(Vector2d pos1, Vector2d pos2);
-
-	template <class T>
-	T* spawn(T& prototype, Vector2d newPos){
-		T* spawned = nullptr;
-		if (prototype.validPos(*this, newPos)){
-			spawned = new T(prototype);
-			spawned->setPos(this, newPos);
-			entities->add(spawned);
-		}
-		return spawned;
-	}
-
-
-private:
-	std::unique_ptr<Skybox> skybox;
-	std::unique_ptr<MonsterSpawner> monsterSpawner;
+	AttackEffect(pugi::xml_node& node);
+	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	Attack attack;
+	float radius;
 };

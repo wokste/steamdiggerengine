@@ -21,8 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "effect.h"
-#include "mapeffect.h"
+#include "attackeffect.h"
 #include "combateffect.h"
+#include "mapeffect.h"
 
 #include <pugixml.hpp>
 #include <iostream>
@@ -31,8 +32,8 @@ std::unique_ptr<Effect> Effect::loadEffect(pugi::xml_node& node){
 	std::unique_ptr<Effect> effect;
 	std::string typeName = node.name();
 
-	if (typeName == "mine")
-		effect.reset(new MineEffect(node));
+	if (typeName == "attack")
+		effect.reset(new AttackEffect(node));
 	if (typeName == "shoot")
 		effect.reset(new ShootEffect(node));
 	if (typeName == "heal")
