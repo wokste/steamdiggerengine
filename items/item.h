@@ -33,7 +33,7 @@ public:
 	ItemType(pugi::xml_node& configNode);
 	ItemType(int frameID);
 	~ItemType();
-	bool use(Entity& owner, const Screen& screen);
+	int use(Creature& owner, const Screen& screen);
 
 	int maxStack;
 	int frameID;

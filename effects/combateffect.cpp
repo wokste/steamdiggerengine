@@ -32,19 +32,18 @@ ShootEffect::ShootEffect(pugi::xml_node& node){
 	projectile->load(node);
 }
 
-bool ShootEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+int ShootEffect::run(EffectParams& params){
 	if (!projectile)
-		return false;
-	Projectile* shot = owner.world->spawn<Projectile>(*projectile, sourcePos);
+		return 0;
+	Projectile* shot = params.entity.world->spawn<Projectile>(*projectile, params.sourcePos);
 	if (shot == nullptr)
-		return false;
+		return 0;
 
-	auto target = dynamic_cast<Creature*>(&owner);
-	if (target){
-		shot->team = target->team;
+	if (params.eventInstignator){
+		shot->team = params.eventInstignator->team;
 	}
-	shot->moveTo(targetPos);
-	return true;
+	shot->moveTo(params.targetPos);
+	return 1;
 }
 
 HealEffect::HealEffect(pugi::xml_node& node){
@@ -52,12 +51,12 @@ HealEffect::HealEffect(pugi::xml_node& node){
 	shieldGain = node.attribute("shield").as_int();
 }
 
-bool HealEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	bool hasEffect = false;
-	/*auto target = dynamic_cast<Creature*>(&owner);
+int HealEffect::run(EffectParams& params){
+	int hasEffect = 0;
+	auto target = params.eventInstignator;
 	if (target){
 		hasEffect |= target->HP.heal(hpGain);
 		hasEffect |= target->shield.heal(shieldGain);
-	}*/
+	}
 	return hasEffect;
 }

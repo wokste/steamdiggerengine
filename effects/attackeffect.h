@@ -30,7 +30,7 @@ class Attack;
 class AttackEffect : public Effect{
 public:
 	AttackEffect(pugi::xml_node& node);
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	virtual int run(EffectParams& params);
 	Attack attack;
 	float radius;
 };

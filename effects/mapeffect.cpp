@@ -34,25 +34,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../map/lightingengine.h"
 #include "../enums.h"
 
-bool BuildEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	Map& map = *owner.world->map;
-	const Vector2i pos = Vector2::floorVec(targetPos);
+int BuildEffect::run(EffectParams& params){
+	Map& map = *params.entity.world->map;
+	const Vector2i pos = Vector2::floorVec(params.targetPos);
+	const int targetLayer = params.targetLayer;
+
 	MapNode* node = map.getMapNode(pos.x, pos.y);
 
 	if (!node || node->isset(targetLayer)){
-		return false;
+		return 0;
 	}
 
 	if (targetLayer == Layer::front){
-		if (owner.world->creatures().areaHasCreature(pos, pos + Vector2i(1,1)))
-			return false;
+		if (params.entity.world->creatures().areaHasCreature(pos, pos + Vector2i(1,1)))
+			return 0;
 	}
 
 	if (map.blocksAdjacent(pos.x, pos.y, targetLayer,
 			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Solid);}) == 0)
-		return false;
+		return 0;
 
 	node->setBlock(blockTypeID, targetLayer);
 	LightingEngine::recalcAreaAround(map, pos);
-	return true;
+	return 1;
 }

@@ -26,13 +26,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 
 class Entity;
+class Creature;
 class Screen;
+
+struct EffectParams{
+	Entity& entity;
+	Creature* eventInstignator;
+	Vector2d sourcePos;
+	Vector2d targetPos;
+	int targetLayer;
+
+	EffectParams(Entity& entity, Creature* eventInstignator, Vector2d sourcePos, Vector2d targetPos, int targetLayer)
+		: entity(entity), eventInstignator(eventInstignator), sourcePos(sourcePos), targetPos(targetPos), targetLayer(targetLayer){}
+};
 
 class Effect{
 public:
 	Effect(){};
 	~Effect(){};
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer) = 0;
+	virtual int run(EffectParams& params) = 0;
 	static std::unique_ptr<Effect> loadEffect(pugi::xml_node& node);
 };
 
@@ -41,7 +53,7 @@ public:
 	EffectSlot();
 	~EffectSlot();
 	void load(pugi::xml_node& node);
-	bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	int run(EffectParams& params);
 	void add(std::unique_ptr<Effect> effect);
 private:
 	std::vector<std::unique_ptr<Effect>> effects;

@@ -33,22 +33,23 @@ AttackEffect::AttackEffect(pugi::xml_node& node){
 	radius = node.attribute("radius").as_float(0);
 }
 
-bool AttackEffect::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
+int AttackEffect::run(EffectParams& params){
 	//Find position to target.
-	Vector2d pos = targetPos;
-
+	Vector2d pos = params.targetPos;
+	World& world = *params.entity.world;
 	// Attack the nodes on the map
 	if (attack.damageTerrain){
 		for (int x = MathPlus::floorInt(pos.x - radius); x < MathPlus::ceilInt(pos.x + radius); x++){
 			for (int y = MathPlus::floorInt(pos.y - radius); y < MathPlus::ceilInt(pos.y + radius); y++){
-				owner.world->map->damageBlock(Vector2i(x,y), targetLayer, attack, *owner.world);
+				world.map->damageBlock(Vector2i(x,y), params.targetLayer, attack, world);
 			}
 		}
 	}
 
 	// Attack the entities near me
-	for (auto other: owner.world->creatures())
-		if ((abs(other->pos.x - pos.x) < radius + other->collision.x) && (abs(other->pos.y - pos.y) < radius + other->collision.y))
-			other->takeDamage(attack, pos);
+	if (params.eventInstignator)
+		for (auto other: world.creatures())
+			if (params.eventInstignator->aggressiveTo(other) && (abs(other->pos.x - pos.x) < radius + other->collision.x) && (abs(other->pos.y - pos.y) < radius + other->collision.y))
+				other->takeDamage(attack, pos);
 	return true;
 }

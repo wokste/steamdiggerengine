@@ -30,5 +30,5 @@ class BuildEffect : public Effect{
 public:
 	int blockTypeID;
 	BuildEffect(int blockTypeID){this->blockTypeID = blockTypeID;}
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	virtual int run(EffectParams& params);
 };

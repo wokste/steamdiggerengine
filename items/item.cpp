@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "item.h"
-#include "../entities/entity.h"
+#include "../entities/creature.h"
 #include "../screen.h"
 #include "../effects/effect.h"
 #include <pugixml.hpp>
@@ -47,7 +47,8 @@ ItemType::ItemType(int newFrameID){
 ItemType::~ItemType(){
 }
 
-bool ItemType::use(Entity& user, const Screen& screen){
+int ItemType::use(Creature& user, const Screen& screen){
 	int layer = screen.getSelectedLayer();
-	return onUse.run(user, user.pos, screen.mousePos(layer), layer);
+	auto params = EffectParams(user, &user, user.pos, screen.mousePos(layer), layer);
+	return onUse.run(params);
 }

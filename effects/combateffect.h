@@ -30,7 +30,7 @@ class Projectile;
 class ShootEffect : public Effect{
 public:
 	ShootEffect(pugi::xml_node& node);
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	virtual int run(EffectParams& params);
 private:
 	std::unique_ptr<Projectile> projectile;
 };
@@ -38,7 +38,7 @@ private:
 class HealEffect : public Effect{
 public:
 	HealEffect(pugi::xml_node& node);
-	virtual bool run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer);
+	virtual int run(EffectParams& params);
 private:
 	int hpGain;
 	int shieldGain;

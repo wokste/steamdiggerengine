@@ -62,11 +62,10 @@ void EffectSlot::add(std::unique_ptr<Effect> newEffect){
 		effects.push_back(std::move(newEffect));
 }
 
-bool EffectSlot::run(Entity& owner, Vector2d sourcePos, Vector2d targetPos, int targetLayer){
-	bool success = false;
-	for(auto& testedEffect: effects){
-		if (testedEffect->run(owner, sourcePos, targetPos, targetLayer))
-			success = true;
+int EffectSlot::run(EffectParams& params){
+	int uses = 0;
+	for(auto& effect: effects){
+		uses += effect->run(params);
 	}
-	return success;
+	return uses;
 }
