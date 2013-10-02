@@ -49,7 +49,7 @@ Drop::Drop(int id) : ref(id)
 Drop::Drop(const std::string tag, const double newChance, const int newCount) : ref(tag)
 {
 	chance = newChance;
-	count = 1;
+	count = newCount;
 }
 
 void DropList::dropStuff(World& world, Vector2d pos) const{
@@ -59,7 +59,7 @@ void DropList::dropStuff(World& world, Vector2d pos) const{
 		if (item.ref.id >= 0 && item.chance * RAND_MAX >= rand()){
 			int count = item.count;
 			if (count > 1)
-				count *= (rand() * 1.0 / RAND_MAX + 0.5); // Slightly randomize count
+				count = count * (rand() * 1.0 / RAND_MAX + 0.5) + 0.5; // Slightly randomize count
 			auto drop = new DroppedItem(item.ref.id, count);
 			drop->setPos(&world, pos);
 			world.entities->add(drop);
