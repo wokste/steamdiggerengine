@@ -55,3 +55,11 @@ Vector2i Vector2::ceilVec(Vector2d source){
 Vector2i Vector2::uToI(sf::Vector2u source){
 	return Vector2i(source.x, source.y);
 }
+
+Vector2d Vector2::center(Vector2i source){
+	return Vector2d(source.x + 0.5, source.y + 0.5);
+}
+
+Vector2d Vector2::center(Vector2d source){
+	return Vector2d(MathPlus::floorInt(source.x) + 0.5, MathPlus::floorInt(source.y) + 0.5);
+}

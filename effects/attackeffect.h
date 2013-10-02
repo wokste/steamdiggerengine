@@ -33,4 +33,5 @@ public:
 	virtual int run(EffectParams& params);
 	Attack attack;
 	float radius;
+	float reach;
 };

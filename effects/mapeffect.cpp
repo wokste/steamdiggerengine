@@ -39,6 +39,9 @@ int BuildEffect::run(EffectParams& params){
 	const Vector2i pos = Vector2::floorVec(params.targetPos);
 	const int targetLayer = params.targetLayer;
 
+	//if (Vector2::length(params.sourcePos - Vector2::center(pos)) > params.reach)
+	//	return 0;
+
 	MapNode* node = map.getMapNode(pos.x, pos.y);
 
 	if (!node || node->isset(targetLayer)){

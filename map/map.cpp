@@ -154,6 +154,11 @@ void Map::damageBlock(Vector2i pos, int targetLayer, const Attack& attack, World
 	if (node->damageBlock(targetLayer, attack))
 	{ // Block is destroyed
 		LightingEngine::recalcAreaAround(*this, pos);
-		minedBlock.drops.dropStuff(world, Vector2::iToD(pos) + Vector2d(0.5,0.5));
+		minedBlock.drops.dropStuff(world, Vector2::center(pos));
 	}
+}
+
+bool Map::solid(int x, int y){
+	auto node = getMapNode(x, y);
+	return (node && node->getBlock(Layer::front).collisionType == BlockCollisionType::Solid);
 }

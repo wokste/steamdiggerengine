@@ -31,14 +31,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 AttackEffect::AttackEffect(pugi::xml_node& node){
 	attack.load(node);
 	radius = node.attribute("radius").as_float(0);
+	reach = node.attribute("reach").as_float(0);
 }
 
 int AttackEffect::run(EffectParams& params){
 	//Find position to target.
+	bool shouldMine = attack.damageTerrain;
 	Vector2d pos = params.targetPos;
+	if (Vector2::length(params.sourcePos - pos) > reach){
+		pos = Vector2::setLength(pos - params.sourcePos, reach) + params.sourcePos;
+		shouldMine = false;
+	}
+
 	World& world = *params.entity.world;
+
 	// Attack the nodes on the map
-	if (attack.damageTerrain){
+	if (shouldMine){
 		for (int x = MathPlus::floorInt(pos.x - radius); x < MathPlus::ceilInt(pos.x + radius); x++){
 			for (int y = MathPlus::floorInt(pos.y - radius); y < MathPlus::ceilInt(pos.y + radius); y++){
 				world.map->damageBlock(Vector2i(x,y), params.targetLayer, attack, world);
@@ -50,6 +58,7 @@ int AttackEffect::run(EffectParams& params){
 	if (params.eventInstignator)
 		for (auto other: world.creatures())
 			if (params.eventInstignator->aggressiveTo(other) && (abs(other->pos.x - pos.x) < radius + other->collision.x) && (abs(other->pos.y - pos.y) < radius + other->collision.y))
-				other->takeDamage(attack, pos);
+				other->takeDamage(attack, params.sourcePos);
+
 	return true;
 }
