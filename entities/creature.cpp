@@ -84,10 +84,12 @@ void Creature::load(pugi::xml_node& configNode)
 void Creature::logic(double time)
 {
 	Entity::logic(time);
-	regenCooldown -= time;
-	while (regenCooldown.done()){
-		shield.heal(1);
-		regenCooldown.add(0.1);
+	if (alive()){
+		regenCooldown -= time;
+		while (regenCooldown.done()){
+			shield.heal(1);
+			regenCooldown.add(0.1);
+		}
 	}
 }
 

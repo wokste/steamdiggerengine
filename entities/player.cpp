@@ -97,7 +97,7 @@ bool Player::useItem(Screen& screen){
 }
 
 void Player::tryJump(){
-	if (physicsMode == PhysicsMode::Walking){
+	if (alive() && physicsMode == PhysicsMode::Walking){
 		push(Vector2d(0,1), jumpHeight);
 	}
 }
@@ -115,7 +115,7 @@ void Player::load(pugi::xml_node& configNode){
 }
 
 bool Player::pickupItem(int id, int count){
-	return inventory.add(id,count);
+	return alive() && inventory.add(id,count);
 }
 
 void Player::render(const sf::Color& skyColor){
