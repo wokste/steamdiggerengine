@@ -32,6 +32,7 @@ std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
 std::unique_ptr<BlockTypeManager> GameGlobals::blockDefs;
 FileSystem GameGlobals::fileSystem;
 std::mt19937 GameGlobals::rnd;
+bool GameGlobals::paused;
 
 void GameGlobals::init(){
 	tileSet.reset(new TileSet(Vector2i(8,8), GameGlobals::fileSystem.fullpath("tileset.png")));
@@ -40,6 +41,8 @@ void GameGlobals::init(){
 
 	// Actions that require the itemDefs to be loaded
 	blockDefs->postLoad();
+
+	paused = false;
 }
 
 FileSystem::FileSystem(){

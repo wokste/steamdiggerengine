@@ -47,4 +47,5 @@ public:
 	static std::mt19937 rnd;
 	static std::unique_ptr<BlockTypeManager> blockDefs;
 	static std::shared_ptr<TileSet> tileSet;
+	static bool paused;
 };

@@ -75,6 +75,8 @@ void doWindowEvents(){
 					player->selectItem(9);
 				else if (event.key.code == sf::Keyboard::Key::E)
 					hud->toggleInventory();
+				else if (event.key.code == sf::Keyboard::Key::P)
+					GameGlobals::paused = !GameGlobals::paused;
 				break;
 		}
 	}
@@ -132,6 +134,10 @@ int main(){
 		double time = fpsClock.restart().asSeconds();
 		if (time > 0.1)
 			time = 0.1; // To avoid slow FPS screwing up physics
+
+		if (GameGlobals::paused)
+			time = 0;
+
 		player->checkInput(time,*screen.get());
 		world->logic(time);
 
