@@ -96,20 +96,26 @@ void Entity::move(Vector2d movement){
 	pos.y += movement.y;
 	if (!validPos(*world, pos)){
 		if (movement.y > 0)
-			// TODO: Fix
 			pos.y = MathPlus::floorInt(pos.y + collision.y) - collision.y;
 		else
 			pos.y = MathPlus::ceilInt(pos.y - collision.y) + collision.y;
+
+		while (!validPos(*world, pos))
+			pos.y += (movement.y > 0) ? -1 : 1;
+
 		hitTerrain(false); // Hit a floor/ceiling
 	}
 
 	pos.x += movement.x;
 	if (!validPos(*world, pos)){
 		if (movement.x > 0)
-			// TODO: Fix
 			pos.x = MathPlus::floorInt(pos.x + collision.x) - collision.x;
 		else
 			pos.x = MathPlus::ceilInt(pos.x - collision.x) + collision.x;
+
+		while (!validPos(*world, pos))
+			pos.x += (movement.x > 0) ? -1 : 1;
+
 		hitTerrain(true); // Hit a wall
 	}
 }
