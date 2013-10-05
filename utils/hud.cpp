@@ -41,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Font HUD::font;
 
 
-HUD::HUD(){
+HUD::HUD() : selectedElement(nullptr){
 	hudElements.emplace_back(new HealthBarHUD());
 	hudElements.emplace_back(new InventoryHUD());
 
@@ -73,10 +73,8 @@ void HUD::draw(const Screen& screen, const Player& player){
 			glEnable(GL_BLEND);
 			for (auto& elem : hudElements){
 				glLoadIdentity();
-				Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
-				pos.x *= elem->docking.x;
-				pos.y *= elem->docking.y;
-				glTranslated(pos.x, pos.y, 0);
+				Vector2i pos = elem->getTopLeft(screen.getSize());
+				glTranslatef(pos.x, pos.y, 0);
 				elem->draw(player);
 			}
 			glLoadIdentity();
@@ -98,6 +96,10 @@ void HUD::drawMouseItem(const Screen& screen, const Player& player){
 	}
 }
 
+bool HUD::hasFocus(){
+	return selectedElement != nullptr;
+}
+
 void HUD::toggleInventory(){
 	for (auto& elem: hudElements){
 		auto inventoryElem = dynamic_cast<InventoryHUD*>(elem.get());
@@ -107,19 +109,22 @@ void HUD::toggleInventory(){
 	}
 }
 
-bool HUD::onMouseEvent(sf::Event& event, const Screen& screen, Player& player){
-	Vector2i mousePos = sf::Mouse::getPosition(*screen.window);
-	for (int i = hudElements.size() - 1; i >= 0; --i){
-		auto& elem = hudElements[i];
-		Vector2d pos = Vector2::iToD(screen.getSize() - elem->size);
-		pos.x *= elem->docking.x;
-		pos.y *= elem->docking.y;
-		Vector2i relativeMousePos = mousePos - Vector2::floorVec(pos);
-		if (relativeMousePos.x < 0 || relativeMousePos.y < 0 || relativeMousePos.x >= elem->size.x || relativeMousePos.y >= elem->size.y)
-			continue;
+void HUD::selectElement(const Screen& screen, const Vector2i& mousePos){
+	selectedElement = nullptr;
+	for (auto& elem: hudElements){
+		if (elem->mouseInArea(screen, mousePos)){
+			selectedElement = elem.get();
+		}
+	}
+}
 
-		if (elem->onMouseEvent(event, player, relativeMousePos))
-			return true;
+bool HUD::onMouseEvent(sf::Event& event, const Screen& screen, Player& player){
+	auto mousePos = Vector2i(event.mouseButton.x, event.mouseButton.y);
+	if (event.type == sf::Event::EventType::MouseButtonPressed)
+		selectElement(screen, mousePos);
+
+	if (selectedElement != nullptr){
+		return (selectedElement->onMouseEvent(event, player, mousePos - selectedElement->getTopLeft(screen.getSize())));
 	}
 	return false;
 }
@@ -128,8 +133,20 @@ bool HUD::onMouseEvent(sf::Event& event, const Screen& screen, Player& player){
    * Hud Element *
    *************** */
 
-bool HUDElement::onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos){
+bool HUDElement::onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos){
 	return false;
+}
+
+Vector2i HUDElement::getTopLeft(const Vector2i& screenSize){
+	Vector2d pos = Vector2::iToD(screenSize - size);
+	pos.x *= docking.x;
+	pos.y *= docking.y;
+	return Vector2::floorVec(pos);
+}
+
+bool HUDElement::mouseInArea(const Screen& screen, const Vector2i& mousePos){
+	Vector2i relMouse = mousePos - getTopLeft(screen.getSize());
+	return (relMouse.x >= 0 && relMouse.y >= 0 && relMouse.x < size.x && relMouse.y < size.y);
 }
 
 /* ****************
@@ -225,7 +242,7 @@ void InventoryHUD::toggle(){
 
 }
 
-bool InventoryHUD::onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos){
+bool InventoryHUD::onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos){
 	int celX = (mousePos.x - outsideBorder + celBorder / 2) / (celSize + celBorder);
 	int celY = (mousePos.y - outsideBorder + celBorder / 2) / (celSize + celBorder);
 	celY = rows - celY - 1;

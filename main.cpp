@@ -81,10 +81,9 @@ void doWindowEvents(){
 
 	if (screen->mouseInWindow){
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-			//hud->onMousePressed(*screen.get(), *player, event.mouseButton.button, mousePos, mouseJustPressed);
-			//if (!handled){
+			if (!hud->hasFocus()){
 				player->useItem(*screen.get());
-			//}
+			}
 		}
 	}
 }

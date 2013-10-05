@@ -45,9 +45,12 @@ public:
 	void toggleInventory();
 	bool onMouseEvent(sf::Event& event, const Screen& screen, Player& player);
 	static Font font;
+	bool hasFocus();
 
 private:
+	void selectElement(const Screen& screen, const Vector2i& mousePos);
 	std::vector<std::unique_ptr<HUDElement>> hudElements;
+	HUDElement* selectedElement;
 };
 
 class HUDElement{
@@ -57,8 +60,12 @@ public:
 	virtual ~HUDElement(){}
 
 	virtual void draw(const Player& player) = 0;
-	virtual bool onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos);
+	virtual bool onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos);
+
+	Vector2i getTopLeft(const Vector2i& screenSize);
+	bool mouseInArea(const Screen& screen, const Vector2i& mousePos);
 	Vector2i size;
+protected:
 	Vector2d docking;
 };
 
@@ -85,7 +92,7 @@ public:
 
 	virtual void draw(const Player& player);
 	void toggle();
-	bool onMouseEvent(sf::Event& event, Player& player, const Vector2i mousePos) override;
+	bool onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos) override;
 private:
 	std::shared_ptr<Texture> background;
 	std::shared_ptr<TileSet> itemTexture;
