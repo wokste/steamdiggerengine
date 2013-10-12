@@ -70,7 +70,6 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer)
 }
 
 bool MapNode::damageBlock(int layer, const Attack& attack){
-	auto blockMaterial = (*GameGlobals::blockDefs)[blockId[layer]].materialType;
 	auto damage = attack.damage;
 
 	HP[layer] -= damage;

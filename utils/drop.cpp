@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../items/itemdefmanager.h"
 #include "../world.h"
 #include "../entities/droppeditem.h"
+#include "../attack.h"
 
 #include <iostream>
 
@@ -52,10 +53,8 @@ Drop::Drop(const std::string tag, const double newChance, const int newCount) : 
 	count = newCount;
 }
 
-void DropList::dropStuff(World& world, Vector2d pos) const{
+void DropList::dropStuff(World& world, Vector2d pos, const Attack& attack) const{
 	for(auto& item: *this){
-		// TODO: stack sizes
-		// TODO: chances
 		if (item.ref.id >= 0 && item.chance * RAND_MAX >= rand()){
 			int count = item.count;
 			if (count > 1)

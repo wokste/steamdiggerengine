@@ -22,22 +22,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include <pugixml.hpp>
-#include <vector>
-
-struct AttackBonus{
-	int type;
-	float perc;
-};
+#include "enums.h"
 
 struct Attack{
 	bool damageTerrain;
 
 	int damage;
 	int push;
-	std::vector<AttackBonus> bonusses;
+	DamageType type;
 
 	void load(pugi::xml_node& configNode);
 
 	Attack();
-	float getBonus(int type);
 };

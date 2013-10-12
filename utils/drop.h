@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/vector2.h"
 
 class World;
+class Attack;
 
 class ItemReference{
 public:
@@ -50,6 +51,6 @@ private:
 
 class DropList : public std::vector<Drop>{
 public:
-	void dropStuff(World& world, Vector2d pos) const;
+	void dropStuff(World& world, Vector2d pos, const Attack& attack) const;
 	void postLoad();
 };

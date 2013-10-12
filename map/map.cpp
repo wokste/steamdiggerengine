@@ -147,14 +147,13 @@ void Map::damageBlock(Vector2i pos, int targetLayer, const Attack& attack, World
 		targetLayer = Layer::front;
 
 	const BlockType& minedBlock = node->getBlock(targetLayer);
-	if (targetLayer == Layer::back && !minedBlock.artificial && (blocksAdjacent(pos.x, pos.y, targetLayer,
-			[](const BlockType& block){return (block.collisionType == BlockCollisionType::Air);}) < 2))
+	if (targetLayer == Layer::back && pos.y > 20)
 		return;
 
 	if (node->damageBlock(targetLayer, attack))
 	{ // Block is destroyed
 		LightingEngine::recalcAreaAround(*this, pos);
-		minedBlock.drops.dropStuff(world, Vector2::center(pos));
+		minedBlock.drops.dropStuff(world, Vector2::center(pos), attack);
 	}
 }
 

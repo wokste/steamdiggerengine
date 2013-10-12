@@ -30,7 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 BlockType::BlockType(pugi::xml_node& configNode){
 	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));
-	materialType = getMaterialType(configNode.attribute("material").as_string("None"));
 	HP = configNode.attribute("hp").as_int(-1);
 	lightColor = LightingEngine::makeColor(configNode.attribute("light").as_string("0"));
 	artificial = configNode.attribute("artificial").as_bool(false);

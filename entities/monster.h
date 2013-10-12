@@ -40,6 +40,7 @@ public:
 	void hitTerrain(bool hitWall) override;
 	void hitCreature(Creature& other);
 	void onCreatureDied(Creature* other) override;
+	virtual void takeDamage(const Attack& attack, Vector2d source);
 public:
 	Attack hitAttack;
 	std::shared_ptr<MovementType> movementType;

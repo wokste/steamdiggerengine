@@ -52,7 +52,6 @@ void Monster::load(pugi::xml_node& node){
 
 void Monster::logic(double time){
 	if (!alive()){
-		dropList->dropStuff(*world, pos);
 		world->entities->remove(this);
 		return;
 	}
@@ -70,6 +69,17 @@ void Monster::logic(double time){
 			if (creature->alive() && aggressiveTo(creature) && boundingBox.intersects(creature->getBoundingBox()))
 				hitCreature(*creature);
 		}
+	}
+}
+
+void Monster::takeDamage(const Attack& attack, Vector2d source){
+	if (!alive())
+		return;
+
+	Creature::takeDamage(attack, source);
+
+	if (!alive()){
+		dropList->dropStuff(*world, pos, attack);
 	}
 }
 

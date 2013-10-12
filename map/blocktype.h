@@ -33,7 +33,6 @@ class World;
 class BlockType{
 public:
 	BlockCollisionType collisionType;
-	MaterialType materialType;
 	int HP;
 	sf::Color lightColor;
 	sf::Color blockedLight;

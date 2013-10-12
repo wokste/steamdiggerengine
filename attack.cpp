@@ -32,18 +32,5 @@ void Attack::load(pugi::xml_node& node){
 
 	damage = node.attribute("damage").as_int();
 	push = node.attribute("push").as_int();
-	for (auto& bonusNode : node){
-		AttackBonus bonus;
-		bonus.type = bonusNode.attribute("type").as_int();
-		bonus.perc = bonusNode.attribute("multiplier").as_float() - 1;
-		bonusses.push_back(bonus);
-	}
-}
-
-float Attack::getBonus(int type){
-	float sum = 1;
-	for (auto& bonus : bonusses){
-		if (type == bonus.type)
-			sum += bonus.perc;
-	}
+	type = getDamageType(node.attribute("type").as_string("none"));
 }
