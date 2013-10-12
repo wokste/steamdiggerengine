@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include "../game.h"
 #include "../attack.h"
+#include "../utils/sound.h"
 
 MapNode::MapNode(){
 	for (int i = 0; i < Layer::count; ++i){
@@ -71,8 +72,10 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer)
 
 bool MapNode::damageBlock(int layer, const Attack& attack){
 	auto damage = attack.damage;
-
+	auto block = getBlock(layer);
+	SoundSystem::playSound(block.mineSound);
 	HP[layer] -= damage;
+
 	if (HP[layer] <= 0){
 		setBlock(0, layer);
 		return true;

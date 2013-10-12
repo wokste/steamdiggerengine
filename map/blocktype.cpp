@@ -27,14 +27,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../game.h"
 #include "../items/itemdefmanager.h"
 #include <iostream>
+#include "../utils/sound.h"
 
 BlockType::BlockType(pugi::xml_node& configNode){
 	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));
 	HP = configNode.attribute("hp").as_int(-1);
 	lightColor = LightingEngine::makeColor(configNode.attribute("light").as_string("0"));
-	artificial = configNode.attribute("artificial").as_bool(false);
 	unsigned char blockedLightByte = configNode.attribute("blocked-light").as_int(100);
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
+	mineSound = SoundSystem::loadSound(configNode.attribute("mine_sound").as_string());
 
 	for( auto childNode : configNode) {
 		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));

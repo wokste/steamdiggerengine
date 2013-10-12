@@ -23,12 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include "../enums.h"
 #include <vector>
+#include <memory>
 #include "../utils/vertex.h"
 #include "../utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
 #include <pugixml.hpp>
 
 class World;
+class Sound;
 
 class BlockType{
 public:
@@ -37,12 +39,12 @@ public:
 	sf::Color lightColor;
 	sf::Color blockedLight;
 	std::vector<VertexArray> models;
-	bool artificial;
 
 	BlockType(pugi::xml_node& configNode);
 	int getModelId() const;
 
 	DropList drops;
+	std::shared_ptr<Sound> mineSound;
 };
 
 class BlockTypeManager{
