@@ -26,12 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 struct Sound{
-	std::string name;
 	sf::SoundBuffer buffer;
 };
 
 namespace SoundSystem{
-	constexpr int NUM_SOUNDS = 16;
 	sf::Sound* playSound(std::shared_ptr<Sound> buffer);
 	std::shared_ptr<Sound> loadSound(const std::string& fileName);
 };

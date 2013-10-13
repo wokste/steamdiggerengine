@@ -24,12 +24,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "sound.h"
 #include "../game.h"
 #include <iostream>
+#include <map>
 
 namespace SoundSystem{
+	constexpr int NUM_SOUNDS = 16;
 	sf::Sound* findUnusedSound();
+	std::shared_ptr<Sound> findLoadedSound(const std::string& fileName);
 
 	// TODO: Keep a list of all buffers that are currently used for playing the sound.
 	sf::Sound soundSlots[NUM_SOUNDS];
+	std::map<std::string,std::shared_ptr<Sound>> loadedSounds;
 };
 
 
@@ -41,6 +45,7 @@ sf::Sound* SoundSystem::playSound(std::shared_ptr<Sound> sound){
 
 	if (slot){
 		slot->setBuffer(sound->buffer);
+		slot->setPitch(std::generate_canonical<double, 10>(GameGlobals::rnd) + 0.5);
 		slot->play();
 	}
 	return slot;
@@ -55,14 +60,24 @@ sf::Sound* SoundSystem::findUnusedSound(){
 }
 
 std::shared_ptr<Sound> SoundSystem::loadSound(const std::string& fileName){
-	std::shared_ptr<Sound> sound;
-	if (fileName != ""){
+	std::shared_ptr<Sound> sound = findLoadedSound(fileName);
+	if (!sound && fileName != ""){
 		sound.reset(new Sound());
-		sound->name = fileName;
-		if (!sound->buffer.loadFromFile (GameGlobals::fileSystem.fullpath(fileName))){
+		if (sound->buffer.loadFromFile (GameGlobals::fileSystem.fullpath(fileName))){
+			loadedSounds[fileName]=sound;
+		} else {
 			std::cout << "Could not load sound " << fileName << " \n";
 			sound.reset();
 		}
 	}
 	return sound;
+}
+
+std::shared_ptr<Sound> SoundSystem::findLoadedSound(const std::string& key){
+	auto iterator = loadedSounds.find(key);
+	if (iterator == loadedSounds.end()) {
+		return std::shared_ptr<Sound>();
+	} else {
+		return iterator->second;
+	}
 }
