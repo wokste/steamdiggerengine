@@ -47,7 +47,7 @@ Drop::Drop(int id) : ref(id)
 	count = 1;
 }
 
-Drop::Drop(const std::string tag, const double newChance, const int newCount) : ref(tag)
+Drop::Drop(const std::string& tag, const double newChance, const int newCount) : ref(tag)
 {
 	chance = newChance;
 	count = newCount;

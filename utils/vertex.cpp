@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "vertex.h"
 #include "texture.h"
+#include <iostream>
 
 Vertex::Vertex(sf::Vector3f pos, float textureX, float textureY) : x(pos.x), y(pos.y), z(pos.z), textureX(textureX), textureY(textureY)
 {
@@ -37,14 +38,16 @@ void VertexArray::clear(){
 
 VertexArray::VertexArray(pugi::xml_node& configNode, const TileSet& tileset){
 	auto id   = configNode.attribute("id").as_int(-1);
-	auto type = configNode.attribute("display").as_string("cube");
+	std::string type = configNode.attribute("display").as_string("cube");
 	if (type == "cube"){
 		addCube(configNode, tileset);
 	}else if (type == "plant"){
 		addSheet(sf::Vector3f(0,0,0), sf::Vector3f(0,1,0), sf::Vector3f(1,0,1), id, tileset);
 		addSheet(sf::Vector3f(0,0,1), sf::Vector3f(0,1,0), sf::Vector3f(1,0,-1), id, tileset);
-	}else if (type == "sheet"){
+	}else if (type == "sprite"){
 		addSheet(sf::Vector3f(0,0,0.5), sf::Vector3f(0,1,0), sf::Vector3f(1,0,0), id, tileset);
+	} else {
+		std::cout << "Warning, undefined display type '" << type << "'\n";
 	}
 }
 

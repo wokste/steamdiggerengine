@@ -45,8 +45,7 @@ void GameGlobals::init(){
 	paused = false;
 }
 
-FileSystem::FileSystem(){
-	dataDir = "data/";
+FileSystem::FileSystem() : dataDir("data/"){
 }
 
 std::string FileSystem::fullpath(const std::string& resourcename) const{

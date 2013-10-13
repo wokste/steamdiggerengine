@@ -32,7 +32,7 @@ class Attack;
 class ItemReference{
 public:
 	inline ItemReference(int id) : id(id){}
-	inline ItemReference(const std::string tag) : id(-1), tag(tag){}
+	inline ItemReference(const std::string& _tag) : id(-1), tag(_tag){}
 	void calcID();
 	int id = -1;
 private:
@@ -41,7 +41,7 @@ private:
 
 struct Drop{
 	Drop(int id);
-	Drop(const std::string tag, const double newChance, const int newCount);
+	Drop(const std::string& tag, const double newChance, const int newCount);
 private:
 	ItemReference ref;
 	double chance;

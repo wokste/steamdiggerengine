@@ -24,7 +24,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Attack::Attack() :
 	damage(0),
-	push(0){
+	push(0),
+	damageTerrain(false),
+	type(DamageType::None)
+{
 }
 
 void Attack::load(pugi::xml_node& node){

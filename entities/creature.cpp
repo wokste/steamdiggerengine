@@ -68,7 +68,7 @@ std::string Stat::asText() const{
 	return out.str();
 }
 
-Creature::Creature(){}
+Creature::Creature(): team(0){}
 
 Creature::~Creature(){
 

@@ -42,8 +42,6 @@ Player* player;
 void doWindowEvents(){
 	sf::Event event;
 
-	bool mouseJustPressed = false;
-
 	while (screen->window->pollEvent(event)){
 		switch (event.type){
 			case sf::Event::EventType::Closed:

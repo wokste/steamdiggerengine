@@ -84,7 +84,6 @@ private:
 class InventoryHUD : public HUDElement{
 public:
 	static constexpr int celSize = 32, celBorder = 8, outsideBorder = 7;
-	int rowsShown = 1;
 
 	InventoryHUD();
 	InventoryHUD(const InventoryHUD& that) = delete;

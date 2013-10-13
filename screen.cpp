@@ -35,7 +35,7 @@ constexpr double farPlane = eyedist + 3;
 
 int floorInt(double);
 
-Screen::Screen(){
+Screen::Screen() : mouseInWindow(true){
 	sf::ContextSettings settings;
 	settings.depthBits = 0;
 	settings.stencilBits = 0;
