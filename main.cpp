@@ -30,9 +30,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "entities/player.h"
 #include "world.h"
 #include "utils/hud.h"
-#include "utils/assert.h"
 #include "game.h"
 #include <pugixml.hpp>
+#include <assert.h>
 
 std::unique_ptr<Screen> screen;
 std::unique_ptr<World> world;
@@ -124,7 +124,7 @@ int main(){
 		std::cerr << result.description();
 	}
 
-	ASSERT(player != nullptr, "Main", "player = NULL");
+	assert(player != nullptr);
 
 	hud.reset(new HUD());
 	sf::Clock fpsClock;
