@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ItemType::ItemType(pugi::xml_node& configNode){
 	maxStack=configNode.attribute("stack").as_int(1);
 	consumable=configNode.attribute("consumable").as_bool(false);
-	useTime=configNode.attribute("use-time").as_double(0.2);
+	useTime=configNode.attribute("use-time").as_double(0.4);
 	frameID=configNode.attribute("frame").as_int();
 	onUse.load(configNode);
 }
@@ -39,7 +39,7 @@ ItemType::ItemType(pugi::xml_node& configNode){
 ItemType::ItemType(int newFrameID){
 	maxStack=250;
 	consumable=true;
-	useTime=0.2;
+	useTime=0.4;
 	frameID=newFrameID;
 }
 
