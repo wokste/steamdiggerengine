@@ -37,7 +37,7 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 	mineSound = SoundSystem::loadSound(configNode.attribute("mine_sound").as_string());
 
-	for( auto childNode : configNode) {
+	for( auto childNode : configNode.children("frame")) {
 		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));
 	}
 }
@@ -54,16 +54,18 @@ BlockTypeManager::BlockTypeManager(std::string fileName){
 	auto result = doc.load_file(fileName.c_str());
 	if (result){
 		auto parentNode = doc.child("root");
-		for (auto childNode : parentNode){
-			BlockType block = BlockType(childNode);
-			std::string dropTag = childNode.attribute("drop").as_string("DEFAULT");
-			if (dropTag == "DEFAULT"){
+		for (auto blockNode : parentNode){
+			BlockType block = BlockType(blockNode);
+			auto dropNode = blockNode.child("drops");
+			if (dropNode){
+				block.drops.load(dropNode);
+			}
+
+			if (!dropNode || dropNode.attribute("drop_this").as_bool()) {
 				int blockID = blocks.size();
-				int iconFrame = childNode.child("frame").attribute("id").as_int();
-				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, childNode.attribute("tag").as_string());
+				int iconFrame = blockNode.child("frame").attribute("id").as_int();
+				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, blockNode.attribute("tag").as_string());
 				block.drops.emplace_back(dropID);
-			} else if (dropTag != ""){
-				block.drops.emplace_back(dropTag, 1.0, 1);
 			}
 			blocks.push_back(block);
 		}

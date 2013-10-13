@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 #include "../utils/vector2.h"
+#include <pugixml.hpp>
 
 class World;
 class Attack;
@@ -52,5 +53,6 @@ private:
 class DropList : public std::vector<Drop>{
 public:
 	void dropStuff(World& world, Vector2d pos, const Attack& attack) const;
+	void load(pugi::xml_node& node);
 	void postLoad();
 };

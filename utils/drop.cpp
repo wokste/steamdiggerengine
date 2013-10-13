@@ -54,15 +54,25 @@ Drop::Drop(const std::string tag, const double newChance, const int newCount) : 
 }
 
 void DropList::dropStuff(World& world, Vector2d pos, const Attack& attack) const{
+	auto choice = std::generate_canonical<double, 20>(GameGlobals::rnd);
 	for(auto& item: *this){
-		if (item.ref.id >= 0 && item.chance * RAND_MAX >= rand()){
+		if (item.ref.id < 0)
+			continue;
+		if (choice >= 0 && choice < item.chance){
 			int count = item.count;
 			if (count > 1)
-				count = count * (rand() * 1.0 / RAND_MAX + 0.5) + 0.5; // Slightly randomize count
+				count = count * std::generate_canonical<double, 5>(GameGlobals::rnd) + 0.5; // Slightly randomize count
 			auto drop = new DroppedItem(item.ref.id, count);
 			drop->setPos(&world, pos);
 			world.entities->add(drop);
 		}
+		choice -= item.chance;
+	}
+}
+
+void DropList::load(pugi::xml_node& dropNode){
+	for (auto childNode : dropNode){
+		emplace_back(childNode.attribute("tag").as_string(), childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
 	}
 }
 
