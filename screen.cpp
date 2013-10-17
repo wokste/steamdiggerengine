@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <sstream>
 
 constexpr double eyedist = 10;
 constexpr double blocksX = 30;
@@ -70,6 +71,10 @@ void Screen::centerOn(Entity& player){
 	center = player.pos;
 	glScaled(1,1,-1);
 	glTranslated(-center.x,-center.y,eyedist);
+
+	std::stringstream ss;
+	ss << "(" << center.x << ", " << center.y << ")";
+	window->setTitle(ss.str());
 }
 
 bool Screen::containsArea(Vector2i topLeft, Vector2i vecSize) const{
