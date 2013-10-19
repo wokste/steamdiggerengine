@@ -58,6 +58,11 @@ public:
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature* other);
 	virtual bool pickupItem(int id, int count){return false;}
+
+	void tryJump(int height = 0);
+	double jumpHeight;
+	double accelSpeed;
+	double walkSpeed;
 public:
 	Stat HP;
 	Stat shield;

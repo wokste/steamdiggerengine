@@ -96,17 +96,8 @@ bool Player::useItem(Screen& screen){
 	return inventory.use(*this, screen);
 }
 
-void Player::tryJump(){
-	if (alive() && physicsMode == PhysicsMode::Walking){
-		push(Vector2d(0,1), jumpHeight);
-	}
-}
-
 void Player::load(pugi::xml_node& configNode){
 	Creature::load(configNode);
-	jumpHeight = configNode.attribute("jump-height").as_double();
-	accelSpeed = configNode.attribute("acceleration").as_double();
-	walkSpeed = configNode.attribute("walk-speed").as_double();
 
 	team = configNode.attribute("team").as_int(0);
 	for (auto& childNode : configNode){

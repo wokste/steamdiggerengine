@@ -26,6 +26,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/vector2.h"
 #include <pugixml.hpp>
 #include "../game.h"
+#include "../world.h"
+#include "../map/map.h"
+#include <math.h>
 
 Stat::Stat(): cur(0), max(0){}
 Stat::~Stat(){}
@@ -79,6 +82,9 @@ void Creature::load(pugi::xml_node& configNode)
 	Entity::load(configNode);
 	HP = configNode.attribute("hp").as_int(100);
 	shield = configNode.attribute("shield").as_int();
+	jumpHeight = configNode.attribute("jump-height").as_double();
+	accelSpeed = configNode.attribute("acceleration").as_double();
+	walkSpeed = configNode.attribute("walk-speed").as_double();
 }
 
 void Creature::logic(double time)
@@ -105,4 +111,14 @@ void Creature::takeDamage(const Attack& attack,Vector2d source){
 
 bool Creature::aggressiveTo(Creature* other){
 	return alive() && other->alive() && team != other->team;
+}
+
+void Creature::tryJump(int height){
+	if (alive() && physicsMode == PhysicsMode::Walking){
+		if (height == 0)
+			height = jumpHeight;
+
+		double force = std::sqrt((2 * height + 1) * world->map->gravity);
+		push(Vector2d(0,1), force);
+	}
 }

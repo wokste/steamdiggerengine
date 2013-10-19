@@ -38,15 +38,10 @@ public:
 	void onMouseWheel(int delta);
 	void selectItem(int nr);
 	bool useItem(Screen& screen);
-	void tryJump();
 
 	virtual void load(pugi::xml_node& configNode);
 	bool pickupItem(int id, int count) override;
-
 	Inventory inventory;
-	double jumpHeight;
-	double accelSpeed;
-	double walkSpeed;
 private:
 	void checkKeyboardMovement(double time);
 };
