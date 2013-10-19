@@ -30,7 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <algorithm>
 #include <pugixml.hpp>
 #include "../utils/vector2.h"
-#include "../utils/assert.h"
 #include "../utils/mathplus.h"
 #include "../game.h"
 #include "../enums.h"

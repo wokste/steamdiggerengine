@@ -29,11 +29,6 @@ enum class BlockCollisionType
 };
 BlockCollisionType getBlockCollisionType(std::string str);
 
-enum class DamageType{
-	None, Chop, Mine, Stab, Fire, Ice
-};
-DamageType getDamageType(std::string str);
-
 namespace Layer{
 	constexpr int front = 0;
 	constexpr int back = 1;

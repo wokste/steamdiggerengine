@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
 #include <pugixml.hpp>
+#include "../attack.h"
 
 class World;
 class Sound;
@@ -44,6 +45,7 @@ public:
 	int getModelId() const;
 
 	DropList drops;
+	Defense defense;
 	std::shared_ptr<Sound> mineSound;
 };
 

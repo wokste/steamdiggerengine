@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "enums.h"
-#include <cassert>
 #include <iostream>
 
 BlockCollisionType getBlockCollisionType(std::string name){
@@ -31,22 +30,6 @@ BlockCollisionType getBlockCollisionType(std::string name){
 		return BlockCollisionType::Solid;
 	if (name == "ladder")
 		return BlockCollisionType::Ladder;
+	std::cout << "Error: collision type type " << name << " is unknown\n";
 	return BlockCollisionType::Air;
-}
-
-DamageType getDamageType(std::string name){
-	if (name == "none")
-		return DamageType::None;
-	if (name == "chop")
-		return DamageType::Chop;
-	if (name == "stab")
-		return DamageType::Stab;
-	if (name == "mine")
-		return DamageType::Mine;
-	if (name == "fire")
-		return DamageType::Fire;
-	if (name == "ice")
-		return DamageType::Ice;
-	std::cout << "Error: damage type " << name << " is unknown\n";
-	return DamageType::None;
 }
