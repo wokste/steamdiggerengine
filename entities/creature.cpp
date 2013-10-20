@@ -114,26 +114,26 @@ bool Creature::aggressiveTo(Creature* other){
 }
 
 void Creature::tryJump(int height){
-	//if (alive() && physicsMode == PhysicsMode::Walking){
+	if (alive() && physicsMode == PhysicsMode::Walking){
 		if (height == 0)
 			height = jumpHeight;
 
 		double force = std::sqrt((2 * height + 1) * world->map->gravity);
 		push(Vector2d(0,-1), force);
-	//}
+	}
 }
 
 void Creature::hitTerrain(bool hitWall){
 	if (hitWall){
 		// Foodstep height
-		//if (physicsMode == PhysicsMode::Walking){
+		if (physicsMode == PhysicsMode::Walking){
 			for (int blocksToJump = 1; blocksToJump <= jumpHeight; blocksToJump++){
 				if (validPos(*world, Vector2d(pos.x + (speed.x > 0 ? 0.5 : -0.5), pos.y - blocksToJump))){
 					tryJump(blocksToJump);
 					break;
 				}
 			}
-		//}
+		}
 		speed.x = 0;
 	}else{
 		if (speed.y > 0){
