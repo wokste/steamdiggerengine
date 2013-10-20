@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include "entity.h"
 #include "../cooldown.h"
+#include "../enums.h"
 
 #include <memory>
 
@@ -60,13 +61,17 @@ public:
 	virtual bool pickupItem(int id, int count){return false;}
 	void hitTerrain(bool hitWall) override;
 
-	void tryJump(int height = 0);
-	double jumpHeight;
-	double accelSpeed;
-	double walkSpeed;
+	// Moves
+	bool tryJump(int height = 0);
+	bool tryWallClimb(Direction climbDirection);
 public:
 	Stat HP;
 	Stat shield;
 	Cooldown regenCooldown;
 	int team;
+
+	double jumpHeight;
+	double accelSpeed;
+	double walkSpeed;
+	Direction facing;
 };

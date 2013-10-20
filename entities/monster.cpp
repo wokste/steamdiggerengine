@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "monster.h"
-#include "movementtype.h"
 
 #include "player.h"
 #include "../world.h"
@@ -40,8 +39,6 @@ void Monster::load(pugi::xml_node& node){
 
 	team = node.attribute("team").as_int(1);
 
-	movementType.reset(MovementType::staticLoad(node));
-
 	dropList.reset(new DropList);
 	auto dropNode = node.child("drops");
 	dropList->load(dropNode);
@@ -57,8 +54,8 @@ void Monster::logic(double time){
 	cooldown -= time;
 	Creature::logic(time);
 
-	if (target != nullptr){
-		movementType->moveTo(*this, target->pos, time);
+	if (target != nullptr && (physicsMode == PhysicsMode::Walking || physicsMode == PhysicsMode::Jumping)){
+		speed.x = (facing == Direction::left) ? -walkSpeed : walkSpeed;
 	}
 
 	if (cooldown.done()){
@@ -84,10 +81,6 @@ void Monster::takeDamage(const Attack& attack, Vector2d source){
 void Monster::hitCreature(Creature& other){
 	other.takeDamage(hitAttack, pos);
 	cooldown.set(0.5);
-}
-
-void Monster::hitTerrain(bool hitWall){
-	movementType->hitTerrain(*this, hitWall);
 }
 
 void Monster::onCreatureDied(Creature* other){

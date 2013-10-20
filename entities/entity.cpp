@@ -62,7 +62,7 @@ void Entity::logic(double time){
 		physicsMode = PhysicsMode::Falling;
 	}
 
-	if (physicsMode == PhysicsMode::Falling){
+	if (physicsMode == PhysicsMode::Falling || physicsMode == PhysicsMode::Jumping){
 		speed.y += world->map->gravity * time;
 	}
 

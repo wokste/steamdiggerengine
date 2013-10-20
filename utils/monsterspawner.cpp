@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "monsterspawner.h"
 
 #include "../entities/monster.h"
-#include "../entities/movementtype.h"
 #include "../entities/player.h"
 #include "../world.h"
 #include "../game.h"

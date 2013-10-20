@@ -40,3 +40,10 @@ namespace LightType{
 	constexpr int sky = 1;
 	constexpr int count = 2;
 }
+
+enum class Direction{
+	left,
+	top,
+	right,
+	bottom
+};

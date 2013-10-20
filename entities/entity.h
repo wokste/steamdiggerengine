@@ -37,7 +37,8 @@ enum class PhysicsMode{
 	None,
 	Walking,
 	Flying,
-	Falling
+	Falling,
+	Jumping
 };
 
 class Entity{

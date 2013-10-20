@@ -71,7 +71,7 @@ std::string Stat::asText() const{
 	return out.str();
 }
 
-Creature::Creature(): team(0){}
+Creature::Creature(): team(0), facing(Direction::right){}
 
 Creature::~Creature(){
 
@@ -113,27 +113,22 @@ bool Creature::aggressiveTo(Creature* other){
 	return alive() && other->alive() && team != other->team;
 }
 
-void Creature::tryJump(int height){
-	if (alive() && physicsMode == PhysicsMode::Walking){
-		if (height == 0)
-			height = jumpHeight;
+bool Creature::tryJump(int height){
+	if (!alive() || physicsMode != PhysicsMode::Walking)
+		return false;
 
-		double force = std::sqrt((2 * height + 1) * world->map->gravity);
-		push(Vector2d(0,-1), force);
-	}
+	if (height == 0)
+		height = jumpHeight;
+
+	physicsMode = PhysicsMode::Jumping;
+	speed.y = std::min(speed.y, -std::sqrt((2 * height + 1) * world->map->gravity));
+	return true;
 }
 
 void Creature::hitTerrain(bool hitWall){
 	if (hitWall){
 		// Foodstep height
-		if (physicsMode == PhysicsMode::Walking){
-			for (int blocksToJump = 1; blocksToJump <= jumpHeight; blocksToJump++){
-				if (validPos(*world, Vector2d(pos.x + (speed.x > 0 ? 0.5 : -0.5), pos.y - blocksToJump))){
-					tryJump(blocksToJump);
-					break;
-				}
-			}
-		}
+		tryWallClimb(facing);
 		speed.x = 0;
 	}else{
 		if (speed.y > 0){
@@ -141,4 +136,17 @@ void Creature::hitTerrain(bool hitWall){
 		}
 		speed.y = 0;
 	}
+}
+
+bool Creature::tryWallClimb(Direction climbDirection){
+	if (physicsMode != PhysicsMode::Walking)
+		return false;
+
+	for (int blocksToJump = 1; blocksToJump <= jumpHeight; blocksToJump++){
+		if (validPos(*world, Vector2d(pos.x + (climbDirection == Direction::right ? 0.5 : -0.5), pos.y - blocksToJump))){
+			tryJump(blocksToJump);
+			return true;
+		}
+	}
+	return false;
 }

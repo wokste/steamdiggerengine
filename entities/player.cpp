@@ -50,13 +50,16 @@ void Player::checkKeyboardMovement(double time){
 	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 
+	if (physicsMode == PhysicsMode::Falling)
+		return;
+
 	if (keyLeft && !keyRight){
-		speed.x -= (accelSpeed * time);
-		if (speed.x < -walkSpeed) speed.x = -walkSpeed;
+		speed.x = -walkSpeed;
+		facing = Direction::left;
 	} else if (keyRight && !keyLeft){
-		speed.x += (accelSpeed * time);
-		if (speed.x > walkSpeed) speed.x = walkSpeed;
-	} else if (physicsMode == PhysicsMode::Walking) {
+		speed.x = walkSpeed;
+		facing = Direction::right;
+	} else {
 		speed.x = 0;
 	}
 }
