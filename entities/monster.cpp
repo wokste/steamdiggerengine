@@ -87,3 +87,20 @@ void Monster::onCreatureDied(Creature* other){
 	if (target == other)
 		target = nullptr;
 }
+
+void Monster::hitTerrain(bool hitWall){
+	if (hitWall){
+		// Foodstep height
+		if (physicsMode != PhysicsMode::Walking)
+			speed.x = 0;
+		else if (tryWallClimb(facing))
+			speed.x = 0;
+		else
+			facing = (facing == Direction::left) ? Direction::right : Direction::left;
+	}else{
+		if (speed.y > 0){
+			physicsMode = PhysicsMode::Walking;
+		}
+		speed.y = 0;
+	}
+}

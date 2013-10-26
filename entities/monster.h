@@ -40,6 +40,7 @@ public:
 	void hitCreature(Creature& other);
 	void onCreatureDied(Creature* other) override;
 	virtual void takeDamage(const Attack& attack, Vector2d source);
+	void hitTerrain(bool hitWall) override;
 public:
 	Attack hitAttack;
 	std::shared_ptr<DropList> dropList;

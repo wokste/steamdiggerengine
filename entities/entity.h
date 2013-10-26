@@ -58,7 +58,7 @@ public:
 	void push(Vector2d dir, double force);
 	Rect4d getBoundingBox() const;
 
-	virtual void hitTerrain(bool hitWall);
+	virtual void hitTerrain(bool hitWall) = 0;
 	virtual void onCreatureDied(Creature* other){}
 
 public:

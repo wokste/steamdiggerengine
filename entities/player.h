@@ -42,6 +42,7 @@ public:
 	virtual void load(pugi::xml_node& configNode);
 	bool pickupItem(int id, int count) override;
 	Inventory inventory;
+	void hitTerrain(bool hitWall) override;
 private:
 	void checkKeyboardMovement(double time);
 };

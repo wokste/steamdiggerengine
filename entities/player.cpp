@@ -124,3 +124,16 @@ void Player::takeDamage(const Attack& attack, Vector2d source){
 			inventory.dropStuff(0.5, *world, pos);
 	}
 }
+
+void Player::hitTerrain(bool hitWall){
+	if (hitWall){
+		// Foodstep height
+		tryWallClimb(facing);
+		speed.x = 0;
+	}else{
+		if (speed.y > 0){
+			physicsMode = PhysicsMode::Walking;
+		}
+		speed.y = 0;
+	}
+}

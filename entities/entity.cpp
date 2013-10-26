@@ -133,17 +133,6 @@ bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	   (pos.y - collision.y < px2.y));
 }
 
-void Entity::hitTerrain(bool hitWall){
-	if (hitWall){
-		speed.x = 0;
-	}else{
-		if (speed.y > 0){
-			physicsMode = PhysicsMode::Walking;
-		}
-		speed.y = 0;
-	}
-}
-
 void Entity::push(Vector2d dir , double force){
 	speed = force * Vector2::normalize(dir);
 	if (physicsMode == PhysicsMode::Walking){

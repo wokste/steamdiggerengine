@@ -59,7 +59,6 @@ public:
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature* other);
 	virtual bool pickupItem(int id, int count){return false;}
-	void hitTerrain(bool hitWall) override;
 
 	// Moves
 	bool tryJump(int height = 0);

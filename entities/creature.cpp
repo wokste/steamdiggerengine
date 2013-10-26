@@ -125,19 +125,6 @@ bool Creature::tryJump(int height){
 	return true;
 }
 
-void Creature::hitTerrain(bool hitWall){
-	if (hitWall){
-		// Foodstep height
-		tryWallClimb(facing);
-		speed.x = 0;
-	}else{
-		if (speed.y > 0){
-			physicsMode = PhysicsMode::Walking;
-		}
-		speed.y = 0;
-	}
-}
-
 bool Creature::tryWallClimb(Direction climbDirection){
 	if (physicsMode != PhysicsMode::Walking)
 		return false;
