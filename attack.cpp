@@ -62,8 +62,12 @@ void Defense::set(std::string text){
 	std::stringstream ss(text);
 	while (!ss.eof()){
 		std::string type;
+		std::getline(ss,type, ' ');
+		if (type == "")
+			return;
+
 		float value;
-		ss >> type >> value;
+		ss >> value;
 		defenseValues.insert(std::make_pair(getDamageType(type), value));
 	}
 }

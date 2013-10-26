@@ -36,7 +36,7 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	unsigned char blockedLightByte = configNode.attribute("blocked-light").as_int(100);
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 	mineSound = SoundSystem::loadSound(configNode.attribute("mine_sound").as_string());
-	defense.set(configNode.attribute("damage_multiplier").as_string());
+	defense.set(configNode.attribute("damage_multiplier").as_string(""));
 
 	for( auto childNode : configNode.children("frame")) {
 		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));
