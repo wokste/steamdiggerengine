@@ -1,0 +1,91 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2013, Steven Wokke
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+#include "map.h"
+#include "../world.h"
+#include "mapwriter.h"
+#include "lightingengine.h"
+#include <limits.h>
+#include "mapnode.h"
+
+MapWriter::MapWriter(World& world) : world(world), area(){}
+
+MapWriter::~MapWriter(){
+	recalcLighting();
+}
+
+bool MapWriter::place(Vector2i pos, int layer, int blockTypeID){
+	MapNode* node = world.map->getMapNode(pos.x, pos.y);
+	if (!node || node->isset(layer)){
+		return false;
+	}
+	node->setBlock(blockTypeID, layer);
+	pointChanged(pos);
+	return true;
+}
+
+bool MapWriter::damage(Vector2i pos, int layer, const Attack& attack){
+	MapNode* node = world.map->getMapNode(pos.x, pos.y);
+	if (!node || node->isset(layer)){
+		return false;
+	}
+	bool mapChanged = node->damageBlock(layer, attack);
+	if (mapChanged)
+		pointChanged(pos);
+	return true;
+}
+
+bool MapWriter::solid(Vector2i pos, int layer){
+	MapNode* node = world.map->getMapNode(pos.x, pos.y);
+	return (!node || node->isset(layer));
+}
+
+void MapWriter::recalcLighting(){
+	if (area.width == 0 || area.height == 0)
+		return; // No changes
+
+	constexpr int lightRadius = 255 / 20 + 1;
+	Vector2i pos1 = Vector2i(area.left - lightRadius, area.top - lightRadius);
+	Vector2i pos2 = Vector2i(area.left + (area.width - 1) + lightRadius, area.top + (area.height - 1) + lightRadius);
+	LightingEngine::recalcArea(*world.map, pos1, pos2);
+	area = Rect4i();
+}
+
+void MapWriter::pointChanged(Vector2i pos){
+	if (area.width == 0 || area.height == 0){
+		area = Rect4i(pos, Vector2i(1,1));
+		return;
+	}
+	if (pos.x < area.left){
+		area.width += (pos.x - area.left);
+		area.left = pos.x;
+	}else if (pos.x > area.left + area.width){
+		area.width = (pos.x - area.left);
+	}
+
+	if (pos.y < area.top){
+		area.height += (pos.y - area.top);
+		area.top = pos.x;
+	}else if (pos.y > area.top + area.height){
+		area.height = (pos.y - area.top);
+	}
+}
