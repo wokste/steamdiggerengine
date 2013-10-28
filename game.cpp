@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "game.h"
 #include "utils/texture.h"
+#include "utils/scriptengine.h"
 #include "items/itemdefmanager.h"
 #include "map/blocktype.h"
 #include <iostream>
@@ -30,11 +31,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 std::shared_ptr<TileSet> GameGlobals::tileSet;
 std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
 std::unique_ptr<BlockTypeManager> GameGlobals::blockDefs;
+std::unique_ptr<ScriptEngine> GameGlobals::scriptEngine;
 FileSystem GameGlobals::fileSystem;
 std::mt19937 GameGlobals::rnd;
 bool GameGlobals::paused;
 
 void GameGlobals::init(){
+	scriptEngine.reset(new ScriptEngine());
 	tileSet.reset(new TileSet(Vector2i(8,8), GameGlobals::fileSystem.fullpath("tileset.png")));
 	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.xml")));
 	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.xml")));

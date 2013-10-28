@@ -20,34 +20,31 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
 
+#include <angelscript.h>
 #include <string>
-#include <memory>
-#include <random>
-class ItemDefManager;
-class World;
-class BlockTypeManager;
-class TileSet;
-class ScriptEngine;
 
-class FileSystem{
+class ScriptEngine{
+	asIScriptEngine* engine;
+
+	void registerClasses();
+	void registerFunctions();
+	void registerInterfaces();
 public:
-	FileSystem();
+	ScriptEngine();
+	~ScriptEngine();
+	void loadScript(const std::string& filename);
 
-	std::string fullpath(const std::string& resourcename) const;
-private:
-	std::string dataDir;
+	static void messageCallback(const asSMessageInfo* msg, void* param);
+
+	template<class A, class B>
+	B* cast(A* a){
+		return a;
+	}
 };
 
-class GameGlobals{
-public:
-	static void init();
-	static std::unique_ptr<ItemDefManager> itemDefs;
-	static FileSystem fileSystem;
-	static std::mt19937 rnd;
-	static std::unique_ptr<BlockTypeManager> blockDefs;
-	static std::unique_ptr<ScriptEngine> scriptEngine;
-	static std::shared_ptr<TileSet> tileSet;
-	static bool paused;
+// Console functions for script binding
+namespace Console{
+	void print(std::string& str);
+	void error(std::string& str);
 };
