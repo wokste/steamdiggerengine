@@ -37,6 +37,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../entities/player.h"
 #include "../entities/monster.h"
 
+#include "../attack.h"
+#include "../map/mapwriter.h"
+
 ScriptEngine::ScriptEngine(){
 	int r;
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
@@ -65,6 +68,9 @@ void ScriptEngine::registerClasses(){
 	r = engine->RegisterObjectBehaviour("Creature", asBEHAVE_IMPLICIT_REF_CAST, "Entity@ f()", asFUNCTION((&ScriptEngine::cast<Creature,Entity>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Player", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Player,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+
+	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_VALUE); assert(r >= 0);
+	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE); assert(r >= 0);
 }
 
 void ScriptEngine::registerFunctions(){
@@ -89,6 +95,13 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectMethod("Player", "void selectItem(int)", asMETHOD(Player, selectItem), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Player", "bool pickupItem(int, int)", asMETHOD(Player, pickupItem), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Monster", "Creature traget", asOFFSET(Monster,target)); assert( r >= 0 );
+
+	// World
+
+	// MapWriter
+	r = engine->RegisterObjectMethod("MapWriter", "bool place(Vector2i, int, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("MapWriter", "bool damage(Vector2i, int, Attack attack)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 }
 void ScriptEngine::registerInterfaces(){
 	int r;
