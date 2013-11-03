@@ -52,7 +52,6 @@ FileSystem::FileSystem() : dataDir("data/"){
 }
 
 std::string FileSystem::fullpath(const std::string& resourcename) const{
-	std::cout << dataDir << " + " << resourcename << " \n";
 	return dataDir + resourcename;
 }
 

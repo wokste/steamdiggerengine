@@ -31,11 +31,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Texture::Texture(std::string fileName){
 	if (loadTexture(fileName)){
-		std::cout<<"loaded texture " << fileName << " as " << ID<<'\n';
 		return;
 	}
 	ID = 0;
-	std::cout<<"error loading texture " << fileName << '\n';
+	std::cout<<"error loading texture " << fileName << ".\n";
 }
 
 void Texture::bind(){
