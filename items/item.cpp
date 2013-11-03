@@ -52,6 +52,8 @@ ItemType::ItemType(const std::string& objectType, int newFrameID){
 }
 
 ItemType::~ItemType(){
+	if (itemScript)
+		itemScript->Release();
 }
 
 int ItemType::use(Creature& user, const Screen& screen){

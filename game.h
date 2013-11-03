@@ -43,6 +43,8 @@ private:
 class GameGlobals{
 public:
 	static void init();
+	static void clear();
+
 	static std::unique_ptr<ItemDefManager> itemDefs;
 	static FileSystem fileSystem;
 	static std::mt19937 rnd;

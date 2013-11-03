@@ -34,18 +34,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 #include <assert.h>
 
-std::unique_ptr<Screen> screen;
-std::unique_ptr<World> world;
-std::unique_ptr<HUD> hud;
-Player* player;
+class Game{
+	std::unique_ptr<Screen> screen;
+	std::unique_ptr<World> world;
+	std::unique_ptr<HUD> hud;
+	Player* player;
+	sf::Clock fpsClock;
+public:
+	bool running = true;
+	Game();
+	~Game();
+	void doWindowEvents();
+	void tick();
+	void initGL();
+};
 
-void doWindowEvents(){
+void Game::doWindowEvents(){
 	sf::Event event;
 
 	while (screen->window->pollEvent(event)){
 		switch (event.type){
 			case sf::Event::EventType::Closed:
-				exit(0); // TODO: make this nicer.
+				running = false;
 				break;
 			case sf::Event::EventType::Resized:
 				screen->resize(Vector2::uToI(screen->window->getSize()));
@@ -88,7 +98,7 @@ void doWindowEvents(){
 	}
 }
 
-void initGL(){
+void Game::initGL(){
 	glEnable(GL_TEXTURE_2D);
 	glEnable (GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -98,12 +108,7 @@ void initGL(){
 	glEnable(GL_ALPHA_TEST);
 }
 
-void draw(){
-
-}
-
-int main(){
-	// create the window
+Game::Game(){
 	srand(time(nullptr));
 	screen.reset(new Screen());
 	initGL();
@@ -125,36 +130,42 @@ int main(){
 	assert(player != nullptr);
 
 	hud.reset(new HUD());
-	sf::Clock fpsClock;
-
-	bool running = true;
-	while (running){
-		double time = fpsClock.restart().asSeconds();
-		if (time > 0.1)
-			time = 0.1; // To avoid slow FPS screwing up physics
-
-		if (GameGlobals::paused)
-			time = 0;
-
-		player->checkInput(time,*screen.get());
-		world->logic(time);
-
-		doWindowEvents();
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		screen->startScene();
-		glPushMatrix();
-			screen->centerOn(*player);
-			world->render(*screen);
-		glPopMatrix();
-
-		hud->draw(*screen, *player);
-		screen->window->display();
-	}
-	return 0;
 }
 
-int floorInt(double d){
-	return (int) (d - 0.5);
+void Game::tick(){
+	double time = fpsClock.restart().asSeconds();
+	if (time > 0.1)
+		time = 0.1; // To avoid slow FPS screwing up physics
+
+	if (GameGlobals::paused)
+		time = 0;
+
+	player->checkInput(time,*screen.get());
+	world->logic(time);
+
+	doWindowEvents();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	screen->startScene();
+	glPushMatrix();
+		screen->centerOn(*player);
+		world->render(*screen);
+	glPopMatrix();
+
+	hud->draw(*screen, *player);
+	screen->window->display();
+}
+
+Game::~Game(){
+	GameGlobals::clear();
+}
+
+int main(){
+	// create the window
+	Game game;
+	while (game.running){
+		game.tick();
+	}
+	return 0;
 }

@@ -55,3 +55,10 @@ std::string FileSystem::fullpath(const std::string& resourcename) const{
 	std::cout << dataDir << " + " << resourcename << " \n";
 	return dataDir + resourcename;
 }
+
+void GameGlobals::clear(){
+	blockDefs.reset();
+	itemDefs.reset();
+	tileSet.reset();
+	scriptEngine.reset();
+}
