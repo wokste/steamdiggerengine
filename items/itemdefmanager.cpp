@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 #include "../utils/texture.h"
 #include "../map/blocktype.h"
-#include "../effects/mapeffect.h"
 #include <iostream>
 
 ItemDefManager::ItemDefManager(const std::string& fileName){
@@ -59,8 +58,7 @@ int ItemDefManager::insert(std::unique_ptr<ItemType> type, const std::string& ta
 
 /** creates item for building block. returns the itemID */
 int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string& tag){
-	auto item = std::unique_ptr<ItemType>(new ItemType(frameID));
-	item->onUse.add(std::unique_ptr<Effect>(new BuildEffect(blockID)));
+	auto item = std::unique_ptr<ItemType>(new ItemType("BlockItem", frameID));
 	return insert(std::move(item), tag);
 }
 

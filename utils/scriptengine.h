@@ -25,8 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 class ScriptEngine{
-	asIScriptEngine* engine;
-
 	void registerClasses();
 	void registerFunctions();
 	void registerInterfaces();
@@ -34,8 +32,10 @@ public:
 	ScriptEngine();
 	~ScriptEngine();
 	void loadScript(const std::string& filename);
-
 	static void messageCallback(const asSMessageInfo* msg, void* param);
+
+	asIScriptEngine* engine;
+	asIScriptContext *context;
 
 	template<class A, class B>
 	B* cast(A* a){

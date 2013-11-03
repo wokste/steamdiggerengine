@@ -49,9 +49,12 @@ ScriptEngine::ScriptEngine(){
 	registerClasses();
 	registerInterfaces();
 	registerFunctions();
+	context = engine->CreateContext();
+	loadScript("blockitem.as");
 }
 
 ScriptEngine::~ScriptEngine(){
+	context->Release();
 	engine->Release();
 }
 
@@ -69,8 +72,8 @@ void ScriptEngine::registerClasses(){
 	r = engine->RegisterObjectBehaviour("Player", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Player,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
-	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_VALUE); assert(r >= 0);
-	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE); assert(r >= 0);
+	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_VALUE | asOBJ_POD); assert(r >= 0);
+	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE | asOBJ_POD); assert(r >= 0);
 }
 
 void ScriptEngine::registerFunctions(){
@@ -106,7 +109,7 @@ void ScriptEngine::registerFunctions(){
 void ScriptEngine::registerInterfaces(){
 	int r;
 	r = engine->RegisterInterface("IItem"); assert(r >= 0);
-	r = engine->RegisterInterfaceMethod("IItem", "int use(Entity@, Creature@, Vector2d, Vector2d, int)"); assert(r >= 0);
+	r = engine->RegisterInterfaceMethod("IItem", "int useItem(Creature@, Vector2d, int)"); assert(r >= 0);
 }
 
 void ScriptEngine::loadScript(const std::string& filename){
@@ -124,6 +127,8 @@ void ScriptEngine::loadScript(const std::string& filename){
 		return;
 	}
 }
+
+
 
 void ScriptEngine::messageCallback(const asSMessageInfo *msg, void *param){
 	const char *type = "Script Error: ";

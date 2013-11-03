@@ -23,15 +23,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <vector>
 #include <memory>
-#include "../effects/effect.h"
+#include "../utils/vector2.h"
+#include <pugixml.hpp>
+#include <angelscript.h>
 
 class Entity;
+class Creature;
 class Screen;
 
 class ItemType{
 public:
 	ItemType(pugi::xml_node& configNode);
-	ItemType(int frameID);
+	ItemType(const std::string& scriptName, int frameID);
 	~ItemType();
 	int use(Creature& owner, const Screen& screen);
 
@@ -39,5 +42,6 @@ public:
 	int frameID;
 	bool consumable;
 	double useTime;
-	EffectSlot onUse;
+
+	asIScriptObject* itemScript = nullptr;
 };
