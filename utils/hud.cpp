@@ -138,10 +138,10 @@ bool HUDElement::onMouseEvent(sf::Event& event, Player& player, const Vector2i& 
 }
 
 Vector2i HUDElement::getTopLeft(const Vector2i& screenSize){
-	Vector2d pos = Vector2::iToD(screenSize - size);
+	Vector2i pos = screenSize - size;
 	pos.x *= docking.x;
 	pos.y *= docking.y;
-	return Vector2::floorVec(pos);
+	return pos;
 }
 
 bool HUDElement::mouseInArea(const Screen& screen, const Vector2i& mousePos){

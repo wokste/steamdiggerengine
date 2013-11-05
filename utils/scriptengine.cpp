@@ -39,6 +39,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "../attack.h"
 #include "../map/mapwriter.h"
+#include "../world.h"
+#include <new>
+
+namespace ScriptUtils{
+	template<class A, class B>
+	B* cast(A* a){
+		return a;
+	}
+
+	void print(std::string& str){
+		std::cout << str << '\n';
+	}
+
+	void error(std::string& str){
+		std::cout << str << '\n';
+	}
+
+	MapWriter* getMapWriter(World& world){
+		return new MapWriter(world);
+	}
+
+	void Vector2iNew(void *memory){new(memory) Vector2i();}
+	void Vector2iDel(void *memory){((Vector2i*)memory)->~Vector2i();}
+	void Vector2dNew(void *memory){new(memory) Vector2d();}
+	void Vector2dDel(void *memory){((Vector2d*)memory)->~Vector2d();}
+};
 
 ScriptEngine::ScriptEngine(){
 	int r;
@@ -60,35 +86,39 @@ ScriptEngine::~ScriptEngine(){
 
 void ScriptEngine::registerClasses(){
 	int r;
-	r = engine->RegisterObjectType("Vector2i", sizeof(Vector2i),asOBJ_VALUE | asOBJ_POD | GetTypeTraits<Vector2i>()); assert(r >= 0);
-	r = engine->RegisterObjectType("Vector2d", sizeof(Vector2d),asOBJ_VALUE | asOBJ_POD | GetTypeTraits<Vector2d>()); assert(r >= 0);
+	r = engine->RegisterObjectType("Vector2i", sizeof(Vector2i),asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_ALLINTS | GetTypeTraits<Vector2i>()); assert(r >= 0);
+	r = engine->RegisterObjectType("Vector2d", sizeof(Vector2d),asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_ALLFLOATS | asOBJ_APP_CLASS_ALIGN8  | GetTypeTraits<Vector2d>()); assert(r >= 0);
 
 	r = engine->RegisterObjectType("World", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 	r = engine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 	r = engine->RegisterObjectType("Creature", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 	r = engine->RegisterObjectType("Player", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 	r = engine->RegisterObjectType("Monster", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
-	r = engine->RegisterObjectBehaviour("Creature", asBEHAVE_IMPLICIT_REF_CAST, "Entity@ f()", asFUNCTION((&ScriptEngine::cast<Creature,Entity>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-	r = engine->RegisterObjectBehaviour("Player", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Player,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptEngine::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Creature", asBEHAVE_IMPLICIT_REF_CAST, "Entity@ f()", asFUNCTION((&ScriptUtils::cast<Creature,Entity>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Player", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptUtils::cast<Player,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptUtils::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
-	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_VALUE | asOBJ_POD); assert(r >= 0);
-	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE | asOBJ_POD); assert(r >= 0);
+	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
+	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE | asOBJ_POD | GetTypeTraits<Attack>()); assert(r >= 0);
 }
 
 void ScriptEngine::registerFunctions(){
 	int r;
-	r = engine->RegisterGlobalFunction("void print(string)", asFUNCTION(Console::print), asCALL_CDECL); assert(r >= 0);
-	r = engine->RegisterGlobalFunction("void error(string)", asFUNCTION(Console::error), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void print(string)", asFUNCTION(ScriptUtils::print), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void error(string)", asFUNCTION(ScriptUtils::error), asCALL_CDECL); assert(r >= 0);
 
 	// Vector2's
+	r = engine->RegisterObjectBehaviour("Vector2i", asBEHAVE_CONSTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2iNew), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Vector2i", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2iDel), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2i", "int x", asOFFSET(Vector2i,x)); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2i", "int y", asOFFSET(Vector2i,y)); assert( r >= 0 );
-	r = engine->RegisterObjectProperty("Vector2d", "int x", asOFFSET(Vector2d,x)); assert( r >= 0 );
-	r = engine->RegisterObjectProperty("Vector2d", "int y", asOFFSET(Vector2d,y)); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_CONSTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dNew), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dDel), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	r = engine->RegisterObjectProperty("Vector2d", "double x", asOFFSET(Vector2d,x)); assert( r >= 0 );
+	r = engine->RegisterObjectProperty("Vector2d", "double y", asOFFSET(Vector2d,y)); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Vector2d", "Vector2i floor()", asFUNCTION((Vector2::floorVec)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
 	r = engine->RegisterObjectMethod("Vector2d", "Vector2i ceil()", asFUNCTION((Vector2::ceilVec)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
-	r = engine->RegisterObjectMethod("Vector2d", "int length()", asFUNCTION((Vector2::length)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
+	r = engine->RegisterObjectMethod("Vector2d", "double length()", asFUNCTION((Vector2::length)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
 	r = engine->RegisterObjectMethod("Vector2d", "Vector2d normalize()", asFUNCTION((Vector2::normalize)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
 
 	// Entity and derived classes
@@ -100,11 +130,12 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectProperty("Monster", "Creature traget", asOFFSET(Monster,target)); assert( r >= 0 );
 
 	// World
+	r = engine->RegisterObjectMethod("World", "MapWriter@ getMapWriter()", asFUNCTION((ScriptUtils::getMapWriter)), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 
 	// MapWriter
 	r = engine->RegisterObjectMethod("MapWriter", "bool place(Vector2i, int, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool damage(Vector2i, int, Attack attack)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
-	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, int)", asMETHOD(MapWriter, solid), asCALL_THISCALL); assert( r >= 0 );
 }
 void ScriptEngine::registerInterfaces(){
 	int r;
@@ -137,12 +168,4 @@ void ScriptEngine::messageCallback(const asSMessageInfo *msg, void *param){
 	else if( msg->type == asMSGTYPE_INFORMATION )
 		type = "Script Info: ";
 	std::cout << msg->section << " (" << msg->row << ", " << msg->col << "): " << type << msg->message << '\n';
-}
-
-void Console::print(std::string& str){
-	std::cout << str << '\n';
-}
-
-void Console::error(std::string& str){
-	std::cout << str << '\n';
 }

@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "lightingengine.h"
 #include <limits.h>
 #include "mapnode.h"
+#include <iostream>
 
 MapWriter::MapWriter(World& world) : world(world), area(){}
 
@@ -56,7 +57,7 @@ bool MapWriter::damage(Vector2i pos, int layer, const Attack& attack){
 
 bool MapWriter::solid(Vector2i pos, int layer){
 	MapNode* node = world.map->getMapNode(pos.x, pos.y);
-	return (!node || node->isset(layer));
+	return (node && node->isset(layer));
 }
 
 void MapWriter::recalcLighting(){

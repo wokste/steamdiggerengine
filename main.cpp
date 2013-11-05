@@ -58,7 +58,10 @@ void Game::doWindowEvents(){
 				running = false;
 				break;
 			case sf::Event::EventType::Resized:
-				screen->resize(Vector2::uToI(screen->window->getSize()));
+				{
+					auto screenSize = screen->window->getSize();
+					screen->resize(Vector2::uToI(screenSize));
+				}
 				break;
 			case sf::Event::EventType::MouseWheelMoved:
 				player->onMouseWheel(event.mouseWheel.delta);

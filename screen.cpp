@@ -48,7 +48,8 @@ Screen::Screen() : mouseInWindow(true){
 	window->setVerticalSyncEnabled(true);
 
 	center = Vector2d(0,0);
-	size = Vector2::uToI(window->getSize());
+	auto sizeU = window->getSize();
+	size = Vector2::uToI(sizeU);
 	glViewport(0, 0, size.x, size.y);
 }
 

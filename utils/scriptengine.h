@@ -36,11 +36,6 @@ public:
 
 	asIScriptEngine* engine;
 	asIScriptContext *context;
-
-	template<class A, class B>
-	B* cast(A* a){
-		return a;
-	}
 };
 
 // Console functions for script binding

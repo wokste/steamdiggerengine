@@ -73,7 +73,8 @@ void Projectile::hitCreature(Creature& other){
 
 void Projectile::moveTo(Vector2d targetPos){
 	// TODO: Better aim for gravity affected projectiles
-	speed = Vector2::normalize(targetPos - pos) * projectileSpeed;
+	auto relPos = targetPos - pos;
+	speed = Vector2::normalize(relPos) * projectileSpeed;
 }
 
 void Projectile::load(pugi::xml_node& configNode){

@@ -48,7 +48,7 @@ ItemType::ItemType(const std::string& objectType, int newFrameID){
 
 	itemScript = (asIScriptObject*)GameGlobals::scriptEngine->engine->CreateScriptObject(GameGlobals::scriptEngine->engine->GetModule("MyModule")->GetObjectTypeByName (objectType.c_str()));
 	if (itemScript == nullptr)
-		std::cout << "not loaded an item\n";
+		std::cout << "Failed loading item script class " << objectType << "\n";
 }
 
 ItemType::~ItemType(){
