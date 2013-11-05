@@ -34,7 +34,7 @@ class Screen;
 class ItemType{
 public:
 	ItemType(pugi::xml_node& configNode);
-	ItemType(const std::string& scriptName, int frameID);
+	ItemType(const std::string& objectType, int blockID, int newFrameID);
 	~ItemType();
 	int use(Creature& owner, const Screen& screen);
 

@@ -58,7 +58,7 @@ int ItemDefManager::insert(std::unique_ptr<ItemType> type, const std::string& ta
 
 /** creates item for building block. returns the itemID */
 int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string& tag){
-	auto item = std::unique_ptr<ItemType>(new ItemType("BlockItem", frameID));
+	auto item = std::unique_ptr<ItemType>(new ItemType("BlockItem", blockID, frameID));
 	return insert(std::move(item), tag);
 }
 

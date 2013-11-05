@@ -40,15 +40,26 @@ ItemType::ItemType(pugi::xml_node& configNode){
 	//TODO: Load script object
 }
 
-ItemType::ItemType(const std::string& objectType, int newFrameID){
+// For blocks
+ItemType::ItemType(const std::string& objectTypeName, int blockID, int newFrameID){
 	maxStack=250;
 	consumable=true;
 	useTime=0.4;
 	frameID=newFrameID;
+	itemScript = nullptr;
 
-	itemScript = (asIScriptObject*)GameGlobals::scriptEngine->engine->CreateScriptObject(GameGlobals::scriptEngine->engine->GetModule("MyModule")->GetObjectTypeByName (objectType.c_str()));
+	asIObjectType* objectType = GameGlobals::scriptEngine->engine->GetModule("MyModule")->GetObjectTypeByName (objectTypeName.c_str());
+	itemScript = (asIScriptObject*)GameGlobals::scriptEngine->engine->CreateScriptObject(objectType);
 	if (itemScript == nullptr)
 		std::cout << "Failed loading item script class " << objectType << "\n";
+	else{
+		asIScriptContext *context = GameGlobals::scriptEngine->context;
+		context->Prepare(objectType->GetMethodByDecl("void setBlock(int)"));
+		context->SetObject(itemScript);
+		context->SetArgDWord(0, blockID);
+		int r = context->Execute();
+		assert( r == asEXECUTION_FINISHED );
+	}
 }
 
 ItemType::~ItemType(){
