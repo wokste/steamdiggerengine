@@ -21,8 +21,22 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#pragma once
 #include <angelscript.h>
 #include <string>
+
+class refCounted{
+	int refCount = 1;
+public:
+	virtual ~refCounted(){}
+	void addref(){
+		refCount++;
+	}
+	void release(){
+		if( --refCount == 0 )
+			delete this;
+	}
+};
 
 class ScriptEngine{
 	void registerClasses();

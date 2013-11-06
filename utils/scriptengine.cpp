@@ -98,7 +98,7 @@ void ScriptEngine::registerClasses(){
 	r = engine->RegisterObjectBehaviour("Player", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptUtils::cast<Player,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptUtils::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
-	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
+	r = engine->RegisterObjectType("MapWriter", sizeof(MapWriter), asOBJ_REF); assert(r >= 0);
 	r = engine->RegisterObjectType("Attack", sizeof(Attack), asOBJ_VALUE | asOBJ_POD | GetTypeTraits<Attack>()); assert(r >= 0);
 }
 
@@ -133,6 +133,8 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectMethod("World", "MapWriter@ getMapWriter()", asFUNCTION((ScriptUtils::getMapWriter)), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 
 	// MapWriter
+	r = engine->RegisterObjectBehaviour("MapWriter", asBEHAVE_ADDREF, "void f()", asMETHOD(MapWriter,addref), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("MapWriter", asBEHAVE_RELEASE, "void f()", asMETHOD(MapWriter,release), asCALL_THISCALL); assert( r >= 0);
 	r = engine->RegisterObjectMethod("MapWriter", "bool place(Vector2i, int, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool damage(Vector2i, int, Attack attack)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, int)", asMETHOD(MapWriter, solid), asCALL_THISCALL); assert( r >= 0 );
