@@ -138,25 +138,6 @@ bool Map::areaHasBlocks(Vector2i px1, Vector2i px2, std::function<bool(const Blo
 	return false;
 }
 
-void Map::damageBlock(Vector2i pos, int targetLayer, const Attack& attack, World& world){
-	MapNode* node = getMapNode(pos.x, pos.y);
-	if (!node || !node->isset(targetLayer))
-		return;
-
-	if (node->isset(Layer::front))
-		targetLayer = Layer::front;
-
-	const BlockType& minedBlock = node->getBlock(targetLayer);
-	if (targetLayer == Layer::back && pos.y > 20)
-		return;
-
-	if (node->damageBlock(targetLayer, attack))
-	{ // Block is destroyed
-		LightingEngine::recalcAreaAround(*this, pos);
-		minedBlock.drops.dropStuff(world, Vector2::center(pos), attack);
-	}
-}
-
 bool Map::solid(int x, int y){
 	auto node = getMapNode(x, y);
 	return (node && node->getBlock(Layer::front).collisionType == BlockCollisionType::Solid);

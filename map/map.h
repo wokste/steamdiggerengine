@@ -66,7 +66,6 @@ public:
 
 	sf::Color getColor(const sf::Color& outsideColor, Vector2d pos) const;
 
-	void damageBlock(Vector2i pos, int targetLayer, const Attack& attack, World& world);
 	bool solid(int x, int y);
 private:
 	std::map<Vector2i, Chunk*, ChunkSorter> chunks;

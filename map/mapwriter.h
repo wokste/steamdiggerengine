@@ -35,6 +35,6 @@ public:
 	MapWriter(World& world);
 	~MapWriter();
 	bool place(Vector2i pos, int layer, int blockNum);
-	bool damage(Vector2i pos, int layer, const Attack& attack);
+	bool damage(Vector2i pos, int layer, const int damage, const int damageType);
 	bool solid(Vector2i pos, int layer);
 };

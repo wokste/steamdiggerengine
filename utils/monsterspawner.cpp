@@ -82,8 +82,7 @@ void MonsterSpawner::logic(World* world, double time){
 				// This is a creature on the player team and monsters should be spawned around it
 				int numMonsters = 0;
 				for (auto other : world->creatures()){
-					auto relPos = other->pos - test->pos;
-					if (other->aggressiveTo(test) && Vector2::length(relPos) < despawnRadius){
+					if (other->aggressiveTo(test) && Vector2::lengthTo(other->pos, test->pos) < despawnRadius){
 						numMonsters++;
 						// TODO: Optimize
 					}
@@ -94,8 +93,7 @@ void MonsterSpawner::logic(World* world, double time){
 				// Testing whether this creature should be deleted
 				bool playerNear = false;
 				for (auto other : world->creatures()){
-					auto relPos = other->pos - test->pos;
-					if (other->aggressiveTo(test) && Vector2::length(relPos) < despawnRadius){
+					if (other->aggressiveTo(test) && Vector2::lengthTo(other->pos, test->pos) < despawnRadius){
 						playerNear = true;
 						break;
 					}

@@ -70,10 +70,11 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer)
 	}
 }
 
-bool MapNode::damageBlock(int layer, const Attack& attack){
+bool MapNode::damageBlock(int layer, const int damage, const int damageType){
 	auto block = getBlock(layer);
 	SoundSystem::playSound(block.mineSound);
-	HP[layer] -= block.defense.getDamage(attack);
+	HP[layer] -= damage;
+	// TODO: defense
 
 	if (HP[layer] <= 0){
 		setBlock(0, layer);

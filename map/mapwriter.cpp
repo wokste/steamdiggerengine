@@ -44,14 +44,18 @@ bool MapWriter::place(Vector2i pos, int layer, int blockTypeID){
 	return true;
 }
 
-bool MapWriter::damage(Vector2i pos, int layer, const Attack& attack){
+bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int damageType){
 	MapNode* node = world.map->getMapNode(pos.x, pos.y);
 	if (!node || node->isset(layer)){
 		return false;
 	}
-	bool mapChanged = node->damageBlock(layer, attack);
-	if (mapChanged)
+	if (layer == Layer::back && pos.y > 20)
+		return false;
+
+	if (node->damageBlock(layer, damage, damageType)){
 		pointChanged(pos);
+		//minedBlock.drops.dropStuff(world, Vector2::center(pos), damageType);
+	}
 	return true;
 }
 
