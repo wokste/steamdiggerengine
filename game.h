@@ -36,6 +36,7 @@ public:
 	FileSystem();
 
 	std::string fullpath(const std::string& resourcename) const;
+	std::vector<std::string> getList(std::string extention) const;
 private:
 	std::string dataDir;
 };

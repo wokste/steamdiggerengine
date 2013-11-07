@@ -42,11 +42,12 @@ class ScriptEngine{
 	void registerClasses();
 	void registerFunctions();
 	void registerInterfaces();
+	void loadScripts();
 public:
 	ScriptEngine();
 	~ScriptEngine();
-	void loadScript(const std::string& filename);
 	static void messageCallback(const asSMessageInfo* msg, void* param);
+	asIScriptObject* createObject(const std::string& name);
 
 	asIScriptEngine* engine;
 	asIScriptContext *context;

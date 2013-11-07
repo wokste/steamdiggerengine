@@ -37,7 +37,18 @@ ItemType::ItemType(pugi::xml_node& configNode){
 	useTime=configNode.attribute("use-time").as_double(0.4);
 	frameID=configNode.attribute("frame").as_int();
 
-	//TODO: Load script object
+	auto scriptName = configNode.attribute("class").as_string();
+	if (scriptName != ""){
+		itemScript = GameGlobals::scriptEngine->createObject(scriptName);
+		if (itemScript){
+			asIScriptContext *context = GameGlobals::scriptEngine->context;
+			context->Prepare(itemScript->GetObjectType()->GetMethodByDecl("void load(Xml@)"));
+			context->SetObject(itemScript);
+			context->SetArgObject(0, &configNode);
+			int r = context->Execute();
+			assert( r == asEXECUTION_FINISHED );
+		}
+	}
 }
 
 // For blocks
@@ -46,15 +57,11 @@ ItemType::ItemType(const std::string& objectTypeName, int blockID, int newFrameI
 	consumable=true;
 	useTime=0.4;
 	frameID=newFrameID;
-	itemScript = nullptr;
 
-	asIObjectType* objectType = GameGlobals::scriptEngine->engine->GetModule("MyModule")->GetObjectTypeByName (objectTypeName.c_str());
-	itemScript = (asIScriptObject*)GameGlobals::scriptEngine->engine->CreateScriptObject(objectType);
-	if (itemScript == nullptr)
-		std::cout << "Failed loading item script class " << objectType << "\n";
-	else{
+	itemScript = GameGlobals::scriptEngine->createObject(objectTypeName);
+	if (itemScript){
 		asIScriptContext *context = GameGlobals::scriptEngine->context;
-		context->Prepare(objectType->GetMethodByDecl("void setBlock(int)"));
+		context->Prepare(itemScript->GetObjectType()->GetMethodByDecl("void setBlock(int)"));
 		context->SetObject(itemScript);
 		context->SetArgDWord(0, blockID);
 		int r = context->Execute();

@@ -89,7 +89,8 @@ ScriptEngine::ScriptEngine(){
 	registerInterfaces();
 	registerFunctions();
 	context = engine->CreateContext();
-	loadScript("blockitem.as");
+
+	loadScripts();
 }
 
 ScriptEngine::~ScriptEngine(){
@@ -165,23 +166,24 @@ void ScriptEngine::registerInterfaces(){
 	r = engine->RegisterInterfaceMethod("IItem", "int useItem(Creature@, Vector2d, int)"); assert(r >= 0);
 }
 
-void ScriptEngine::loadScript(const std::string& filename){
+void ScriptEngine::loadScripts(){
 	CScriptBuilder builder;
 	int r;
 	r = builder.StartNewModule(engine, "MyModule");assert(r >= 0);
-	r = builder.AddSectionFromFile(GameGlobals::fileSystem.fullpath(filename).c_str());
-	if( r < 0 ){
-		std::cout << "Failed to load or proprocess: " << filename << ".\n";
-		return;
+	auto list = GameGlobals::fileSystem.getList(".as");
+	for (auto filename : list){
+		r = builder.AddSectionFromFile(GameGlobals::fileSystem.fullpath(filename).c_str());
+		if( r < 0 ){
+			std::cout << "Failed to load or proprocess: " << filename << ".\n";
+			return;
+		}
 	}
 	r = builder.BuildModule();
 	if( r < 0 ){
-		std::cout << "Failed to build: " << filename << ".\n";
+		std::cout << "Failed to build scripts.\n";
 		return;
 	}
 }
-
-
 
 void ScriptEngine::messageCallback(const asSMessageInfo *msg, void *param){
 	const char *type = "Script Error: ";
@@ -190,4 +192,12 @@ void ScriptEngine::messageCallback(const asSMessageInfo *msg, void *param){
 	else if( msg->type == asMSGTYPE_INFORMATION )
 		type = "Script Info: ";
 	std::cout << msg->section << " (" << msg->row << ", " << msg->col << "): " << type << msg->message << '\n';
+}
+
+asIScriptObject* ScriptEngine::createObject(const std::string& name){
+	asIObjectType* objectType = engine->GetModule("MyModule")->GetObjectTypeByName (name.c_str());
+	auto object = (asIScriptObject*)engine->CreateScriptObject(objectType);
+	if (!object)
+		std::cout << "failed to create script object " << name << "\n";
+	return object;
 }

@@ -46,7 +46,7 @@ bool MapWriter::place(Vector2i pos, int layer, int blockTypeID){
 
 bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int damageType){
 	MapNode* node = world.map->getMapNode(pos.x, pos.y);
-	if (!node || node->isset(layer)){
+	if (!node || !node->isset(layer)){
 		return false;
 	}
 	if (layer == Layer::back && pos.y > 20)

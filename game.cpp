@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "map/blocktype.h"
 #include <iostream>
 #include <cstdlib>
+#include <dirent.h>
 
 std::shared_ptr<TileSet> GameGlobals::tileSet;
 std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
@@ -53,6 +54,26 @@ FileSystem::FileSystem() : dataDir("data/"){
 
 std::string FileSystem::fullpath(const std::string& resourcename) const{
 	return dataDir + resourcename;
+}
+
+// Inspired by http://www.gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Simple-Directory-Lister.html
+std::vector<std::string> FileSystem::getList(std::string extention) const{
+	std::vector<std::string> fileNames;
+	DIR *dir;
+	dirent *directoryEntry;
+
+	dir = opendir(dataDir.c_str());
+	if (dir != nullptr){
+		while (directoryEntry = readdir(dir)){
+			std::string name = directoryEntry->d_name;
+			if (name.length() > extention.length() && name.compare(name.length() - extention.length(),extention.length(),extention) == 0)
+				fileNames.push_back(name);
+		}
+		closedir(dir);
+	} else
+		std::cerr << "Couldn't open file directory";
+
+	return fileNames;
 }
 
 void GameGlobals::clear(){
