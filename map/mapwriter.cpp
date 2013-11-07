@@ -68,14 +68,20 @@ bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int dama
 	return true;
 }
 
-bool MapWriter::solid(Vector2i pos, int layer){
+bool MapWriter::solid(Vector2i topLeftPos, Vector2i size, int layer){
 	if (layer == Layer::front)
 		for (auto creature: world.creatures())
-			if (creature->isInArea(Vector2::iToD(pos), Vector2::iToD(pos) + Vector2d(1,1)))
-				return false;
+			if (creature->isInArea(Vector2::iToD(topLeftPos), Vector2::iToD(topLeftPos)))
+				return true;
 
-	MapNode* node = world.map->getMapNode(pos.x, pos.y);
-	return (node && node->isset(layer));
+	for (int x = topLeftPos.x; x < size.x + topLeftPos.x; x++){
+		for (int y = topLeftPos.y; y < size.y + topLeftPos.y; y++){
+			MapNode* node = world.map->getMapNode(x, y);
+			if (!node || node->isset(layer))
+				return true;
+		}
+	}
+	return false;
 }
 
 void MapWriter::recalcLighting(){

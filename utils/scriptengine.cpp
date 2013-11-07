@@ -61,6 +61,8 @@ namespace ScriptUtils{
 	}
 
 	void Vector2iNew(void *memory){new(memory) Vector2i();}
+	Vector2i Vector2iNewXY(int x, int y){return Vector2i(x,y);}
+	Vector2i Vector2iAdd(Vector2i& v1, Vector2i v2) {return v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
 	void Vector2iDel(void *memory){((Vector2i*)memory)->~Vector2i();}
 	void Vector2dNew(void *memory){new(memory) Vector2d();}
 	void Vector2dDel(void *memory){((Vector2d*)memory)->~Vector2d();}
@@ -132,6 +134,10 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectBehaviour("Vector2i", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2iDel), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2i", "int x", asOFFSET(Vector2i,x)); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2i", "int y", asOFFSET(Vector2i,y)); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("Vector2i", "Vector2i opAdd(Vector2i) const",  asFUNCTION(ScriptUtils::Vector2iAdd), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+	r = engine->RegisterGlobalFunction("Vector2i makeVector2i(int, int)", asFUNCTION(ScriptUtils::Vector2iNewXY), asCALL_CDECL); assert( r >= 0 );
+
+
 	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_CONSTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dNew), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dDel), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2d", "double x", asOFFSET(Vector2d,x)); assert( r >= 0 );
@@ -158,7 +164,7 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectBehaviour("MapWriter", asBEHAVE_RELEASE, "void f()", asMETHOD(MapWriter,release), asCALL_THISCALL); assert( r >= 0);
 	r = engine->RegisterObjectMethod("MapWriter", "bool place(Vector2i, int, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool damage(Vector2i, int, int damage, int damageType)", asMETHOD(MapWriter, damage), asCALL_THISCALL); assert( r >= 0 );
-	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, int)", asMETHOD(MapWriter, solid), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, Vector2i, int)", asMETHOD(MapWriter, solid), asCALL_THISCALL); assert( r >= 0 );
 }
 void ScriptEngine::registerInterfaces(){
 	int r;
