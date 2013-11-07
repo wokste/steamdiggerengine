@@ -52,7 +52,7 @@ private:
 
 class DropList : public std::vector<Drop>{
 public:
-	void dropStuff(World& world, Vector2d pos, const Attack& attack) const;
+	void dropStuff(World& world, Vector2d pos, const int damageType) const;
 	void load(pugi::xml_node& node);
 	void postLoad();
 };

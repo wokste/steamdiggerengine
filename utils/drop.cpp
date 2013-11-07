@@ -53,7 +53,7 @@ Drop::Drop(const std::string& tag, const double newChance, const int newCount) :
 	count = newCount;
 }
 
-void DropList::dropStuff(World& world, Vector2d pos, const Attack& attack) const{
+void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 	auto choice = std::generate_canonical<double, 20>(GameGlobals::rnd);
 	for(auto& item: *this){
 		if (item.ref.id < 0)

@@ -74,7 +74,7 @@ void Monster::takeDamage(const Attack& attack, Vector2d source){
 	Creature::takeDamage(attack, source);
 
 	if (!alive()){
-		dropList->dropStuff(*world, pos, attack);
+		dropList->dropStuff(*world, pos, attack.type);
 	}
 }
 

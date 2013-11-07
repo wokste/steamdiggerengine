@@ -24,29 +24,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 #include <string>
 #include <map>
-
-enum class DamageType{
-	None, Chop, Mine, Stab, Fire, Ice
-};
-DamageType getDamageType(std::string str);
+int getDamageFlags(std::string str);
 
 struct Attack{
 	bool damageTerrain;
 
 	int damage;
 	int push;
-	DamageType type;
+	int type;
 
 	void load(pugi::xml_node& configNode);
 
 	Attack();
-};
-
-class Defense{
-	std::map<DamageType, float> defenseValues;
-public:
-	Defense(){}
-	~Defense(){}
-	void set(std::string value);
-	int getDamage(const Attack& attack);
 };

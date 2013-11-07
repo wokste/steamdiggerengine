@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <limits.h>
 #include "mapnode.h"
 #include <iostream>
+#include "../entities/creature.h"
+#include "blocktype.h"
 
 MapWriter::MapWriter(World& world) : world(world), area(){}
 
@@ -39,6 +41,12 @@ bool MapWriter::place(Vector2i pos, int layer, int blockTypeID){
 	if (!node || node->isset(layer)){
 		return false;
 	}
+
+	if (layer == Layer::front)
+		for (auto creature: world.creatures())
+			if (creature->isInArea(Vector2::iToD(pos), Vector2::iToD(pos) + Vector2d(1,1)))
+				return false;
+
 	node->setBlock(blockTypeID, layer);
 	pointChanged(pos);
 	return true;
@@ -52,14 +60,20 @@ bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int dama
 	if (layer == Layer::back && pos.y > 20)
 		return false;
 
+	auto& block = node->getBlock(layer);
 	if (node->damageBlock(layer, damage, damageType)){
 		pointChanged(pos);
-		//minedBlock.drops.dropStuff(world, Vector2::center(pos), damageType);
+		block.drops.dropStuff(world, Vector2::center(pos), damageType);
 	}
 	return true;
 }
 
 bool MapWriter::solid(Vector2i pos, int layer){
+	if (layer == Layer::front)
+		for (auto creature: world.creatures())
+			if (creature->isInArea(Vector2::iToD(pos), Vector2::iToD(pos) + Vector2d(1,1)))
+				return false;
+
 	MapNode* node = world.map->getMapNode(pos.x, pos.y);
 	return (node && node->isset(layer));
 }

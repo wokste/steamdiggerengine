@@ -45,7 +45,6 @@ public:
 	int getModelId() const;
 
 	DropList drops;
-	Defense defense;
 	std::shared_ptr<Sound> mineSound;
 };
 
