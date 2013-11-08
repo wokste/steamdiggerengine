@@ -79,6 +79,19 @@ namespace ScriptUtils{
 	std::string XmlGetString(pugi::xml_node& node, std::string name){
 		return node.attribute(name.c_str()).as_string();
 	}
+
+	template <class T>
+	void registerEntity (asIScriptEngine* engine, const char* className) {
+		int r;
+		r = engine->RegisterObjectMethod(className, "void push(Vector2d, double)", asMETHOD(T, push), asCALL_THISCALL); assert( r >= 0 );
+		r = engine->RegisterObjectProperty(className, "World@ world", asOFFSET(T,world)); assert( r >= 0 );
+		r = engine->RegisterObjectProperty(className, "Vector2d pos", asOFFSET(T,pos)); assert( r >= 0 );
+	}
+
+	template <class T>
+	void registerCreature (asIScriptEngine* engine, const char* className) {
+		registerEntity<T>(engine, className);
+	}
 };
 
 ScriptEngine::ScriptEngine(){
@@ -149,9 +162,11 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectMethod("Vector2d", "Vector2d normalize()", asFUNCTION((Vector2::normalize)), asCALL_CDECL_OBJFIRST); assert(r >= 0);
 
 	// Entity and derived classes
-	r = engine->RegisterObjectMethod("Entity", "void push(Vector2d, double)", asMETHOD(Entity, push), asCALL_THISCALL); assert( r >= 0 );
-	r = engine->RegisterObjectProperty("Entity", "World@ world", asOFFSET(Entity,world)); assert( r >= 0 );
-	r = engine->RegisterObjectProperty("Entity", "Vector2d pos", asOFFSET(Entity,pos)); assert( r >= 0 );
+	ScriptUtils::registerEntity<Entity>(engine, "Entity");
+	ScriptUtils::registerCreature<Creature>(engine, "Creature");
+	ScriptUtils::registerCreature<Player>(engine, "Player");
+	ScriptUtils::registerCreature<Monster>(engine, "Monster");
+
 	r = engine->RegisterObjectMethod("Player", "void selectItem(int)", asMETHOD(Player, selectItem), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Player", "bool pickupItem(int, int)", asMETHOD(Player, pickupItem), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Monster", "Creature traget", asOFFSET(Monster,target)); assert( r >= 0 );
