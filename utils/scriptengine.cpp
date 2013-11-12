@@ -80,6 +80,12 @@ namespace ScriptUtils{
 		return node.attribute(name.c_str()).as_string();
 	}
 
+	bool healCreature(Creature& c, std::string name, int amount){
+		if (name == "hp")
+			return c.HP.heal(amount);
+		return 0;
+	}
+
 	template <class T>
 	void registerEntity (asIScriptEngine* engine, const char* className) {
 		int r;
@@ -90,6 +96,8 @@ namespace ScriptUtils{
 
 	template <class T>
 	void registerCreature (asIScriptEngine* engine, const char* className) {
+		int r;
+		r = engine->RegisterObjectMethod(className, "bool heal(string, int)", asFUNCTION(ScriptUtils::healCreature), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 		registerEntity<T>(engine, className);
 	}
 };
