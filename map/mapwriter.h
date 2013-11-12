@@ -31,6 +31,7 @@ class MapWriter : public refCounted{
 	Rect4i area;
 	void recalcLighting(); // Implicitely called at destruction
 	void pointChanged(Vector2i pos);
+	void destroy(Vector2i pos, int layer, const int damageType, int recursionTTL = 160, int blockFlags = 0);
 public:
 	MapWriter(World& world);
 	~MapWriter();

@@ -33,7 +33,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class World;
 class Sound;
 
+
 class BlockType{
+private:
+	int getFlags(std::string text);
 public:
 	BlockCollisionType collisionType;
 	int HP;
@@ -46,6 +49,17 @@ public:
 
 	DropList drops;
 	std::shared_ptr<Sound> mineSound;
+	int flags;
+
+	enum AttachFlags{
+		FLAG_ATTACH_TOP = 1,
+		FLAG_ATTACH_BOTTOM = 2,
+		FLAG_ATTACH_LEFT = 4,
+		FLAG_ATTACH_RIGHT = 8,
+		FLAG_ATTACH_FRONT = 16,
+		FLAG_ATTACH_BACK = 32,
+		FLAG_ATTACH_ADJACENT = FLAG_ATTACH_LEFT | FLAG_ATTACH_RIGHT | FLAG_ATTACH_FRONT | FLAG_ATTACH_BACK
+	};
 };
 
 class BlockTypeManager{

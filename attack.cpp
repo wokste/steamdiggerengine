@@ -57,4 +57,5 @@ int getDamageFlags(std::string text){
 				returnValue |= (1 << i);
 		}
 	}
+	return returnValue;
 }

@@ -62,17 +62,42 @@ bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int dama
 
 	auto& block = node->getBlock(layer);
 	if (node->damageBlock(layer, damage, damageType)){
-		pointChanged(pos);
-		block.drops.dropStuff(world, Vector2::center(pos), damageType);
+		destroy(pos, layer, damageType);
 	}
 	return true;
 }
 
+void MapWriter::destroy(Vector2i pos, int layer, const int damageType, int recursionTTL, int blockFlags){
+	MapNode* node = world.map->getMapNode(pos.x, pos.y);
+	if (!node || !node->isset(layer))
+		return;
+	auto& block = node->getBlock(layer);
+	if (blockFlags == 0 || (block.flags & blockFlags)){
+		block.drops.dropStuff(world, Vector2::center(pos), damageType);
+		node->setBlock(0, layer);
+		pointChanged(pos);
+
+		if (recursionTTL > 0){
+			recursionTTL--;
+			destroy(pos + Vector2i(-1,0), layer, damageType, recursionTTL, BlockType::FLAG_ATTACH_RIGHT);
+			destroy(pos + Vector2i(1,0) , layer, damageType, recursionTTL, BlockType::FLAG_ATTACH_LEFT);
+			destroy(pos + Vector2i(0,-1), layer, damageType, recursionTTL, BlockType::FLAG_ATTACH_BOTTOM);
+			destroy(pos + Vector2i(0,1) , layer, damageType, recursionTTL, BlockType::FLAG_ATTACH_TOP);
+			if (layer > 0)
+				destroy(pos, layer - 1, damageType, recursionTTL, BlockType::FLAG_ATTACH_BACK);
+			if (layer < Layer::back)
+				destroy(pos, layer + 1, damageType, recursionTTL, BlockType::FLAG_ATTACH_FRONT);
+		}
+	}
+}
+
 bool MapWriter::solid(Vector2i topLeftPos, Vector2i size, int layer){
 	if (layer == Layer::front)
-		for (auto creature: world.creatures())
-			if (creature->isInArea(Vector2::iToD(topLeftPos), Vector2::iToD(topLeftPos)))
+		for (auto creature: world.creatures()){
+			auto bottomRightPos = topLeftPos + size;
+			if (creature->isInArea(Vector2::iToD(topLeftPos), Vector2::iToD(bottomRightPos)))
 				return true;
+		}
 
 	for (int x = topLeftPos.x; x < size.x + topLeftPos.x; x++){
 		for (int y = topLeftPos.y; y < size.y + topLeftPos.y; y++){

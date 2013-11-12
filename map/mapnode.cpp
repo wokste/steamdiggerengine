@@ -77,7 +77,6 @@ bool MapNode::damageBlock(int layer, const int damage, const int damageType){
 	// TODO: defense
 
 	if (HP[layer] <= 0){
-		setBlock(0, layer);
 		return true;
 	}
 	return false;

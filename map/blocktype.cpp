@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../game.h"
 #include "../items/itemdefmanager.h"
 #include <iostream>
+#include <sstream>
 #include "../utils/sound.h"
 
 BlockType::BlockType(pugi::xml_node& configNode){
@@ -36,10 +37,27 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	unsigned char blockedLightByte = configNode.attribute("blocked-light").as_int(100);
 	blockedLight = sf::Color(blockedLightByte,blockedLightByte,blockedLightByte);
 	mineSound = SoundSystem::loadSound(configNode.attribute("mine_sound").as_string());
+	flags = getFlags(configNode.attribute("attach").as_string());
 
 	for( auto childNode : configNode.children("frame")) {
 		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));
 	}
+}
+
+int BlockType::getFlags(std::string text){
+	int returnValue = 0;
+	std::stringstream ss(text);
+	const std::vector<std::pair<std::string, int>> flags = {{"top",FLAG_ATTACH_TOP}, {"bottom",FLAG_ATTACH_BOTTOM}, {"front",FLAG_ATTACH_FRONT}, {"back",FLAG_ATTACH_BACK}, {"left",FLAG_ATTACH_LEFT}, {"right",FLAG_ATTACH_RIGHT}};
+
+	while (!ss.eof()){
+		std::string flagname;
+		std::getline(ss,flagname, ' ');
+		for(auto& flag : flags){
+			if (flagname == flag.first)
+				returnValue |= flag.second;
+		}
+	}
+	return returnValue;
 }
 
 int BlockType::getModelId() const{
