@@ -44,6 +44,7 @@ sf::Sound* SoundSystem::playSound(std::shared_ptr<Sound> sound){
 	sf::Sound* slot = findUnusedSound();
 
 	if (slot){
+		slot->setLoop(false);
 		slot->setBuffer(sound->buffer);
 		slot->setPitch(std::generate_canonical<double, 10>(GameGlobals::rnd) + 0.5);
 		slot->play();

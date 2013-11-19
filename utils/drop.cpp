@@ -60,8 +60,10 @@ void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 			continue;
 		if (choice >= 0 && choice < item.chance){
 			int count = item.count;
-			if (count > 1)
-				count = count * std::generate_canonical<double, 5>(GameGlobals::rnd) + 0.5; // Slightly randomize count
+			if (count > 1){
+				double rand = std::generate_canonical<double, 20>(GameGlobals::rnd);
+				count = std::round(((count - 1) * 2) * rand) + 1; // Slightly randomize count
+			}
 			auto drop = new DroppedItem(item.ref.id, count);
 			drop->setPos(&world, pos);
 			world.entities->add(drop);
