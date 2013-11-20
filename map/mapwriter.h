@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class Map;
 class Attack;
-#include "../utils/vector2.h"
-#include "../utils/scriptengine.h"
+#include "src/utils/vector2.h"
+#include "src/utils/scriptengine.h"
 
 class MapWriter : public refCounted{
 	World& world;

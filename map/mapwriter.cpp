@@ -20,15 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "map.h"
-#include "../world.h"
-#include "mapwriter.h"
-#include "lightingengine.h"
+#include "src/map/map.h"
+#include "src/world.h"
+#include "src/map/mapwriter.h"
+#include "src/map/lightingengine.h"
 #include <limits.h>
-#include "mapnode.h"
+#include "src/map/mapnode.h"
 #include <iostream>
-#include "../entities/creature.h"
-#include "blocktype.h"
+#include "src/entities/creature.h"
+#include "src/map/blocktype.h"
 
 MapWriter::MapWriter(World& world) : world(world), area(){}
 

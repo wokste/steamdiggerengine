@@ -20,15 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "blocktype.h"
+#include "src/map/blocktype.h"
 
-#include "lightingengine.h"
-#include "../enums.h"
-#include "../game.h"
-#include "../items/itemdefmanager.h"
+#include "src/map/lightingengine.h"
+#include "src/enums.h"
+#include "src/game.h"
+#include "src/items/itemdefmanager.h"
 #include <iostream>
 #include <sstream>
-#include "../utils/sound.h"
+#include "src/utils/sound.h"
 
 BlockType::BlockType(pugi::xml_node& configNode){
 	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));

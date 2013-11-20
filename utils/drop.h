@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <string>
 #include <vector>
-#include "../utils/vector2.h"
+#include "src/utils/vector2.h"
 #include <pugixml.hpp>
 
 class World;

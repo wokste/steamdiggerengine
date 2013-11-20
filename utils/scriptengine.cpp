@@ -21,25 +21,25 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "scriptengine.h"
+#include "src/utils/scriptengine.h"
 
 #include <iostream>
 #include <scriptbuilder/scriptbuilder.h>
 #include <scripthelper/scripthelper.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <assert.h>
-#include "../game.h"
+#include "src/game.h"
 
 // Included for the script bindings
-#include "vector2.h"
-#include "../entities/entity.h"
-#include "../entities/creature.h"
-#include "../entities/player.h"
-#include "../entities/monster.h"
+#include "src/utils/vector2.h"
+#include "src/entities/entity.h"
+#include "src/entities/creature.h"
+#include "src/entities/player.h"
+#include "src/entities/monster.h"
 
-#include "../attack.h"
-#include "../map/mapwriter.h"
-#include "../world.h"
+#include "src/attack.h"
+#include "src/map/mapwriter.h"
+#include "src/world.h"
 #include <new>
 
 namespace ScriptUtils{

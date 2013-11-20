@@ -21,14 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include "../enums.h"
+#include "src/enums.h"
 #include <vector>
 #include <memory>
-#include "../utils/vertex.h"
-#include "../utils/drop.h"
+#include "src/utils/vertex.h"
+#include "src/utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
 #include <pugixml.hpp>
-#include "../attack.h"
+#include "src/attack.h"
 
 class World;
 class Sound;

@@ -20,8 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "vertex.h"
-#include "texture.h"
+#include "src/utils/vertex.h"
+#include "src/utils/texture.h"
 #include <iostream>
 
 Vertex::Vertex(sf::Vector3f pos, float textureX, float textureY) : x(pos.x), y(pos.y), z(pos.z), textureX(textureX), textureY(textureY)

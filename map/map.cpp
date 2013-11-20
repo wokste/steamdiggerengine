@@ -20,23 +20,23 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "map.h"
-#include "../utils/texture.h"
+#include "src/map/map.h"
+#include "src/utils/texture.h"
 #include <pugixml.hpp>
-#include "../screen.h"
-#include "../items/itemdefmanager.h"
-#include "../game.h"
+#include "src/screen.h"
+#include "src/items/itemdefmanager.h"
+#include "src/game.h"
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
 #include <SFML/Graphics/Color.hpp>
 
-#include "mapgenerator.h"
-#include "mapnode.h"
-#include "lightingengine.h"
-#include "../enums.h"
-#include "chunk.h"
-#include "blocktype.h"
+#include "src/map/mapgenerator.h"
+#include "src/map/mapnode.h"
+#include "src/map/lightingengine.h"
+#include "src/enums.h"
+#include "src/map/chunk.h"
+#include "src/map/blocktype.h"
 
 bool ChunkSorter::operator()(const Vector2i& a, const Vector2i& b) const {
 	return a.x < b.x || (a.x == b.x && a.y < b.y);

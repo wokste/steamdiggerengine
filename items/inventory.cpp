@@ -20,16 +20,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "inventory.h"
-#include "itemdefmanager.h"
-#include "item.h"
+#include "src/items/inventory.h"
+#include "src/items/itemdefmanager.h"
+#include "src/items/item.h"
 #include <iostream>
-#include "../cooldown.h"
-#include "../screen.h"
-#include "../entities/player.h"
-#include "../game.h"
-#include "../entities/droppeditem.h"
-#include "../world.h"
+#include "src/cooldown.h"
+#include "src/screen.h"
+#include "src/entities/player.h"
+#include "src/game.h"
+#include "src/entities/droppeditem.h"
+#include "src/world.h"
 
 ItemStack::ItemStack(){
 	id = 0;

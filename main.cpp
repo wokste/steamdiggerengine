@@ -26,11 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include "screen.h"
-#include "entities/player.h"
-#include "world.h"
-#include "utils/hud.h"
-#include "game.h"
+#include "src/screen.h"
+#include "src/entities/player.h"
+#include "src/world.h"
+#include "src/utils/hud.h"
+#include "src/game.h"
 #include <pugixml.hpp>
 #include <assert.h>
 

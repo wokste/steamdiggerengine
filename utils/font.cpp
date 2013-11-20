@@ -20,9 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "font.h"
-#include "texture.h"
-#include "../game.h"
+#include "src/utils/font.h"
+#include "src/utils/texture.h"
+#include "src/game.h"
 
 FontChar::FontChar(pugi::xml_node& node){
 	x = node.attribute("x").as_int();

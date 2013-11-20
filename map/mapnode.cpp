@@ -20,16 +20,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "mapnode.h"
-#include "blocktype.h"
-#include "../utils/texture.h"
-#include "../utils/skybox.h"
-#include "../enums.h"
-#include "map.h"
+#include "src/map/mapnode.h"
+#include "src/map/blocktype.h"
+#include "src/utils/texture.h"
+#include "src/utils/skybox.h"
+#include "src/enums.h"
+#include "src/map/map.h"
 #include <iostream>
-#include "../game.h"
-#include "../attack.h"
-#include "../utils/sound.h"
+#include "src/game.h"
+#include "src/attack.h"
+#include "src/utils/sound.h"
 
 MapNode::MapNode(){
 	for (int i = 0; i < Layer::count; ++i){

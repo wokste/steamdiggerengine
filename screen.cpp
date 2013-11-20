@@ -20,9 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "screen.h"
-#include "entities/entity.h"
-#include "enums.h"
+#include "src/screen.h"
+#include "src/entities/entity.h"
+#include "src/enums.h"
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>

@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include <string>
-#include "../utils/vector2.h"
-#include "../enums.h"
+#include "src/utils/vector2.h"
+#include "src/enums.h"
 #include <functional>
 #include <memory>
 #include <map>
 #include <vector>
-#include "../utils/vertex.h"
+#include "src/utils/vertex.h"
 
 namespace sf{
 	class Color;

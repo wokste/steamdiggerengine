@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "perlinnoise.h"
+#include "src/map/perlinnoise.h"
 #include <cmath>
 #include <iostream>
-#include "../utils/mathplus.h"
+#include "src/utils/mathplus.h"
 
 PerlinNoise::PerlinNoise(int newSeed, int newOctaves, double newPersistence, double newScale) :
 	seed(newSeed),

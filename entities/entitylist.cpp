@@ -20,13 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "entitylist.h"
-#include "entity.h"
-#include "../game.h"
-#include "../utils/skybox.h"
-#include "../map/map.h"
+#include "src/entities/entitylist.h"
+#include "src/entities/entity.h"
+#include "src/game.h"
+#include "src/utils/skybox.h"
+#include "src/map/map.h"
 #include "creature.h"
-#include "../world.h"
+#include "src/world.h"
 #include <stdlib.h>
 #include <pugixml.hpp>
 #include <SFML/Graphics/Color.hpp>

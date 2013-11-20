@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "monster.h"
+#include "src/entities/monster.h"
 
-#include "player.h"
-#include "../world.h"
+#include "src/entities/player.h"
+#include "src/world.h"
 #include <pugixml.hpp>
-#include "../utils/drop.h"
+#include "src/utils/drop.h"
 
 #include <iostream>
 

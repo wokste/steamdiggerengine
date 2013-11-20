@@ -20,19 +20,19 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "entity.h"
-#include "../utils/texture.h"
-#include "../world.h"
-#include "../attack.h"
-#include "../map/map.h"
+#include "src/entities/entity.h"
+#include "src/utils/texture.h"
+#include "src/world.h"
+#include "src/attack.h"
+#include "src/map/map.h"
 
 #include <cmath>
 #include <algorithm>
 #include <pugixml.hpp>
-#include "../utils/vector2.h"
-#include "../utils/mathplus.h"
-#include "../game.h"
-#include "../enums.h"
+#include "src/utils/vector2.h"
+#include "src/utils/mathplus.h"
+#include "src/game.h"
+#include "src/enums.h"
 #include <sstream>
 #include <string>
 

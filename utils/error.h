@@ -20,41 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include "src/utils/vector2.h"
-#include "src/cooldown.h"
-#include <SFML/Window.hpp>
+#include <string>
 
-class ItemDef;
-class Player;
-class ItemDefManager;
-class Screen;
-class InventoryHUD;
-class World;
+#define runtime_assert(pred,errormsg) if (!(pred)){throw new UserError(errormsg);}
 
-struct ItemStack{
-	ItemStack();
-	int id;
-	int count;
-};
-
-class Inventory{
-	constexpr static int width = 10;
-	constexpr static int height = 4;
-
-	ItemStack items[width * height];
-	int selectedItem;
-	Cooldown cooldown;
-
-	friend InventoryHUD;
-public:
-	ItemStack mouseHeldItem;
-
-	Inventory();
-	void logic(double time);
-	bool use(Player& owner, const Screen& screen);
-	void selectItem(int delta, bool relative = false);
-	bool add(int itemId, int count = 1);
-	bool add(std::string itemTag, int count = 1);
-	void dropStuff(double proportion, World& world, Vector2d position);
+struct UserError{
+	std::string error;
+	UserError(const std::string& error){this->error = error;}
 };

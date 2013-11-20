@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "monsterspawner.h"
+#include "src/utils/monsterspawner.h"
 
-#include "../entities/monster.h"
-#include "../entities/player.h"
-#include "../world.h"
-#include "../game.h"
+#include "src/entities/monster.h"
+#include "src/entities/player.h"
+#include "src/world.h"
+#include "src/game.h"
 #include <cmath>
 #include <algorithm>
 #include <iostream>

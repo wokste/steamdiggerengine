@@ -20,11 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "game.h"
-#include "utils/texture.h"
-#include "utils/scriptengine.h"
-#include "items/itemdefmanager.h"
-#include "map/blocktype.h"
+#include "src/game.h"
+#include "src/utils/texture.h"
+#include "src/utils/scriptengine.h"
+#include "src/items/itemdefmanager.h"
+#include "src/map/blocktype.h"
 #include <iostream>
 #include <cstdlib>
 #include <dirent.h>

@@ -20,14 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "item.h"
-#include "../entities/creature.h"
-#include "../screen.h"
+#include "src/items/item.h"
+#include "src/entities/creature.h"
+#include "src/screen.h"
 #include <pugixml.hpp>
-#include "../enums.h"
+#include "src/enums.h"
 #include <SFML/Window/Keyboard.hpp>
-#include "../game.h"
-#include "../utils/scriptengine.h"
+#include "src/game.h"
+#include "src/utils/scriptengine.h"
 #include <iostream>
 #include <assert.h>
 

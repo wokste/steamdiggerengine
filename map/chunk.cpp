@@ -20,8 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "chunk.h"
-#include "mapgenerator.h"
+#include "src/map/chunk.h"
+#include "src/map/mapgenerator.h"
 
 void Chunk::render(const sf::Color& skyColor, const Vector2i& topLeft, int focussedLayer) const{
 	for(int y = 0; y < height; ++y){

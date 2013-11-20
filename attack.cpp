@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "attack.h"
+#include "src/attack.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -45,7 +45,6 @@ int getDamageFlags(std::string text){
 	int returnValue = 0;
 	std::stringstream ss(text);
 	std::vector<std::string> damageTypes = {"chop", "stab", "mine", "fire", "ice"};
-	// TODO: Add a static assert
 
 	while (!ss.eof()){
 		std::string type;

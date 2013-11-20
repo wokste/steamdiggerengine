@@ -20,14 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "droppeditem.h"
-#include "creature.h"
-#include "../world.h"
-#include "../utils/texture.h"
-#include "../utils/vector2.h"
-#include "../game.h"
-#include "../items/itemdefmanager.h"
-#include "../items/item.h"
+#include "src/entities/droppeditem.h"
+#include "src/entities/creature.h"
+#include "src/world.h"
+#include "src/utils/texture.h"
+#include "src/utils/vector2.h"
+#include "src/game.h"
+#include "src/items/itemdefmanager.h"
+#include "src/items/item.h"
 
 DroppedItem::DroppedItem(int itemId, int count) :
 	Entity(),

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <SFML/OpenGL.hpp>
 #include <string>
-#include "vector2.h"
+#include "src/utils/vector2.h"
 #include <pugixml.hpp>
 
 struct Texture{

@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "skybox.h"
+#include "src/utils/skybox.h"
 #include <cmath>
 #include <SFML/OpenGL.hpp>
-#include "../map/lightingengine.h"
+#include "src/map/lightingengine.h"
 
 SkyboxStateData::SkyboxStateData(double newStateTime, double newTransitionTime, sf::Color newSkyColor, sf::Color newLightColor, int newNextState) :
 	stateTime(newStateTime),

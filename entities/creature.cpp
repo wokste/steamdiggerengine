@@ -20,14 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "creature.h"
+#include "src/entities/creature.h"
 #include <sstream>
-#include "../attack.h"
-#include "../utils/vector2.h"
+#include "src/attack.h"
+#include "src/utils/vector2.h"
 #include <pugixml.hpp>
-#include "../game.h"
-#include "../world.h"
-#include "../map/map.h"
+#include "src/game.h"
+#include "src/world.h"
+#include "src/map/map.h"
 #include <math.h>
 
 Stat::Stat(): cur(0), max(0){}

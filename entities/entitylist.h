@@ -25,8 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 #include <memory>
-#include "../utils/vector2.h"
-#include "../enums.h"
+#include "src/utils/vector2.h"
+#include "src/enums.h"
 #include <SFML/Graphics/Color.hpp>
 
 class Attack;

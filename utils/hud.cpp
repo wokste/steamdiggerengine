@@ -20,13 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "hud.h"
-#include "../entities/player.h"
-#include "../items/itemdefmanager.h"
-#include "../items/item.h"
-#include "../utils/texture.h"
-#include "../screen.h"
-#include "../game.h"
+#include "src/utils/hud.h"
+#include "src/entities/player.h"
+#include "src/items/itemdefmanager.h"
+#include "src/items/item.h"
+#include "src/utils/texture.h"
+#include "src/screen.h"
+#include "src/game.h"
 #include <SFML/OpenGL.hpp>
 
 /* *******

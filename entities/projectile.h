@@ -21,10 +21,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include "entity.h"
-#include "player.h"
-#include "monster.h"
-#include "../attack.h"
+#include "src/entities/entity.h"
+#include "src/entities/player.h"
+#include "src/entities/monster.h"
+#include "src/attack.h"
 
 class Projectile;
 class Player;
