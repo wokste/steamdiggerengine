@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include "src/entities/creature.h"
-#include "src/attack.h"
-#include "src/cooldown.h"
+#include "src/utils/attack.h"
+#include "src/utils/cooldown.h"
 #include <memory>
 
 class Player;

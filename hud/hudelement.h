@@ -21,33 +21,26 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
+#include "src/utils/vector2.h"
+#include <SFML/Window.hpp>
+#include <memory>
 
-namespace sf{
-	class Color;
-};
+class Screen;
+class Player;
+class HUDElement;
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
-
-class Skybox{
+class HUDElement{
 public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+	HUDElement(){}
+	HUDElement(const HUDElement& that) = delete;
+	virtual ~HUDElement(){}
 
-	sf::Color lightColor;
+	virtual void draw(const Player& player) = 0;
+	virtual bool onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos);
+
+	Vector2i getTopLeft(const Vector2i& screenSize);
+	bool mouseInArea(const Screen& screen, const Vector2i& mousePos);
+	Vector2i size;
+protected:
+	Vector2d docking;
 };

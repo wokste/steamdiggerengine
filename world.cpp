@@ -20,21 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "world.h"
-#include "entities/entity.h"
-#include "map/map.h"
-#include "map/mapnode.h"
-#include "map/lightingengine.h"
-#include "items/itemdefmanager.h"
-#include "game.h"
+#include "src/world.h"
+#include "src/entities/entity.h"
+#include "src/map/map.h"
+#include "src/game.h"
 #include <stdlib.h>
-#include <pugixml.hpp>
-#include "utils/skybox.h"
-#include "entities/player.h"
-#include "entities/projectile.h"
-#include "entities/monster.h"
-#include "map/blocktype.h"
-#include "attack.h"
+#include "src/utils/skybox.h"
+#include "src/entities/monster.h"
+#include "src/map/blocktype.h"
+#include "src/utils/attack.h"
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 #include <assert.h>

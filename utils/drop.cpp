@@ -25,21 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/items/itemdefmanager.h"
 #include "src/world.h"
 #include "src/entities/droppeditem.h"
-#include "src/attack.h"
+#include "src/utils/attack.h"
 
 #include <iostream>
-
-void ItemReference::calcID(){
-	if (tag == "")
-		return;
-
-	id = GameGlobals::itemDefs->at(tag);
-	if (id < 0){
-		std::cerr << "Inventory tag " << tag << " not found\n";
-		return;
-	}
-	tag = "";
-}
 
 Drop::Drop(int id) : ref(id)
 {
@@ -80,6 +68,6 @@ void DropList::load(pugi::xml_node& dropNode){
 
 void DropList::postLoad(){
 	for(auto& item: *this){
-		item.ref.calcID();
+		item.ref.postLoad();
 	}
 }

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include "src/entities/creature.h"
 #include "src/items/inventory.h"
-#include "src/cooldown.h"
+#include "src/utils/cooldown.h"
 
 class Screen;
 

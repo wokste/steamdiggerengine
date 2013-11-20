@@ -21,33 +21,20 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
 
-namespace sf{
-	class Color;
-};
+#include "src/hud/hudelement.h"
+#include "src/utils/vector2.h"
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
+class Texture;
 
-class Skybox{
+class StatusBarHUD : public HUDElement{
 public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+	StatusBarHUD();
+	StatusBarHUD(const StatusBarHUD& that) = delete;
+	virtual ~StatusBarHUD();
 
-	sf::Color lightColor;
+	virtual void draw(const Player& player);
+private:
+	Vector2i barSize;
+	std::shared_ptr<Texture> barTexture;
 };

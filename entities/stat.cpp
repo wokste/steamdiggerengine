@@ -20,34 +20,49 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
 
-namespace sf{
-	class Color;
-};
+#include "src/entities/stat.h"
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
+#include <sstream>
+#include <cmath>
 
-class Skybox{
-public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+Stat::Stat(): cur(0), max(0){}
+Stat::~Stat(){}
 
-	sf::Color lightColor;
-};
+Stat::Stat(int newVal){
+	cur = newVal;
+	max = newVal;
+}
+
+/// returns the amount that is healed.
+bool Stat::heal(int healing){
+	if (cur == max)
+		return false;
+
+	cur = std::min(cur + healing, max);
+	return true;
+}
+
+/// reduces stat
+/// returns the amount that is not soaked.
+int Stat::soak(int damage){
+	cur -= damage;
+	if (cur < 0){
+		auto notSoaked = -cur;
+		cur = 0;
+		return notSoaked;
+	}
+	return 0;
+}
+
+double Stat::asProportion() const{
+	if (max <= 0)
+		return 1;
+	return (double)cur / (double)max;
+}
+
+std::string Stat::asText() const{
+	std::stringstream out;
+	out << cur << " / " << max;
+	return out.str();
+}

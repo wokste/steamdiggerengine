@@ -21,33 +21,16 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
+#include <string>
 
-namespace sf{
-	class Color;
-};
-
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
-
-class Skybox{
+class ItemReference{
 public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
+	inline ItemReference(int id) : id(id){}
+	inline ItemReference(const std::string& _tag) : id(-1), tag(_tag){}
+	void postLoad();
+	int id = -1;
+	
+	bool valid();
 private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
-
-	sf::Color lightColor;
+	std::string tag;
 };

@@ -20,41 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "src/attack.h"
-#include <iostream>
-#include <sstream>
-#include <vector>
 
-Attack::Attack() :
-	damage(0),
-	push(0),
-	damageTerrain(false),
-	type(0)
-{
-}
+#pragma once
 
-void Attack::load(pugi::xml_node& node){
-	damageTerrain = node.attribute("damage-terrain").as_bool();
-
-	damage = node.attribute("damage").as_int();
-	push = node.attribute("push").as_int();
-	type = getDamageFlags(node.attribute("type").as_string("none"));
-}
-
-int getDamageFlags(std::string text){
-	int returnValue = 0;
-	std::stringstream ss(text);
-	std::vector<std::string> damageTypes = {"chop", "stab", "mine", "fire", "ice"};
-
-	while (!ss.eof()){
-		std::string type;
-		std::getline(ss,type, ' ');
-		int i = 0;
-		for(auto& checkedType : damageTypes){
-			i++;
-			if (type == checkedType)
-				returnValue |= (1 << i);
-		}
-	}
-	return returnValue;
-}
+class RefCounted{
+	int refCount = 1;
+public:
+	virtual ~RefCounted(){}
+	void addref();
+	void release();
+};

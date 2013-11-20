@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <math.h>
 #include "src/entities/projectile.h"
-#include "src/attack.h"
+#include "src/utils/attack.h"
 #include "src/world.h"
 #include <pugixml.hpp>
 

@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/map/map.h"
 #include <iostream>
 #include "src/game.h"
-#include "src/attack.h"
+#include "src/utils/attack.h"
 #include "src/utils/sound.h"
 
 MapNode::MapNode(){

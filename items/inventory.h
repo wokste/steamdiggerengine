@@ -22,7 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include "src/utils/vector2.h"
-#include "src/cooldown.h"
+#include "src/items/itemstack.h"
+#include "src/utils/cooldown.h"
 #include <SFML/Window.hpp>
 
 class ItemDef;
@@ -31,12 +32,6 @@ class ItemDefManager;
 class Screen;
 class InventoryHUD;
 class World;
-
-struct ItemStack{
-	ItemStack();
-	int id;
-	int count;
-};
 
 class Inventory{
 	constexpr static int width = 10;

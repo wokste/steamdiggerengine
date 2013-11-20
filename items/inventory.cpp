@@ -24,17 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/items/itemdefmanager.h"
 #include "src/items/item.h"
 #include <iostream>
-#include "src/cooldown.h"
+#include "src/utils/cooldown.h"
 #include "src/screen.h"
 #include "src/entities/player.h"
 #include "src/game.h"
 #include "src/entities/droppeditem.h"
 #include "src/world.h"
-
-ItemStack::ItemStack(){
-	id = 0;
-	count = 0;
-}
 
 Inventory::Inventory() : cooldown(){
 	selectedItem=0;

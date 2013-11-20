@@ -20,41 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+#include "src/items/itemstack.h"
 
-#pragma once
-#include <angelscript.h>
-#include <string>
-
-class refCounted{
-	int refCount = 1;
-public:
-	virtual ~refCounted(){}
-	void addref(){
-		refCount++;
-	}
-	void release(){
-		if( --refCount == 0 )
-			delete this;
-	}
-};
-
-class ScriptEngine{
-	void registerClasses();
-	void registerFunctions();
-	void registerInterfaces();
-	void loadScripts();
-public:
-	ScriptEngine();
-	~ScriptEngine();
-	static void messageCallback(const asSMessageInfo* msg, void* param);
-	asIScriptObject* createObject(const std::string& name);
-
-	asIScriptEngine* engine;
-	asIScriptContext *context;
-};
-
-// Console functions for script binding
-namespace Console{
-	void print(std::string& str);
-	void error(std::string& str);
-};
+ItemStack::ItemStack(){
+	id = 0;
+	count = 0;
+}

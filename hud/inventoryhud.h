@@ -20,25 +20,30 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "src/cooldown.h"
+#pragma once
 
-Cooldown::Cooldown(){
-	time = 0;
-}
+#include "src/hud/hudelement.h"
+class Texture;
+class TileSet;
 
-void Cooldown::operator-=(double timeDelta){
-	time -= timeDelta;
-}
+class InventoryHUD : public HUDElement{
+public:
+	static constexpr int celSize = 32, celBorder = 8, outsideBorder = 7;
 
-void Cooldown::set(double newTime){
-	if (time < newTime)
-		time = newTime;
-}
+	InventoryHUD();
+	InventoryHUD(const InventoryHUD& that) = delete;
+	virtual ~InventoryHUD();
 
-void Cooldown::add(double newTime){
-	time += newTime;
-}
+	virtual void draw(const Player& player);
+	void toggle();
+	bool onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos) override;
+private:
+	std::shared_ptr<Texture> background;
+	std::shared_ptr<TileSet> itemTexture;
+	bool isOpen;
 
-bool Cooldown::done(){
-	return time <= 0;
-}
+	Vector2i slotMarkerSize;
+	int rows;
+	int cols;
+	int backgroundTop;
+};

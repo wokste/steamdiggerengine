@@ -20,34 +20,32 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
+#include "src/hud/hudelement.h"
+#include "src/entities/player.h"
+#include "src/items/itemdefmanager.h"
+#include "src/items/item.h"
+#include "src/utils/texture.h"
+#include "src/screen.h"
+#include "src/game.h"
+#include <SFML/OpenGL.hpp>
 
-namespace sf{
-	class Color;
-};
+#include "src/utils/font.h"
+#include <pugixml.hpp>
+#include <sstream>
+#include <iostream>
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
+bool HUDElement::onMouseEvent(sf::Event& event, Player& player, const Vector2i& mousePos){
+	return false;
+}
 
-class Skybox{
-public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+Vector2i HUDElement::getTopLeft(const Vector2i& screenSize){
+	Vector2i pos = screenSize - size;
+	pos.x *= docking.x;
+	pos.y *= docking.y;
+	return pos;
+}
 
-	sf::Color lightColor;
-};
+bool HUDElement::mouseInArea(const Screen& screen, const Vector2i& mousePos){
+	Vector2i relMouse = mousePos - getTopLeft(screen.getSize());
+	return (relMouse.x >= 0 && relMouse.y >= 0 && relMouse.x < size.x && relMouse.y < size.y);
+}

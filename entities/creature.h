@@ -22,8 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include "src/entities/entity.h"
-#include "src/cooldown.h"
+#include "src/utils/cooldown.h"
 #include "src/enums.h"
+#include "src/entities/stat.h"
 
 #include <memory>
 
@@ -33,21 +34,6 @@ class Entity;
 
 class World;
 class DropList;
-
-struct Stat{
-	int cur;
-	int max;
-
-	Stat();
-	Stat(int newVal);
-	Stat(const Stat& other) = default;
-	~Stat();
-	bool heal(int healing);
-	int soak(int damage);
-
-	double asProportion() const;
-	std::string asText() const;
-};
 
 class Creature : public Entity{
 public:

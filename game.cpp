@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/game.h"
 #include "src/utils/texture.h"
-#include "src/utils/scriptengine.h"
+#include "src/script/scriptengine.h"
 #include "src/items/itemdefmanager.h"
 #include "src/map/blocktype.h"
 #include <iostream>

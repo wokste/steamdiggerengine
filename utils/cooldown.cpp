@@ -20,34 +20,25 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include <SFML/Graphics/Color.hpp>
 #include "src/utils/cooldown.h"
-#include <vector>
 
-namespace sf{
-	class Color;
-};
+Cooldown::Cooldown(){
+	time = 0;
+}
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
+void Cooldown::operator-=(double timeDelta){
+	time -= timeDelta;
+}
 
-class Skybox{
-public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+void Cooldown::set(double newTime){
+	if (time < newTime)
+		time = newTime;
+}
 
-	sf::Color lightColor;
-};
+void Cooldown::add(double newTime){
+	time += newTime;
+}
+
+bool Cooldown::done(){
+	return time <= 0;
+}

@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/utils/drop.h"
 #include <SFML/Graphics/Color.hpp>
 #include <pugixml.hpp>
-#include "src/attack.h"
+#include "src/utils/attack.h"
 
 class World;
 class Sound;

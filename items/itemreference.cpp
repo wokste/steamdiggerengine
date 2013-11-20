@@ -20,34 +20,23 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
+#include "src/utils/drop.h"
+#include "src/game.h"
+#include "src/items/itemdefmanager.h"
+#include "src/world.h"
+#include "src/entities/droppeditem.h"
+#include "src/utils/attack.h"
 
-namespace sf{
-	class Color;
-};
+#include <iostream>
 
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
+void ItemReference::postLoad(){
+	if (tag == "")
+		return;
 
-class Skybox{
-public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
-
-	sf::Color lightColor;
-};
+	id = GameGlobals::itemDefs->at(tag);
+	if (id < 0){
+		std::cerr << "Inventory tag " << tag << " not found\n";
+		return;
+	}
+	tag = "";
+}

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/entities/player.h"
 #include <SFML/Window.hpp>
 #include "src/screen.h"
-#include "src/attack.h"
+#include "src/utils/attack.h"
 #include "src/world.h"
 #include "src/game.h"
 

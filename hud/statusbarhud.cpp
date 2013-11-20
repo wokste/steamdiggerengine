@@ -20,35 +20,34 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#pragma once
-#include "src/entities/entity.h"
+#include "src/hud/statusbarhud.h"
 #include "src/entities/player.h"
-#include "src/entities/monster.h"
-#include "src/utils/attack.h"
+#include "src/utils/texture.h"
+#include "src/screen.h"
+#include "src/game.h"
+#include <SFML/OpenGL.hpp>
 
-class Projectile;
-class Player;
-class Monster;
-enum class ProjectileState {Flying, Exploding, DeleteMe};
+StatusBarHUD::StatusBarHUD(){
+	barSize = Vector2i(256,24);
+	barTexture.reset(new Texture(GameGlobals::fileSystem.fullpath("healthbar.png")));
 
-class Projectile : public Entity{
-public:
-	Projectile();
-	virtual ~Projectile();
-	virtual void load(pugi::xml_node& configNode);
+	size = Vector2i(256, 48);
+	docking = Vector2d(1, 0);
+}
 
-	virtual void hitTerrain(bool hitWall);
-	virtual void logic(double time);
+StatusBarHUD::~StatusBarHUD(){
+}
 
-	ProjectileState state;
-	int team;
-	void moveTo(Vector2d point);
+void StatusBarHUD::draw(const Player& player){
+	auto HPPerc = player.HP.asProportion();
+	auto ShieldPerc = player.shield.asProportion();
 
-	Attack hitAttack;
-	double projectileSpeed;
+	int widthHP	 = std::max<int>((int) barSize.x * HPPerc, 0);
+	int widthShield = std::max<int>((int) barSize.x * ShieldPerc, 0);
 
-	double bounce; // Negative is no bounce
-	double TTL; // Time to live in seconds
-private:
-	void hitCreature(Creature& other);
-};
+	barTexture->bind();
+	barTexture->draw(Vector2i(0, 0), Vector2i(widthHP, barSize.y), Vector2i(0, 0));
+	barTexture->draw(Vector2i(widthHP, barSize.y), Vector2i(barSize.x - widthHP, barSize.y), Vector2i(widthHP, 0));
+	barTexture->draw(Vector2i(0, 2*barSize.y), Vector2i(widthShield, barSize.y), Vector2i(0, barSize.y));
+	barTexture->draw(Vector2i(widthShield, 3*barSize.y), Vector2i(barSize.x - widthShield, barSize.y), Vector2i(widthShield, barSize.y));
+}

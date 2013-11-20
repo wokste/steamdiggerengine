@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "src/utils/scriptengine.h"
+#include "src/script/scriptengine.h"
 
 #include <iostream>
 #include <scriptbuilder/scriptbuilder.h>
@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/entities/player.h"
 #include "src/entities/monster.h"
 
-#include "src/attack.h"
+#include "src/utils/attack.h"
 #include "src/map/mapwriter.h"
 #include "src/world.h"
 #include <new>

@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/enums.h"
 #include <SFML/Window/Keyboard.hpp>
 #include "src/game.h"
-#include "src/utils/scriptengine.h"
+#include "src/script/scriptengine.h"
 #include <iostream>
 #include <assert.h>
 

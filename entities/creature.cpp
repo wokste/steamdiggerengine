@@ -21,55 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/entities/creature.h"
-#include <sstream>
-#include "src/attack.h"
+#include "src/utils/attack.h"
 #include "src/utils/vector2.h"
 #include <pugixml.hpp>
 #include "src/game.h"
 #include "src/world.h"
 #include "src/map/map.h"
-#include <math.h>
 
-Stat::Stat(): cur(0), max(0){}
-Stat::~Stat(){}
-
-Stat::Stat(int newVal){
-	cur = newVal;
-	max = newVal;
-}
-
-/// returns the amount that is healed.
-bool Stat::heal(int healing){
-	if (cur == max)
-		return false;
-
-	cur = std::min(cur + healing, max);
-	return true;
-}
-
-/// reduces stat
-/// returns the amount that is not soaked.
-int Stat::soak(int damage){
-	cur -= damage;
-	if (cur < 0){
-		auto notSoaked = -cur;
-		cur = 0;
-		return notSoaked;
-	}
-	return 0;
-}
-
-double Stat::asProportion() const{
-	if (max <= 0)
-		return 1;
-	return (double)cur / (double)max;
-}
-
-std::string Stat::asText() const{
-	std::stringstream out;
-	out << cur << " / " << max;
-	return out.str();
-}
 
 Creature::Creature(): team(0), facing(Direction::right){}
 

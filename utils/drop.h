@@ -23,21 +23,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <string>
 #include <vector>
+#include "src/items/itemreference.h"
 #include "src/utils/vector2.h"
 #include <pugixml.hpp>
 
 class World;
 class Attack;
-
-class ItemReference{
-public:
-	inline ItemReference(int id) : id(id){}
-	inline ItemReference(const std::string& _tag) : id(-1), tag(_tag){}
-	void calcID();
-	int id = -1;
-private:
-	std::string tag;
-};
 
 struct Drop{
 	Drop(int id);

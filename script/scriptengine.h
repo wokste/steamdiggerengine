@@ -20,34 +20,28 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 #pragma once
-#include <SFML/Graphics/Color.hpp>
-#include "src/utils/cooldown.h"
-#include <vector>
+#include <angelscript.h>
+#include <string>
 
-namespace sf{
-	class Color;
-};
-
-struct SkyboxStateData{
-	SkyboxStateData(double stateTime, double transitionTime, sf::Color skyColor, sf::Color lightColor, int nextState);
-	double stateTime;
-	double transitionTime;
-	sf::Color lightColor;
-	sf::Color skyColor;
-	int nextState;
-};
-
-class Skybox{
+class ScriptEngine{
+	void registerClasses();
+	void registerFunctions();
+	void registerInterfaces();
+	void loadScripts();
 public:
-	Skybox();
-	void logic(double time);
-	void render();
-	inline sf::Color getLightColor() const{return lightColor;}
-private:
-	std::vector<SkyboxStateData> states;
-	int currentState;
-	double timeToNextState;
+	ScriptEngine();
+	~ScriptEngine();
+	static void messageCallback(const asSMessageInfo* msg, void* param);
+	asIScriptObject* createObject(const std::string& name);
 
-	sf::Color lightColor;
+	asIScriptEngine* engine;
+	asIScriptContext *context;
+};
+
+// Console functions for script binding
+namespace Console{
+	void print(std::string& str);
+	void error(std::string& str);
 };

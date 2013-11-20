@@ -24,9 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class Map;
 class Attack;
 #include "src/utils/vector2.h"
-#include "src/utils/scriptengine.h"
+#include "src/script/refcounted.h"
 
-class MapWriter : public refCounted{
+class MapWriter : public RefCounted{
 	World& world;
 	Rect4i area;
 	void recalcLighting(); // Implicitely called at destruction
