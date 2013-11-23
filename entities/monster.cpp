@@ -42,7 +42,6 @@ void Monster::load(pugi::xml_node& node){
 	dropList.reset(new DropList);
 	auto dropNode = node.child("drops");
 	dropList->load(dropNode);
-	dropList->postLoad();
 }
 
 void Monster::logic(double time){

@@ -28,45 +28,43 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/map/blocktype.h"
 #include <iostream>
 
-ItemDefManager::ItemDefManager(const std::string& fileName){
-	pugi::xml_document doc;
+ItemDefManager::ItemDefManager(){
 
-	auto result = doc.load_file(fileName.c_str());
-	if (result){
-		auto rootNode = doc.child("root");
-		for (auto childNode : rootNode){
-			insert(std::unique_ptr<ItemType>(new ItemType(childNode)), childNode.attribute("tag").as_string());
-		}
-	} else {
-		std::cerr << result.description();
-	}
 }
 
 ItemDefManager::~ItemDefManager(){
 
 }
 
-/** inserts item. returns the itemID */
-int ItemDefManager::insert(std::unique_ptr<ItemType> type, const std::string& tag){
-	items.push_back(std::move(type));
-	int id = items.size() - 1;
-	if(tag != ""){
-		tags.insert(make_pair(tag, id));
+void ItemDefManager::loadFromXml(const std::string& fileName){
+	pugi::xml_document doc;
+
+	auto result = doc.load_file(fileName.c_str());
+	if (result){
+		auto rootNode = doc.child("root");
+		for (auto childNode : rootNode){
+			int id = find(childNode.attribute("tag").as_string(), true);
+			items[id]->loadFromXml(childNode);
+		}
+	} else {
+		std::cerr << result.description();
 	}
-	return id;
 }
 
-/** creates item for building block. returns the itemID */
-int ItemDefManager::addBuildingBlock(int blockID, int frameID, const std::string& tag){
-	auto item = std::unique_ptr<ItemType>(new ItemType("BlockItem", blockID, frameID));
-	return insert(std::move(item), tag);
-}
-
-int ItemDefManager::at(std::string& tag){
+/// Finds item id corresponding to the current item.
+/// @param tag. The tag of the item.
+/// @param forCreation. Whether the item is actually created after finding it.
+/// Used to detect whether tags are unique and used.
+/// @return A valid ID for the item or a negative value indicating an error.
+int ItemDefManager::find(const std::string& tag, bool forCreation){
 	auto iterator = tags.find(tag);
 	if (iterator == tags.end()) {
-		std::cerr << "item tag: " << tag << " not found\n";
-		return -1;
+		items.push_back(std::unique_ptr<ItemType>(new ItemType()));
+		int id = items.size() - 1;
+		if(tag != ""){
+			tags.insert(make_pair(tag, id));
+		}
+		return id;
 	} else {
 		return iterator->second;
 	}

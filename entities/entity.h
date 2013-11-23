@@ -41,6 +41,7 @@ enum class PhysicsMode{
 	Jumping
 };
 
+/// An entity is a moving object in the world.
 class Entity{
 public:
 	Entity();
@@ -51,8 +52,12 @@ public:
 	void setPos(World* newWorld, Vector2d newPos);
 	bool isInArea(Vector2d px1, Vector2d px2);
 
+	/// Apply physics on the entity
 	virtual void logic(double time);
+
+	/// Draw the entity
 	virtual void render(const sf::Color& skyColor);
+
 	void startAnim(std::string animName);
 	void move(Vector2d change);
 	void push(Vector2d dir, double force);

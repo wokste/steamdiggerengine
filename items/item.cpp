@@ -31,7 +31,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <assert.h>
 
-ItemType::ItemType(pugi::xml_node& configNode){
+ItemType::ItemType(){
+	maxStack=250;
+	consumable=true;
+	useTime=0.4;
+	frameID=0;
+}
+
+void ItemType::loadFromXml(pugi::xml_node& configNode){
 	maxStack=configNode.attribute("stack").as_int(1);
 	consumable=configNode.attribute("consumable").as_bool(false);
 	useTime=configNode.attribute("use-time").as_double(0.4);
@@ -52,10 +59,7 @@ ItemType::ItemType(pugi::xml_node& configNode){
 }
 
 // For blocks
-ItemType::ItemType(const std::string& objectTypeName, int blockID, int newFrameID){
-	maxStack=250;
-	consumable=true;
-	useTime=0.4;
+void ItemType::loadBlock(const std::string& objectTypeName, int blockID, int newFrameID){
 	frameID=newFrameID;
 
 	itemScript = GameGlobals::scriptEngine->createObject(objectTypeName);

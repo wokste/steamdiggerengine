@@ -29,14 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-Drop::Drop(int id) : ref(id)
-{
-	chance = 1;
-	count = 1;
-}
-
-Drop::Drop(const std::string& tag, const double newChance, const int newCount) : ref(tag)
-{
+Drop::Drop(int newId, const double newChance, const int newCount){
+	itemID = newId;
 	chance = newChance;
 	count = newCount;
 }
@@ -44,7 +38,7 @@ Drop::Drop(const std::string& tag, const double newChance, const int newCount) :
 void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 	auto choice = std::generate_canonical<double, 20>(GameGlobals::rnd);
 	for(auto& item: *this){
-		if (item.ref.id < 0)
+		if (item.itemID < 0)
 			continue;
 		if (choice >= 0 && choice < item.chance){
 			int count = item.count;
@@ -52,7 +46,7 @@ void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 				double rand = std::generate_canonical<double, 20>(GameGlobals::rnd);
 				count = std::round(((count - 1) * 2) * rand) + 1; // Slightly randomize count
 			}
-			auto drop = new DroppedItem(item.ref.id, count);
+			auto drop = new DroppedItem(item.itemID, count);
 			drop->setPos(&world, pos);
 			world.entities->add(drop);
 		}
@@ -62,12 +56,7 @@ void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 
 void DropList::load(pugi::xml_node& dropNode){
 	for (auto childNode : dropNode){
-		emplace_back(childNode.attribute("tag").as_string(), childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
-	}
-}
-
-void DropList::postLoad(){
-	for(auto& item: *this){
-		item.ref.postLoad();
+		int itemID = GameGlobals::itemDefs->find(childNode.attribute("tag").as_string());
+		emplace_back(itemID, childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
 	}
 }

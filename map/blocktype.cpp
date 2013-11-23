@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/enums.h"
 #include "src/game.h"
 #include "src/items/itemdefmanager.h"
+#include "src/items/item.h"
 #include <iostream>
 #include <sstream>
 #include "src/utils/sound.h"
@@ -82,19 +83,15 @@ BlockTypeManager::BlockTypeManager(std::string fileName){
 			if (!dropNode || dropNode.attribute("drop_this").as_bool()) {
 				int blockID = blocks.size();
 				int iconFrame = blockNode.child("frame").attribute("id").as_int();
-				int dropID = GameGlobals::itemDefs->addBuildingBlock(blockID, iconFrame, blockNode.attribute("tag").as_string());
+				auto dropTag = blockNode.attribute("tag").as_string();
+				int dropID = GameGlobals::itemDefs->find(dropTag);
+				(*GameGlobals::itemDefs)[dropID].loadBlock("BlockItem", blockID, iconFrame);
 				block.drops.emplace_back(dropID);
 			}
 			blocks.push_back(block);
 		}
 	} else {
 		std::cerr << result.description();
-	}
-}
-
-void BlockTypeManager::postLoad(){
-	for(auto& block: blocks){
-		block.drops.postLoad();
 	}
 }
 

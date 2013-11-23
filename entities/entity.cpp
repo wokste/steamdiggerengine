@@ -36,8 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include <string>
 
-int floorInt(double);
-
 Entity::Entity() :
 	maxSpeed(0),
 	bMapCollision(true),

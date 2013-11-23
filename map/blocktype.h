@@ -68,5 +68,4 @@ public:
 	BlockTypeManager(std::string fileName);
 	~BlockTypeManager();
 	BlockType& operator[](int id);
-	void postLoad();
 };

@@ -40,11 +40,9 @@ bool GameGlobals::paused;
 void GameGlobals::init(){
 	scriptEngine.reset(new ScriptEngine());
 	tileSet.reset(new TileSet(Vector2i(8,8), GameGlobals::fileSystem.fullpath("tileset.png")));
-	itemDefs.reset(new ItemDefManager(fileSystem.fullpath("tools.xml")));
+	itemDefs.reset(new ItemDefManager());
+	itemDefs->loadFromXml(fileSystem.fullpath("tools.xml"));
 	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.xml")));
-
-	// Actions that require the itemDefs to be loaded
-	blockDefs->postLoad();
 
 	paused = false;
 }

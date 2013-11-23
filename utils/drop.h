@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <string>
 #include <vector>
-#include "src/items/itemreference.h"
 #include "src/utils/vector2.h"
 #include <pugixml.hpp>
 
@@ -31,19 +30,14 @@ class World;
 class Attack;
 
 struct Drop{
-	Drop(int id);
-	Drop(const std::string& tag, const double newChance, const int newCount);
-private:
-	ItemReference ref;
+	Drop(int id, const double newChance = 1, const int newCount = 1);
+	int itemID;
 	double chance;
 	int count;
-
-	friend class DropList;
 };
 
 class DropList : public std::vector<Drop>{
 public:
 	void dropStuff(World& world, Vector2d pos, const int damageType) const;
 	void load(pugi::xml_node& node);
-	void postLoad();
 };

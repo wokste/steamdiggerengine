@@ -63,7 +63,7 @@ void Inventory::selectItem(int nr, bool relative){
 }
 
 bool Inventory::add(std::string itemTag, int count){
-	return add(GameGlobals::itemDefs->at(itemTag), count);
+	return add(GameGlobals::itemDefs->find(itemTag), count);
 }
 
 bool Inventory::add(int itemId, int count){
