@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-Drop::Drop(int newId, const double newChance, const int newCount){
+DropList::Drop::Drop(int newId, const double newChance, const int newCount){
 	itemID = newId;
 	chance = newChance;
 	count = newCount;
@@ -37,7 +37,7 @@ Drop::Drop(int newId, const double newChance, const int newCount){
 
 void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 	auto choice = std::generate_canonical<double, 20>(GameGlobals::rnd);
-	for(auto& item: *this){
+	for(auto& item: drops){
 		if (item.itemID < 0)
 			continue;
 		if (choice >= 0 && choice < item.chance){
@@ -57,6 +57,10 @@ void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 void DropList::load(pugi::xml_node& dropNode){
 	for (auto childNode : dropNode){
 		int itemID = GameGlobals::itemDefs->find(childNode.attribute("tag").as_string());
-		emplace_back(itemID, childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
+		drops.emplace_back(itemID, childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
 	}
+}
+
+void DropList::addDrop(int itemID){
+	drops.emplace_back(itemID, 1.0, 1);
 }

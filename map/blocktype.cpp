@@ -86,7 +86,7 @@ BlockTypeManager::BlockTypeManager(std::string fileName){
 				auto dropTag = blockNode.attribute("tag").as_string();
 				int dropID = GameGlobals::itemDefs->find(dropTag);
 				(*GameGlobals::itemDefs)[dropID].loadBlock("BlockItem", blockID, iconFrame);
-				block.drops.emplace_back(dropID);
+				block.drops.addDrop(dropID);
 			}
 			blocks.push_back(block);
 		}

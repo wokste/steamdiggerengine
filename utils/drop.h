@@ -29,15 +29,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class World;
 class Attack;
 
-struct Drop{
-	Drop(int id, const double newChance = 1, const int newCount = 1);
-	int itemID;
-	double chance;
-	int count;
-};
+class DropList{
+	struct Drop{
+		Drop(int id, const double newChance, const int newCount);
+		int itemID;
+		double chance;
+		int count;
+	};
 
-class DropList : public std::vector<Drop>{
+	std::vector<Drop> drops;
 public:
+	void addDrop(int dropID);
 	void dropStuff(World& world, Vector2d pos, const int damageType) const;
 	void load(pugi::xml_node& node);
 };
