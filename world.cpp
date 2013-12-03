@@ -48,7 +48,7 @@ World::~World(){
 void World::logic(double time){
 	map->logic(time);
 	entities->logic(time, *this);
-	monsterSpawner->logic(this, time);
+	monsterSpawner->logic(*this, time);
 	skybox->logic(time);
 }
 

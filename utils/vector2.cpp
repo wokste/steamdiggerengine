@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/utils/mathplus.h"
 #include <iostream>
 
+#include "src/game.h"
+
 Vector2d Vector2::setLength(Vector2d source, double lengthNew){
 	double lengthOld = length(source);
 	if (lengthOld < 0.1)
@@ -67,4 +69,12 @@ Vector2d Vector2::center(Vector2i& source){
 
 Vector2d Vector2::center(Vector2d& source){
 	return Vector2d(MathPlus::floorInt(source.x) + 0.5, MathPlus::floorInt(source.y) + 0.5);
+}
+
+Vector2d Vector2::randomize(Vector2d& origin, double minLen, double maxLen){
+	std::uniform_real_distribution<> distanceRandomizer(minLen,maxLen);
+	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
+	double distance = distanceRandomizer(GameGlobals::rnd);
+	double direction = directionRandomizer(GameGlobals::rnd);
+	return origin + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 }

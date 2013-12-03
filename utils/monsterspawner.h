@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 #include "src/utils/cooldown.h"
+#include "src/utils/vector2.h"
 #include <memory>
 #include <vector>
 
@@ -45,12 +46,13 @@ private:
 class MonsterSpawner{
 public:
 	MonsterSpawner();
-	void logic(World* world, double time);
+	void logic(World& world, double time);
 
 private:
 	Cooldown cooldown;
 	SpawnConfig basicSpawnConfig;
-	bool trySpawn(World* world, Creature* player);
+	bool trySpawn(World& world, Creature* player);
+	bool validSpawnPos(Vector2d& desiredPosition, World& world, Creature& monster);
 	static constexpr int despawnRadius = 48;
 	static constexpr int spawnRadiusMin = 28;
 	static constexpr int spawnRadiusMax = 32;

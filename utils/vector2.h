@@ -43,4 +43,5 @@ namespace Vector2{
     Vector2d normalize(Vector2d& source);
     Vector2d center(Vector2i& source);
     Vector2d center(Vector2d& source);
+    Vector2d randomize(Vector2d& origin, double minLen, double maxLen);
 }

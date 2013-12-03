@@ -68,7 +68,7 @@ MonsterSpawner::MonsterSpawner() : basicSpawnConfig()
 	cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
 }
 
-void MonsterSpawner::logic(World* world, double time){
+void MonsterSpawner::logic(World& world, double time){
 	cooldown -= time;
 
 	if (cooldown.done()){
@@ -77,11 +77,11 @@ void MonsterSpawner::logic(World* world, double time){
 		std::vector<Creature*> spawnAround;
 
 		// Step 1: Find the creatures it should spawn around.
-		for (auto test : world->creatures()){
+		for (auto test : world.creatures()){
 			if (test->isPlayer){
 				// This is a creature on the player team and monsters should be spawned around it
 				int numMonsters = 0;
-				for (auto other : world->creatures()){
+				for (auto other : world.creatures()){
 					if (other->aggressiveTo(test) && Vector2::lengthTo(other->pos, test->pos) < despawnRadius){
 						numMonsters++;
 						// TODO: Optimize
@@ -92,14 +92,14 @@ void MonsterSpawner::logic(World* world, double time){
 			} else {
 				// Testing whether this creature should be deleted
 				bool playerNear = false;
-				for (auto other : world->creatures()){
+				for (auto other : world.creatures()){
 					if (other->aggressiveTo(test) && Vector2::lengthTo(other->pos, test->pos) < despawnRadius){
 						playerNear = true;
 						break;
 					}
 				}
 				if (!playerNear){
-					world->entities->remove(test);
+					world.entities->remove(test);
 				}
 			}
 		}
@@ -122,18 +122,26 @@ void MonsterSpawner::logic(World* world, double time){
 	}
 }
 
-bool MonsterSpawner::trySpawn(World* world, Creature* player){
-	std::uniform_real_distribution<> distanceRandomizer(28,32);
-	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
-	double distance = distanceRandomizer(GameGlobals::rnd);
-	double direction = directionRandomizer(GameGlobals::rnd);
-	Vector2d spawnPos = player->pos + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
+bool MonsterSpawner::validSpawnPos(Vector2d& desiredPosition, World& world, Creature& monster){
+	Vector2d offset(0,4);
+
+	if (!monster.validPos(world, desiredPosition) || monster.validPos(world, desiredPosition + offset))
+		return false;
+
+	return true;
+}
+
+bool MonsterSpawner::trySpawn(World& world, Creature* player){
+	Vector2d spawnPos = Vector2::randomize(player->pos, 28, 32);
 
 	// TODO: randomly chosen biome dependant mobs
 	Monster* typeToSpawn = basicSpawnConfig.getMonsterType();
-	if (typeToSpawn == nullptr)
+	if (!typeToSpawn || !validSpawnPos(spawnPos, world, *typeToSpawn))
 		return false;
-	Monster* spawned = world->spawn(*typeToSpawn, spawnPos);
+
+
+
+	Monster* spawned = world.spawn(*typeToSpawn, spawnPos);
 
 	if (spawned)
 		spawned->target = player;
