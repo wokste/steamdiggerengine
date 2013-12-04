@@ -66,19 +66,20 @@ void Monster::logic(double time){
 	}
 }
 
-void Monster::takeDamage(const Attack& attack, Vector2d source){
+void Monster::takeDamage(Creature* source, int damage, const int damageType){
 	if (!alive())
 		return;
 
-	Creature::takeDamage(attack, source);
+	Creature::takeDamage(source, damage, damageType);
 
 	if (!alive()){
-		dropList->dropStuff(*world, pos, attack.type);
+		dropList->dropStuff(*world, pos, damageType);
 	}
 }
 
 void Monster::hitCreature(Creature& other){
-	other.takeDamage(hitAttack, pos);
+	other.takeDamage(this, hitAttack.damage, hitAttack.type);
+	other.push(other.pos - pos, hitAttack.push);
 	cooldown.set(0.5);
 }
 

@@ -65,6 +65,7 @@ public:
 
 	virtual void hitTerrain(bool hitWall) = 0;
 	virtual void onCreatureDied(Creature* other){}
+	virtual Creature* asCreature(){return nullptr;}
 
 public:
 	// Variables

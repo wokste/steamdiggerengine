@@ -39,7 +39,7 @@ public:
 	void load(pugi::xml_node& configNode) override;
 	void hitCreature(Creature& other);
 	void onCreatureDied(Creature* other) override;
-	virtual void takeDamage(const Attack& attack, Vector2d source);
+	virtual void takeDamage(Creature* source, int damage, const int damageType);
 	void hitTerrain(bool hitWall) override;
 public:
 	Attack hitAttack;

@@ -67,7 +67,8 @@ void Projectile::hitTerrain(bool hitWall){
 }
 
 void Projectile::hitCreature(Creature& other){
-	other.takeDamage(hitAttack, pos);
+	other.takeDamage(nullptr, hitAttack.damage, hitAttack.type);
+	other.push(other.pos - pos, hitAttack.push);
 	world->entities->remove(this);
 }
 

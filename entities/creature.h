@@ -41,10 +41,12 @@ public:
 	virtual ~Creature();
 	void load(pugi::xml_node& configNode) override;
 	void logic(double time) override;
-	virtual void takeDamage(const Attack& attack, Vector2d source);
+	virtual void takeDamage(Creature* source, int damage, const int damageType);
 	bool alive() {return HP.cur > 0;}
 	bool aggressiveTo(Creature* other);
 	virtual bool pickupItem(int id, int count){return false;}
+
+	Creature* asCreature() override{return this;}
 
 	// Moves
 	bool tryJump(int height = 0);

@@ -37,6 +37,7 @@ class Skybox;
 class Screen;
 class EntityListCreatureView;
 class World;
+class EntityIterator;
 
 class EntityList{
 public:
@@ -51,6 +52,7 @@ public:
 	std::vector<Entity*>::iterator begin();
 	std::vector<Entity*>::iterator end();
 	EntityListCreatureView getCreatures();
+	EntityIterator getArea(Rect4d area);
 private:
 	std::vector<Entity*> entities;
 	// A subset of entities containing all creatures

@@ -21,12 +21,21 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#pragma once
+class Creature;
+class Entity;
+#include "src/utils/vector2.h"
+#include <vector>
+#include "src/script/refcounted.h"
 
-class RefCounted{
-	int refCount = 1;
+class EntityIterator : public RefCounted{
+	Rect4d area;
+	std::vector<Entity*> list;
+	int id;
+
 public:
-	virtual ~RefCounted();
-	void addref();
-	void release();
+	EntityIterator(std::vector<Entity*> list, Rect4d area);
+	~EntityIterator();
+	Entity* nextEntity();
+	Creature* nextCreature();
+
 };

@@ -37,6 +37,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/entities/player.h"
 #include "src/entities/monster.h"
 
+#include "src/entities/entityiterator.h"
+
 #include "src/utils/attack.h"
 #include "src/map/mapwriter.h"
 #include "src/world.h"
@@ -65,6 +67,9 @@ namespace ScriptUtils{
 	Vector2i Vector2iAdd(Vector2i& v1, Vector2i v2) {return v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
 	void Vector2iDel(void *memory){((Vector2i*)memory)->~Vector2i();}
 	void Vector2dNew(void *memory){new(memory) Vector2d();}
+	Vector2d Vector2dNewXY(double x, double y){return Vector2d(x,y);}
+	Vector2d Vector2dAdd(Vector2d& v1, Vector2d v2) {return v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
+
 	void Vector2dDel(void *memory){((Vector2d*)memory)->~Vector2d();}
 
 	int XmlGetInt(pugi::xml_node& node, std::string name){
@@ -86,6 +91,11 @@ namespace ScriptUtils{
 		return 0;
 	}
 
+	EntityIterator* entitiesInArea(World& world, Vector2d centerPosition, Vector2d size){
+		// TODO: Complete this function
+		return new EntityIterator(std::vector<Entity*>(), Rect4d(centerPosition - size * 0.5, size));
+	}
+
 	template <class T>
 	void registerEntity (asIScriptEngine* engine, const char* className) {
 		int r;
@@ -98,6 +108,8 @@ namespace ScriptUtils{
 	void registerCreature (asIScriptEngine* engine, const char* className) {
 		int r;
 		r = engine->RegisterObjectMethod(className, "bool heal(string, int)", asFUNCTION(ScriptUtils::healCreature), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+		r = engine->RegisterObjectMethod(className, "void damage(Creature@, int, int)", asMETHOD(T, push), asCALL_THISCALL); assert( r >= 0 );
+		r = engine->RegisterObjectMethod(className, "bool aggressiveTo(Creature@)", asMETHOD(T, aggressiveTo), asCALL_THISCALL); assert( r >= 0 );
 		registerEntity<T>(engine, className);
 	}
 };
@@ -105,7 +117,7 @@ namespace ScriptUtils{
 ScriptEngine::ScriptEngine(){
 	int r;
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-	r = engine->SetMessageCallback(asFUNCTION(ScriptEngine::messageCallback), 0, asCALL_CDECL);
+	r = engine->SetMessageCallback(asFUNCTION(ScriptEngine::messageCallback), 0, asCALL_CDECL); assert(r >= 0);
 
 	RegisterStdString(engine);
 	registerClasses();
@@ -137,6 +149,8 @@ void ScriptEngine::registerClasses(){
 	r = engine->RegisterObjectBehaviour("Monster", asBEHAVE_IMPLICIT_REF_CAST, "Creature@ g()", asFUNCTION((&ScriptUtils::cast<Monster,Creature>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
 	r = engine->RegisterObjectType("MapWriter",0, asOBJ_REF); assert(r >= 0);
+
+	r = engine->RegisterObjectType("EntityIterator",0,asOBJ_REF); assert(r >= 0);
 }
 
 void ScriptEngine::registerFunctions(){
@@ -156,8 +170,9 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectProperty("Vector2i", "int x", asOFFSET(Vector2i,x)); assert( r >= 0 );
 	r = engine->RegisterObjectProperty("Vector2i", "int y", asOFFSET(Vector2i,y)); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Vector2i", "Vector2i opAdd(Vector2i) const",  asFUNCTION(ScriptUtils::Vector2iAdd), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("Vector2d", "Vector2d opAdd(Vector2d) const",  asFUNCTION(ScriptUtils::Vector2dAdd), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 	r = engine->RegisterGlobalFunction("Vector2i makeVector2i(int, int)", asFUNCTION(ScriptUtils::Vector2iNewXY), asCALL_CDECL); assert( r >= 0 );
-
+	r = engine->RegisterGlobalFunction("Vector2d makeVector2d(double, double)", asFUNCTION(ScriptUtils::Vector2dNewXY), asCALL_CDECL); assert( r >= 0 );
 
 	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_CONSTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dNew), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("Vector2d", asBEHAVE_DESTRUCT, "void f()", asFUNCTION(ScriptUtils::Vector2dDel), asCALL_CDECL_OBJLAST); assert( r >= 0 );
@@ -181,6 +196,7 @@ void ScriptEngine::registerFunctions(){
 
 	// World
 	r = engine->RegisterObjectMethod("World", "MapWriter@ getMapWriter()", asFUNCTION((ScriptUtils::getMapWriter)), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("World", "EntityIterator@ entitiesInArea(Vector2d, Vector2d)", asFUNCTION((ScriptUtils::entitiesInArea)), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 
 	// MapWriter
 	r = engine->RegisterObjectBehaviour("MapWriter", asBEHAVE_ADDREF, "void f()", asMETHOD(MapWriter,addref), asCALL_THISCALL); assert( r >= 0 );
@@ -188,6 +204,12 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectMethod("MapWriter", "bool place(Vector2i, int, int)", asMETHOD(MapWriter, place), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool damage(Vector2i, int, int damage, int damageType)", asMETHOD(MapWriter, damage), asCALL_THISCALL); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("MapWriter", "bool solid(Vector2i, Vector2i, int)", asMETHOD(MapWriter, solid), asCALL_THISCALL); assert( r >= 0 );
+
+	// EntityIterator
+	r = engine->RegisterObjectBehaviour("EntityIterator", asBEHAVE_ADDREF, "void f()", asMETHOD(EntityIterator,addref), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("EntityIterator", asBEHAVE_RELEASE, "void f()", asMETHOD(EntityIterator,release), asCALL_THISCALL); assert( r >= 0);
+	r = engine->RegisterObjectMethod("EntityIterator", "Entity@ nextEntity()", asMETHOD(EntityIterator, nextEntity), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("EntityIterator", "Creature@ nextCreature()", asMETHOD(EntityIterator, nextCreature), asCALL_THISCALL); assert( r >= 0 );
 }
 void ScriptEngine::registerInterfaces(){
 	int r;

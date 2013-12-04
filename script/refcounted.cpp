@@ -22,12 +22,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "src/script/refcounted.h"
+#include <cassert>
+
+RefCounted::~RefCounted(){
+	assert(refCount == 0);
+}
 
 void RefCounted::addref(){
 	refCount++;
 }
 
 void RefCounted::release(){
+	assert(refCount > 0);
+
 	if( --refCount == 0 )
 		delete this;
 }

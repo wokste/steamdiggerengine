@@ -57,13 +57,9 @@ void Creature::logic(double time)
 	}
 }
 
-void Creature::takeDamage(const Attack& attack,Vector2d source){
-	int damage = attack.damage;
-
+void Creature::takeDamage(Creature* source, int damage, const int damageType){
 	damage = shield.soak(damage);
 	damage = HP.soak(damage);
-	push(pos - source, attack.push);
-
 	regenCooldown.set(5);
 }
 

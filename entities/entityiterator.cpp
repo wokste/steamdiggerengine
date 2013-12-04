@@ -21,12 +21,35 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#pragma once
+#include "src/entities/entityiterator.h"
+#include "src/entities/entity.h"
+#include "src/entities/creature.h"
+#include "src/utils/vector2.h"
 
-class RefCounted{
-	int refCount = 1;
-public:
-	virtual ~RefCounted();
-	void addref();
-	void release();
-};
+EntityIterator::EntityIterator(std::vector<Entity*> list, Rect4d area){
+	this->list = list;
+	this->area = area;
+	this->id = 0;
+}
+
+EntityIterator::~EntityIterator(){
+
+}
+
+Entity* EntityIterator::nextEntity(){
+	while(id < list.size()){
+		Entity* e = list[id++];
+		if (area.intersects(e->getBoundingBox()))
+			return e;
+	}
+	return nullptr;
+}
+
+Creature* EntityIterator::nextCreature(){
+	while(Entity* e = nextEntity()){
+		Creature* c = e->asCreature();
+		if (c && c->alive())
+			return c;
+	}
+	return nullptr;
+}

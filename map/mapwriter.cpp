@@ -60,7 +60,6 @@ bool MapWriter::damage(Vector2i pos, int layer, const int damage, const int dama
 	if (layer == Layer::back && pos.y > 20)
 		return false;
 
-	auto& block = node->getBlock(layer);
 	if (node->damageBlock(layer, damage, damageType)){
 		destroy(pos, layer, damageType);
 	}

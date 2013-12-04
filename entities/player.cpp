@@ -117,9 +117,9 @@ void Player::render(const sf::Color& skyColor){
 		Entity::render(skyColor);
 }
 
-void Player::takeDamage(const Attack& attack, Vector2d source){
+void Player::takeDamage(Creature* source, int damage, const int damageType){
 	if (alive()){
-		Creature::takeDamage(attack, source);
+		Creature::takeDamage(source, damage, damageType);
 		if (!alive())
 			inventory.dropStuff(0.5, *world, pos);
 	}
