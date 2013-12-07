@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/enums.h"
 #include "src/map/map.h"
 #include <iostream>
-#include "src/game.h"
 #include "src/utils/attack.h"
 #include "src/utils/sound.h"
 
@@ -42,14 +41,14 @@ MapNode::MapNode(){
 }
 
 void MapNode::setBlock(int newBlockId, int layer){
-	const BlockType& type = (*GameGlobals::blockDefs)[newBlockId];
+	const BlockType& type = g_BlockDefs[newBlockId];
 	modelId[layer] = type.getModelId();
 	blockId[layer] = newBlockId;
 	HP[layer] = type.HP;
 }
 
 const BlockType& MapNode::getBlock(int layer) const{
-	return (*GameGlobals::blockDefs)[blockId[layer]];
+	return g_BlockDefs[blockId[layer]];
 }
 
 sf::Color MapNode::getLight(const sf::Color& skyColor) const{
@@ -64,7 +63,7 @@ void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer)
 		if (modelId[layer] >= 0){
 			glPushMatrix();
 			glTranslated(pos.x, pos.y, layer);
-			(*GameGlobals::blockDefs)[blockId[layer]].models[modelId[layer]].render();
+			g_BlockDefs[blockId[layer]].models[modelId[layer]].render();
 			glPopMatrix();
 		}
 	}

@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/map/blocktype.h"
 #include <iostream>
 
+ItemDefManager g_ItemDefs;
+
 ItemDefManager::ItemDefManager(){
 
 }
@@ -36,7 +38,7 @@ ItemDefManager::~ItemDefManager(){
 
 }
 
-void ItemDefManager::loadFromXml(const std::string& fileName){
+void ItemDefManager::loadXml(const std::string& fileName){
 	pugi::xml_document doc;
 
 	auto result = doc.load_file(fileName.c_str());

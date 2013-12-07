@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 #include "src/enums.h"
 #include <SFML/Window/Keyboard.hpp>
-#include "src/game.h"
 #include "src/script/scriptengine.h"
 #include <iostream>
 #include <assert.h>
@@ -46,9 +45,9 @@ void ItemType::loadFromXml(pugi::xml_node& configNode){
 
 	auto scriptName = configNode.attribute("class").as_string();
 	if (scriptName != ""){
-		itemScript = GameGlobals::scriptEngine->createObject(scriptName);
+		itemScript = g_ScriptEngine.createObject(scriptName);
 		if (itemScript){
-			asIScriptContext *context = GameGlobals::scriptEngine->context;
+			asIScriptContext *context = g_ScriptEngine.context;
 			context->Prepare(itemScript->GetObjectType()->GetMethodByDecl("void load(Xml@)"));
 			context->SetObject(itemScript);
 			context->SetArgObject(0, &configNode);
@@ -62,9 +61,9 @@ void ItemType::loadFromXml(pugi::xml_node& configNode){
 void ItemType::loadBlock(const std::string& objectTypeName, int blockID, int newFrameID){
 	frameID=newFrameID;
 
-	itemScript = GameGlobals::scriptEngine->createObject(objectTypeName);
+	itemScript = g_ScriptEngine.createObject(objectTypeName);
 	if (itemScript){
-		asIScriptContext *context = GameGlobals::scriptEngine->context;
+		asIScriptContext *context = g_ScriptEngine.context;
 		context->Prepare(itemScript->GetObjectType()->GetMethodByDecl("void setBlock(int)"));
 		context->SetObject(itemScript);
 		context->SetArgDWord(0, blockID);
@@ -85,7 +84,7 @@ int ItemType::use(Creature& user, const Screen& screen){
 	int layer = screen.getSelectedLayer();
 	Vector2d mousePos = screen.mousePos(layer);
 
-	asIScriptContext *context = GameGlobals::scriptEngine->context;
+	asIScriptContext *context = g_ScriptEngine.context;
 	asIScriptFunction *func = itemScript->GetObjectType()->GetMethodByDecl("int useItem(Creature@, Vector2d, int)");
 	assert(func);
 	context->Prepare(func);

@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/utils/font.h"
 #include "src/utils/texture.h"
-#include "src/game.h"
+#include "src/utils/filesystem.h"
 
 FontChar::FontChar(pugi::xml_node& node){
 	x = node.attribute("x").as_int();
@@ -45,7 +45,7 @@ Font::~Font(){
 
 void Font::load(pugi::xml_node& node){
 	const std::string textureName = node.attribute("texture").value();
-	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
+	texture.reset(new Texture(g_FileSystem.fullpath(textureName)));
 
 	for (auto childNode: node.children())
     {

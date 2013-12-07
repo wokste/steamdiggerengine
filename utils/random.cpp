@@ -22,28 +22,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 
-#include <SFML/OpenGL.hpp>
-#include <string>
-#include "src/utils/vector2.h"
-#include <pugixml.hpp>
-#include <memory>
+#include "src/utils/random.h"
+#include <time.h>
 
-struct Texture{
-	GLuint ID;
-	Vector2i size;
+Random g_Random;
 
-	Texture(std::string fileName);
-	~Texture();
-	bool loadTexture(std::string fileName);
-	void bind();
-	void draw(Vector2i src, Vector2i imgSize, Vector2i dest) const;
-	void draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const;
-};
+Random::Random(){
+	rng.seed(time(nullptr));
+}
 
-struct TileSet : public Texture{
-	TileSet(Vector2i framesPerSheet, std::string fileName);
-	Vector2i framesPerSheet;
-	sf::Rect<float> getBounds(int tileNum) const;
-};
+double Random::generate(double _min, double _max){
+	return (_max - _min) * std::generate_canonical<double, 10>(rng) + _min;
+}
 
-extern std::shared_ptr<TileSet> g_TileSet;;
+int Random::discrete(std::vector<double> probs){
+	std::discrete_distribution<> odds(probs.begin(), probs.end());
+	return odds(rng);
+}
+
+double Random::poisson(double mean){
+
+}

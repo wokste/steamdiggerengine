@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pugixml.hpp>
 #include "src/screen.h"
 #include "src/items/itemdefmanager.h"
-#include "src/game.h"
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
@@ -69,9 +68,7 @@ void Map::logic(double time){
 }
 
 void Map::render(const Screen& screen, const sf::Color& skyColor) const{
-	if(GameGlobals::tileSet == nullptr) return;
-
-	GameGlobals::tileSet->bind();
+	g_TileSet->bind();
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY );
 

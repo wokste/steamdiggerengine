@@ -33,12 +33,15 @@ class ScriptEngine{
 public:
 	ScriptEngine();
 	~ScriptEngine();
+	void load();
 	static void messageCallback(const asSMessageInfo* msg, void* param);
 	asIScriptObject* createObject(const std::string& name);
 
 	asIScriptEngine* engine;
 	asIScriptContext *context;
 };
+
+extern ScriptEngine g_ScriptEngine;
 
 // Console functions for script binding
 namespace Console{

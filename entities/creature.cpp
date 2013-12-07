@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/utils/attack.h"
 #include "src/utils/vector2.h"
 #include <pugixml.hpp>
-#include "src/game.h"
 #include "src/world.h"
 #include "src/map/map.h"
 

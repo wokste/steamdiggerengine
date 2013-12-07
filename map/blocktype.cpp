@@ -24,12 +24,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "src/map/lightingengine.h"
 #include "src/enums.h"
-#include "src/game.h"
 #include "src/items/itemdefmanager.h"
 #include "src/items/item.h"
 #include <iostream>
 #include <sstream>
 #include "src/utils/sound.h"
+#include "src/utils/texture.h"
+
+BlockTypeManager g_BlockDefs;
 
 BlockType::BlockType(pugi::xml_node& configNode){
 	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));
@@ -41,7 +43,7 @@ BlockType::BlockType(pugi::xml_node& configNode){
 	flags = getFlags(configNode.attribute("attach").as_string());
 
 	for( auto childNode : configNode.children("frame")) {
-		models.push_back(VertexArray(childNode,*GameGlobals::tileSet));
+		models.push_back(VertexArray(childNode, *g_TileSet));
 	}
 }
 
@@ -68,7 +70,10 @@ int BlockType::getModelId() const{
 	return rand() % models.size();
 }
 
-BlockTypeManager::BlockTypeManager(std::string fileName){
+BlockTypeManager::BlockTypeManager(){
+}
+
+void BlockTypeManager::loadXml(const std::string& fileName){
 	pugi::xml_document doc;
 	auto result = doc.load_file(fileName.c_str());
 	if (result){
@@ -84,8 +89,8 @@ BlockTypeManager::BlockTypeManager(std::string fileName){
 				int blockID = blocks.size();
 				int iconFrame = blockNode.child("frame").attribute("id").as_int();
 				auto dropTag = blockNode.attribute("tag").as_string();
-				int dropID = GameGlobals::itemDefs->find(dropTag);
-				(*GameGlobals::itemDefs)[dropID].loadBlock("BlockItem", blockID, iconFrame);
+				int dropID = g_ItemDefs.find(dropTag);
+				g_ItemDefs[dropID].loadBlock("BlockItem", blockID, iconFrame);
 				block.drops.addDrop(dropID);
 			}
 			blocks.push_back(block);

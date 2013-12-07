@@ -22,28 +22,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 
-#include <SFML/OpenGL.hpp>
+#include <vector>
 #include <string>
-#include "src/utils/vector2.h"
-#include <pugixml.hpp>
-#include <memory>
 
-struct Texture{
-	GLuint ID;
-	Vector2i size;
+class FileSystem{
+public:
+	FileSystem();
 
-	Texture(std::string fileName);
-	~Texture();
-	bool loadTexture(std::string fileName);
-	void bind();
-	void draw(Vector2i src, Vector2i imgSize, Vector2i dest) const;
-	void draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const;
+	std::string fullpath(const std::string& resourcename) const;
+	std::vector<std::string> getList(std::string extention) const;
+private:
+	std::string dataDir;
 };
 
-struct TileSet : public Texture{
-	TileSet(Vector2i framesPerSheet, std::string fileName);
-	Vector2i framesPerSheet;
-	sf::Rect<float> getBounds(int tileNum) const;
-};
-
-extern std::shared_ptr<TileSet> g_TileSet;;
+extern FileSystem g_FileSystem;

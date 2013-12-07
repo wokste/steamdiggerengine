@@ -21,18 +21,18 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/utils/monsterspawner.h"
+#include "src/utils/random.h"
 
 #include "src/entities/monster.h"
 #include "src/entities/player.h"
 #include "src/world.h"
-#include "src/game.h"
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include "src/utils/filesystem.h"
 
 Monster* SpawnConfig::getMonsterType(){
-	std::discrete_distribution<> monsterOdds(probs.begin(), probs.end());
-	unsigned int index = monsterOdds(GameGlobals::rnd);
+	auto index = g_Random.discrete(probs);
 	if (index >= prototypes.size())
 		return nullptr;
 
@@ -41,7 +41,7 @@ Monster* SpawnConfig::getMonsterType(){
 
 SpawnConfig::SpawnConfig(){
 	pugi::xml_document doc;
-	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("monsters.xml").c_str());
+	auto result = doc.load_file(g_FileSystem.fullpath("monsters.xml").c_str());
 	if (result){
 		auto spawnConfigNode = doc.first_child();
 		newWaveChance = spawnConfigNode.attribute("long-delay-odd").as_double();
@@ -63,9 +63,8 @@ SpawnConfig::SpawnConfig(){
 
 MonsterSpawner::MonsterSpawner() : basicSpawnConfig()
 {
-	std::poisson_distribution<> poisson(1);
 	SpawnConfig& spawnConfig = basicSpawnConfig;
-	cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
+	cooldown.set(g_Random.poisson(spawnConfig.delayWaves));
 }
 
 void MonsterSpawner::logic(World& world, double time){
@@ -114,11 +113,10 @@ void MonsterSpawner::logic(World& world, double time){
 		}
 
 		// Step 3: Set cooldown
-		std::poisson_distribution<> poisson(1);
-		if (std::bernoulli_distribution(spawnConfig.newWaveChance)(GameGlobals::rnd))
-			cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delayWaves);
+		if (g_Random.generate() > spawnConfig.newWaveChance)
+			cooldown.set(g_Random.poisson(spawnConfig.delayWaves));
 		else
-			cooldown.set(poisson(GameGlobals::rnd) * spawnConfig.delaySpawns);
+			cooldown.set(g_Random.poisson(spawnConfig.delaySpawns));
 	}
 }
 

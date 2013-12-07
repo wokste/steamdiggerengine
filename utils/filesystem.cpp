@@ -20,34 +20,38 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "src/hud/statusbarhud.h"
-#include "src/entities/player.h"
-#include "src/utils/texture.h"
+
 #include "src/utils/filesystem.h"
-#include "src/screen.h"
-#include <SFML/OpenGL.hpp>
 
-StatusBarHUD::StatusBarHUD(){
-	barSize = Vector2i(256,24);
-	barTexture.reset(new Texture(g_FileSystem.fullpath("healthbar.png")));
+#include <iostream>
+#include <cstdlib>
+#include <dirent.h>
 
-	size = Vector2i(256, 48);
-	docking = Vector2d(1, 0);
+FileSystem g_FileSystem;
+
+FileSystem::FileSystem() : dataDir("data/"){
 }
 
-StatusBarHUD::~StatusBarHUD(){
+std::string FileSystem::fullpath(const std::string& resourcename) const{
+	return dataDir + resourcename;
 }
 
-void StatusBarHUD::draw(const Player& player){
-	auto HPPerc = player.HP.asProportion();
-	auto ShieldPerc = player.shield.asProportion();
+// Inspired by http://www.gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Simple-Directory-Lister.html
+std::vector<std::string> FileSystem::getList(std::string extention) const{
+	std::vector<std::string> fileNames;
+	DIR *dir;
+	dirent *directoryEntry;
 
-	int widthHP	 = std::max<int>((int) barSize.x * HPPerc, 0);
-	int widthShield = std::max<int>((int) barSize.x * ShieldPerc, 0);
+	dir = opendir(dataDir.c_str());
+	if (dir != nullptr){
+		while (directoryEntry = readdir(dir)){
+			std::string name = directoryEntry->d_name;
+			if (name.length() > extention.length() && name.compare(name.length() - extention.length(),extention.length(),extention) == 0)
+				fileNames.push_back(name);
+		}
+		closedir(dir);
+	} else
+		std::cerr << "Couldn't open file directory";
 
-	barTexture->bind();
-	barTexture->draw(Vector2i(0, 0), Vector2i(widthHP, barSize.y), Vector2i(0, 0));
-	barTexture->draw(Vector2i(widthHP, barSize.y), Vector2i(barSize.x - widthHP, barSize.y), Vector2i(widthHP, 0));
-	barTexture->draw(Vector2i(0, 2*barSize.y), Vector2i(widthShield, barSize.y), Vector2i(0, barSize.y));
-	barTexture->draw(Vector2i(widthShield, 3*barSize.y), Vector2i(barSize.x - widthShield, barSize.y), Vector2i(widthShield, barSize.y));
+	return fileNames;
 }

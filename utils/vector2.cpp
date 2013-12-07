@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/utils/vector2.h"
 #include "src/utils/mathplus.h"
 #include <iostream>
-
-#include "src/game.h"
+#include "src/utils/random.h"
 
 Vector2d Vector2::setLength(Vector2d source, double lengthNew){
 	double lengthOld = length(source);
@@ -72,9 +71,9 @@ Vector2d Vector2::center(Vector2d& source){
 }
 
 Vector2d Vector2::randomize(Vector2d& origin, double minLen, double maxLen){
-	std::uniform_real_distribution<> distanceRandomizer(minLen,maxLen);
-	std::uniform_real_distribution<> directionRandomizer(0,6.283184);
-	double distance = distanceRandomizer(GameGlobals::rnd);
-	double direction = directionRandomizer(GameGlobals::rnd);
+	// Tau = 2 * Pi
+	const double tau = 6.283184;
+	double distance = g_Random.generate(minLen, maxLen);
+	double direction = g_Random.generate(0, tau);
 	return origin + Vector2d(std::sin(direction) * distance, std::cos(direction) * distance);
 }

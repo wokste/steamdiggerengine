@@ -21,11 +21,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/utils/drop.h"
-#include "src/game.h"
 #include "src/items/itemdefmanager.h"
 #include "src/world.h"
 #include "src/entities/droppeditem.h"
 #include "src/utils/attack.h"
+#include "src/utils/random.h"
 
 #include <iostream>
 
@@ -36,15 +36,15 @@ DropList::Drop::Drop(int newId, const double newChance, const int newCount){
 }
 
 void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
-	auto choice = std::generate_canonical<double, 20>(GameGlobals::rnd);
+	auto choice = g_Random.generate(0,1);
 	for(auto& item: drops){
 		if (item.itemID < 0)
 			continue;
 		if (choice >= 0 && choice < item.chance){
 			int count = item.count;
 			if (count > 1){
-				double rand = std::generate_canonical<double, 20>(GameGlobals::rnd);
-				count = std::round(((count - 1) * 2) * rand) + 1; // Slightly randomize count
+				// Slightly randomize results
+				count = g_Random.generate(count - count / 2, count + count / 2) + 0.5;
 			}
 			auto drop = new DroppedItem(item.itemID, count);
 			drop->setPos(&world, pos);
@@ -56,7 +56,7 @@ void DropList::dropStuff(World& world, Vector2d pos, int damageType) const{
 
 void DropList::load(pugi::xml_node& dropNode){
 	for (auto childNode : dropNode){
-		int itemID = GameGlobals::itemDefs->find(childNode.attribute("tag").as_string());
+		int itemID = g_ItemDefs.find(childNode.attribute("tag").as_string());
 		drops.emplace_back(itemID, childNode.attribute("odds").as_double(1.0), childNode.attribute("count").as_int(1));
 	}
 }

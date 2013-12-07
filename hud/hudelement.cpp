@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/items/item.h"
 #include "src/utils/texture.h"
 #include "src/screen.h"
-#include "src/game.h"
 #include <SFML/OpenGL.hpp>
 
 #include "src/utils/font.h"

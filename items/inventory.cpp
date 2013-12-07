@@ -39,7 +39,7 @@ bool Inventory::use(Player& owner, const Screen& screen){
 	if (!cooldown.done() || items[selectedItem].count <= 0)
 		return false;
 
-	ItemType& type = (*GameGlobals::itemDefs)[items[selectedItem].id];
+	ItemType& type = g_ItemDefs[items[selectedItem].id];
 	if (type.use(owner, screen)){
 		cooldown.set(type.useTime);
 		if (type.consumable)
@@ -63,7 +63,7 @@ void Inventory::selectItem(int nr, bool relative){
 }
 
 bool Inventory::add(std::string itemTag, int count){
-	return add(GameGlobals::itemDefs->find(itemTag), count);
+	return add(g_ItemDefs.find(itemTag), count);
 }
 
 bool Inventory::add(int itemId, int count){
@@ -72,12 +72,12 @@ bool Inventory::add(int itemId, int count){
 
 	for (auto& i: items){
 		if (i.id == itemId && i.count > 0){
-			if (i.count + count <= (*GameGlobals::itemDefs)[i.id].maxStack){
+			if (i.count + count <= g_ItemDefs[i.id].maxStack){
 				i.count += count;
 				return true;
 			} else {
-				count -= (*GameGlobals::itemDefs)[i.id].maxStack - i.count;
-				i.count = (*GameGlobals::itemDefs)[i.id].maxStack;
+				count -= g_ItemDefs[i.id].maxStack - i.count;
+				i.count = g_ItemDefs[i.id].maxStack;
 			}
 		}
 	}

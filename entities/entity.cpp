@@ -25,13 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/world.h"
 #include "src/utils/attack.h"
 #include "src/map/map.h"
+#include "src/utils/filesystem.h"
 
 #include <cmath>
 #include <algorithm>
 #include <pugixml.hpp>
 #include "src/utils/vector2.h"
 #include "src/utils/mathplus.h"
-#include "src/game.h"
 #include "src/enums.h"
 #include <sstream>
 #include <string>
@@ -166,7 +166,7 @@ void Entity::load(pugi::xml_node& configNode){
 	collision   = Vector2d(frameArray[2] - frameArray[0], frameArray[3] - frameArray[1]) / 2.0;
 
 	const std::string textureName = configNode.attribute("texture").as_string();
-	texture.reset(new Texture(GameGlobals::fileSystem.fullpath(textureName)));
+	texture.reset(new Texture(g_FileSystem.fullpath(textureName)));
 
 	std::map<std::string,PhysicsMode> modeLookupTable = {{"none",PhysicsMode::None},{"walking",PhysicsMode::Walking},{"flying",PhysicsMode::Flying},{"falling",PhysicsMode::Falling}};
 	physicsMode   = modeLookupTable[configNode.attribute("physics").as_string("falling")];

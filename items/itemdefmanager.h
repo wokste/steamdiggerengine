@@ -36,8 +36,10 @@ class ItemDefManager{
 public:
 	ItemDefManager();
 	~ItemDefManager();
-	void loadFromXml(const std::string& configFileName);
+	void loadXml(const std::string& configFileName);
 	ItemType& operator[](int id){return *items[id];}
 	int find(const std::string& tag, bool forCreation = false);
 	std::unique_ptr<Texture> textureSet;
 };
+
+extern ItemDefManager g_ItemDefs;

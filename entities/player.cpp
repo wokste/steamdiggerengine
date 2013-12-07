@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/screen.h"
 #include "src/utils/attack.h"
 #include "src/world.h"
-#include "src/game.h"
 
 #include <pugixml.hpp>
 #include "src/items/itemdefmanager.h"

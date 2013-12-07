@@ -25,11 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/hud/inventoryhud.h"
 #include "src/items/item.h"
 #include "src/items/itemdefmanager.h"
+#include "src/utils/filesystem.h"
 
 #include "src/entities/player.h"
 #include "src/utils/texture.h"
 #include "src/screen.h"
-#include "src/game.h"
 #include <SFML/OpenGL.hpp>
 
 /* *******
@@ -49,7 +49,7 @@ HUD::HUD() : selectedElement(nullptr){
 	hudElements.emplace_back(new InventoryHUD());
 
 	pugi::xml_document doc;
-	auto result = doc.load_file(GameGlobals::fileSystem.fullpath("font.xml").c_str());
+	auto result = doc.load_file(g_FileSystem.fullpath("font.xml").c_str());
 
 	if (result){
 		auto root = doc.child("font");
@@ -91,11 +91,11 @@ void HUD::draw(const Screen& screen, const Player& player){
 
 void HUD::drawMouseItem(const Screen& screen, const Player& player){
 	Vector2i mousePos = sf::Mouse::getPosition(*screen.window);
-	GameGlobals::tileSet->bind();
 	if (player.inventory.mouseHeldItem.count > 0){
-		int framesPerRow = GameGlobals::tileSet->size.x / 32;
-		int frame = (*GameGlobals::itemDefs)[player.inventory.mouseHeldItem.id].frameID;
-		GameGlobals::tileSet->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), mousePos);
+		int framesPerRow = g_TileSet->size.x / 32;
+		int frame = g_ItemDefs[player.inventory.mouseHeldItem.id].frameID;
+		g_TileSet->bind();
+		g_TileSet->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), mousePos);
 	}
 }
 

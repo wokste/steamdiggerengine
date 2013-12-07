@@ -110,3 +110,5 @@ sf::Rect<float> TileSet::getBounds(int tileNum) const{
 	rect.height = (1.0 / framesPerSheet.y);
 	return rect;
 }
+
+std::shared_ptr<TileSet> g_TileSet;

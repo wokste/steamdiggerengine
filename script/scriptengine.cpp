@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <scripthelper/scripthelper.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <assert.h>
-#include "src/game.h"
 
 // Included for the script bindings
 #include "src/utils/vector2.h"
@@ -38,11 +37,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/entities/monster.h"
 
 #include "src/entities/entityiterator.h"
+#include "src/utils/filesystem.h"
 
 #include "src/utils/attack.h"
 #include "src/map/mapwriter.h"
 #include "src/world.h"
 #include <new>
+
+ScriptEngine g_ScriptEngine;
 
 namespace ScriptUtils{
 	template<class A, class B>
@@ -114,7 +116,9 @@ namespace ScriptUtils{
 	}
 };
 
-ScriptEngine::ScriptEngine(){
+ScriptEngine::ScriptEngine(){}
+
+void ScriptEngine::load(){
 	int r;
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
 	r = engine->SetMessageCallback(asFUNCTION(ScriptEngine::messageCallback), 0, asCALL_CDECL); assert(r >= 0);
@@ -221,9 +225,9 @@ void ScriptEngine::loadScripts(){
 	CScriptBuilder builder;
 	int r;
 	r = builder.StartNewModule(engine, "MyModule");assert(r >= 0);
-	auto list = GameGlobals::fileSystem.getList(".as");
+	auto list = g_FileSystem.getList(".as");
 	for (auto filename : list){
-		r = builder.AddSectionFromFile(GameGlobals::fileSystem.fullpath(filename).c_str());
+		r = builder.AddSectionFromFile(g_FileSystem.fullpath(filename).c_str());
 		if( r < 0 ){
 			std::cout << "Failed to load or proprocess: " << filename << ".\n";
 			return;

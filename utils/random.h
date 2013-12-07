@@ -22,28 +22,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 
-#include <SFML/OpenGL.hpp>
-#include <string>
-#include "src/utils/vector2.h"
-#include <pugixml.hpp>
-#include <memory>
+#include <random>
 
-struct Texture{
-	GLuint ID;
-	Vector2i size;
-
-	Texture(std::string fileName);
-	~Texture();
-	bool loadTexture(std::string fileName);
-	void bind();
-	void draw(Vector2i src, Vector2i imgSize, Vector2i dest) const;
-	void draw(Vector2i src, Vector2i srcSize, Vector2d dest, Vector2d destSize) const;
+class Random{
+	std::mt19937 rng;
+public:
+	Random();
+	~Random(){}
+	double generate(double _min=0, double _max=1);
+	int discrete(std::vector<double> probs);
+	double poisson(double mean);
 };
 
-struct TileSet : public Texture{
-	TileSet(Vector2i framesPerSheet, std::string fileName);
-	Vector2i framesPerSheet;
-	sf::Rect<float> getBounds(int tileNum) const;
-};
-
-extern std::shared_ptr<TileSet> g_TileSet;;
+extern Random g_Random;

@@ -65,7 +65,10 @@ public:
 class BlockTypeManager{
 	std::vector<BlockType> blocks;
 public:
-	BlockTypeManager(std::string fileName);
+	BlockTypeManager();
+	void loadXml(const std::string& fileName);
 	~BlockTypeManager();
 	BlockType& operator[](int id);
 };
+
+extern BlockTypeManager g_BlockDefs;

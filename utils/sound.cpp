@@ -22,9 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "src/utils/sound.h"
-#include "src/game.h"
 #include <iostream>
 #include <map>
+
+#include "src/utils/filesystem.h"
+#include "src/utils/random.h"
 
 namespace SoundSystem{
 	constexpr int NUM_SOUNDS = 16;
@@ -46,7 +48,7 @@ sf::Sound* SoundSystem::playSound(std::shared_ptr<Sound> sound){
 	if (slot){
 		slot->setLoop(false);
 		slot->setBuffer(sound->buffer);
-		slot->setPitch(std::generate_canonical<double, 10>(GameGlobals::rnd) + 0.5);
+		slot->setPitch(g_Random.generate(0.5, 1.5));
 		slot->play();
 	}
 	return slot;
@@ -64,7 +66,7 @@ std::shared_ptr<Sound> SoundSystem::loadSound(const std::string& fileName){
 	std::shared_ptr<Sound> sound = findLoadedSound(fileName);
 	if (!sound && fileName != ""){
 		sound.reset(new Sound());
-		if (sound->buffer.loadFromFile (GameGlobals::fileSystem.fullpath(fileName))){
+		if (sound->buffer.loadFromFile (g_FileSystem.fullpath(fileName))){
 			loadedSounds[fileName]=sound;
 		} else {
 			std::cout << "Could not load sound " << fileName << " \n";

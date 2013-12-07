@@ -27,14 +27,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/items/item.h"
 #include "src/utils/texture.h"
 #include "src/screen.h"
-#include "src/game.h"
 #include "src/utils/font.h"
+#include "src/utils/filesystem.h"
 #include <SFML/OpenGL.hpp>
 #include <sstream>
 
 InventoryHUD::InventoryHUD(){
-	background.reset(new Texture(GameGlobals::fileSystem.fullpath("inventoryhud.png")));
-	itemTexture = GameGlobals::tileSet;
+	background.reset(new Texture(g_FileSystem.fullpath("inventoryhud.png")));
+	itemTexture = g_TileSet;
 	isOpen = true;
 	toggle();
 	docking = Vector2d(0.5, 1);
@@ -61,7 +61,7 @@ void InventoryHUD::draw(const Player& player){
 			int id = x + (3 - y - rowOffset) * Inventory::width;
 			if (player.inventory.items[id].count > 0){
 				int framesPerRow = itemTexture->size.x / celSize;
-				int frame = (*GameGlobals::itemDefs)[player.inventory.items[id].id].frameID;
+				int frame = g_ItemDefs[player.inventory.items[id].id].frameID;
 				itemTexture->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, Vector2i(32,32), Vector2i(x * 40 + 7, y * 40 + 7));
 			}
 		}

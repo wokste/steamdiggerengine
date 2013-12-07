@@ -22,35 +22,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
 
-#include <string>
 #include <memory>
-#include <random>
-class ItemDefManager;
+#include <SFML/Window.hpp>
+
+class Screen;
 class World;
-class BlockTypeManager;
-class TileSet;
-class ScriptEngine;
+class HUD;
+class Player;
 
-class FileSystem{
+class Game{
+	std::unique_ptr<Screen> screen;
+	std::unique_ptr<World> world;
+	std::unique_ptr<HUD> hud;
+	Player* player;
+	sf::Clock fpsClock;
+	bool paused = false;
 public:
-	FileSystem();
-
-	std::string fullpath(const std::string& resourcename) const;
-	std::vector<std::string> getList(std::string extention) const;
-private:
-	std::string dataDir;
-};
-
-class GameGlobals{
-public:
-	static void init();
-	static void clear();
-
-	static std::unique_ptr<ItemDefManager> itemDefs;
-	static FileSystem fileSystem;
-	static std::mt19937 rnd;
-	static std::unique_ptr<BlockTypeManager> blockDefs;
-	static std::unique_ptr<ScriptEngine> scriptEngine;
-	static std::shared_ptr<TileSet> tileSet;
-	static bool paused;
+	bool running = true;
+	Game();
+	~Game();
+	void initGlobals();
+	void doWindowEvents();
+	void tick();
+	void initGL();
 };

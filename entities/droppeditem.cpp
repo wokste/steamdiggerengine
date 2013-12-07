@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/world.h"
 #include "src/utils/texture.h"
 #include "src/utils/vector2.h"
-#include "src/game.h"
 #include "src/items/itemdefmanager.h"
 #include "src/items/item.h"
 
@@ -38,7 +37,7 @@ DroppedItem::DroppedItem(int itemId, int count) :
 	physicsMode = PhysicsMode::Falling;
 	maxSpeed = 200;
 	bMapCollision = true;
-	texture = GameGlobals::tileSet;
+	texture = g_TileSet;
 	collision = Vector2d(0.25,0.25);
 	isPlayer =  false;
 	frameOffset = collision * -1.0;
@@ -55,7 +54,7 @@ void DroppedItem::render(const sf::Color& skyColor){
 		texture->bind();
 		glColor3ub(skyColor.r,skyColor.g,skyColor.b);
 		int framesPerRow = texture->size.x / 32;
-		int frame = (*GameGlobals::itemDefs)[itemId].frameID;
+		int frame = g_ItemDefs[itemId].frameID;
 		texture->draw(Vector2i((frame % framesPerRow), (frame / framesPerRow)) * 32, size, Vector2d(pos.x + frameOffset.x, pos.y + frameOffset.y),collision * 2.0);
 	}
 }

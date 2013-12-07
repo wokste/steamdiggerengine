@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/world.h"
 #include "src/entities/entity.h"
 #include "src/map/map.h"
-#include "src/game.h"
 #include <stdlib.h>
 #include "src/utils/skybox.h"
 #include "src/entities/monster.h"

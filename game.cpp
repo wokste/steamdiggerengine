@@ -20,63 +20,141 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#include <iostream>
+#include <time.h>
+#include <SFML/OpenGL.hpp>
+
 #include "src/game.h"
-#include "src/utils/texture.h"
+#include "src/screen.h"
+#include "src/entities/player.h"
+#include "src/world.h"
+#include "src/hud/hud.h"
+#include "src/utils/filesystem.h"
 #include "src/script/scriptengine.h"
 #include "src/items/itemdefmanager.h"
+#include "src/utils/texture.h"
 #include "src/map/blocktype.h"
-#include <iostream>
-#include <cstdlib>
-#include <dirent.h>
+#include <pugixml.hpp>
+#include <assert.h>
 
-std::shared_ptr<TileSet> GameGlobals::tileSet;
-std::unique_ptr<ItemDefManager> GameGlobals::itemDefs;
-std::unique_ptr<BlockTypeManager> GameGlobals::blockDefs;
-std::unique_ptr<ScriptEngine> GameGlobals::scriptEngine;
-FileSystem GameGlobals::fileSystem;
-std::mt19937 GameGlobals::rnd;
-bool GameGlobals::paused;
-
-void GameGlobals::init(){
-	scriptEngine.reset(new ScriptEngine());
-	tileSet.reset(new TileSet(Vector2i(8,8), GameGlobals::fileSystem.fullpath("tileset.png")));
-	itemDefs.reset(new ItemDefManager());
-	itemDefs->loadFromXml(fileSystem.fullpath("tools.xml"));
-	blockDefs.reset(new BlockTypeManager(fileSystem.fullpath("blocks.xml")));
-
-	paused = false;
+void Game::initGlobals(){
+	g_ScriptEngine.load();
+	g_TileSet.reset(new TileSet(Vector2i(8,8), g_FileSystem.fullpath("tileset.png")));
+	g_ItemDefs.loadXml(g_FileSystem.fullpath("tools.xml"));
+	g_BlockDefs.loadXml(g_FileSystem.fullpath("blocks.xml"));
 }
 
-FileSystem::FileSystem() : dataDir("data/"){
-}
+void Game::doWindowEvents(){
+	sf::Event event;
 
-std::string FileSystem::fullpath(const std::string& resourcename) const{
-	return dataDir + resourcename;
-}
-
-// Inspired by http://www.gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Simple-Directory-Lister.html
-std::vector<std::string> FileSystem::getList(std::string extention) const{
-	std::vector<std::string> fileNames;
-	DIR *dir;
-	dirent *directoryEntry;
-
-	dir = opendir(dataDir.c_str());
-	if (dir != nullptr){
-		while (directoryEntry = readdir(dir)){
-			std::string name = directoryEntry->d_name;
-			if (name.length() > extention.length() && name.compare(name.length() - extention.length(),extention.length(),extention) == 0)
-				fileNames.push_back(name);
+	while (screen->window->pollEvent(event)){
+		switch (event.type){
+			case sf::Event::EventType::Closed:
+				running = false;
+				break;
+			case sf::Event::EventType::Resized:
+				{
+					auto screenSize = screen->window->getSize();
+					screen->resize(Vector2::uToI(screenSize));
+				}
+				break;
+			case sf::Event::EventType::MouseWheelMoved:
+				player->onMouseWheel(event.mouseWheel.delta);
+				break;
+			case sf::Event::EventType::MouseEntered:
+				screen->mouseInWindow = true;
+				break;
+			case sf::Event::EventType::MouseLeft:
+				screen->mouseInWindow = false;
+				break;
+			case sf::Event::EventType::MouseButtonPressed:
+				if (screen->mouseInWindow){
+					hud->onMouseEvent(event, *screen, *player);
+				}
+				break;
+			case sf::Event::EventType::KeyPressed:
+				if (event.key.code == sf::Keyboard::Key::Space)
+					player->tryJump();
+				else if (event.key.code >= sf::Keyboard::Key::Num1 && event.key.code <= sf::Keyboard::Key::Num9)
+					player->selectItem((int)(event.key.code) - (int)(sf::Keyboard::Key::Num1));
+				else if (event.key.code == sf::Keyboard::Key::Num0)
+					player->selectItem(9);
+				else if (event.key.code == sf::Keyboard::Key::E)
+					hud->toggleInventory();
+				else if (event.key.code == sf::Keyboard::Key::P)
+					paused = !paused;
+				break;
 		}
-		closedir(dir);
-	} else
-		std::cerr << "Couldn't open file directory";
+	}
 
-	return fileNames;
+	if (screen->mouseInWindow){
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
+			if (!hud->hasFocus()){
+				player->useItem(*screen.get());
+			}
+		}
+	}
 }
 
-void GameGlobals::clear(){
-	blockDefs.reset();
-	itemDefs.reset();
-	tileSet.reset();
-	scriptEngine.reset();
+void Game::initGL(){
+	glEnable(GL_TEXTURE_2D);
+	glEnable (GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glAlphaFunc(GL_GREATER, 0.1);
+	glEnable(GL_ALPHA_TEST);
+}
+
+Game::Game(){
+	srand(time(nullptr));
+	screen.reset(new Screen());
+	initGL();
+	initGlobals();
+	world.reset(new World());
+	std::unique_ptr<Player> stats;
+	stats.reset(new Player());
+
+	pugi::xml_document doc;
+	auto result = doc.load_file(g_FileSystem.fullpath("player.xml").c_str());
+	if (result){
+		auto playerNode = doc.child("player");
+		stats->load(playerNode);
+		player = world->spawn(*stats,Vector2d(20,-10));
+	} else {
+		std::cerr << result.description();
+	}
+
+	assert(player != nullptr);
+
+	hud.reset(new HUD());
+}
+
+void Game::tick(){
+	double time = fpsClock.restart().asSeconds();
+	if (time > 0.1)
+		time = 0.1; // To avoid slow FPS screwing up physics
+
+	if (paused)
+		time = 0;
+
+	player->checkInput(time,*screen.get());
+	world->logic(time);
+
+	doWindowEvents();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	screen->startScene();
+	glPushMatrix();
+		screen->centerOn(*player);
+		world->render(*screen);
+	glPopMatrix();
+
+	hud->draw(*screen, *player);
+	screen->window->display();
+}
+
+Game::~Game(){
 }
