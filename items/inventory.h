@@ -34,8 +34,8 @@ class InventoryHUD;
 class World;
 
 class Inventory{
-	constexpr static int width = 10;
-	constexpr static int height = 4;
+	static constexpr int width = 10;
+	static constexpr int height = 4;
 
 	ItemStack items[width * height];
 	int selectedItem;
