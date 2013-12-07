@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <SFML/Graphics/Color.hpp>
 #include <pugixml.hpp>
 #include "src/utils/attack.h"
+#include "src/utils/resourcemanager.h"
 
 class World;
 class Sound;
@@ -40,11 +41,14 @@ private:
 public:
 	BlockCollisionType collisionType;
 	int HP;
+	int id;
 	sf::Color lightColor;
 	sf::Color blockedLight;
 	std::vector<VertexArray> models;
 
-	BlockType(pugi::xml_node& configNode);
+	BlockType(int id){this->id = id;}
+	void loadXml(pugi::xml_node& configNode);
+	void addDrops(pugi::xml_node& configNode);
 	int getModelId() const;
 
 	DropList drops;
@@ -62,13 +66,7 @@ public:
 	};
 };
 
-class BlockTypeManager{
-	std::vector<BlockType> blocks;
-public:
-	BlockTypeManager();
-	void loadXml(const std::string& fileName);
-	~BlockTypeManager();
-	BlockType& operator[](int id);
+class BlockTypeManager : public ResourceManager<BlockType>{
 };
 
 extern BlockTypeManager g_BlockDefs;

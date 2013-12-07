@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 BlockTypeManager g_BlockDefs;
 
-BlockType::BlockType(pugi::xml_node& configNode){
+void BlockType::loadXml(pugi::xml_node& configNode){
 	collisionType = getBlockCollisionType(configNode.attribute("collision").as_string("Air"));
 	HP = configNode.attribute("hp").as_int(-1);
 	lightColor = LightingEngine::makeColor(configNode.attribute("light").as_string("0"));
@@ -44,6 +44,23 @@ BlockType::BlockType(pugi::xml_node& configNode){
 
 	for( auto childNode : configNode.children("frame")) {
 		models.push_back(VertexArray(childNode, *g_TileSet));
+	}
+
+	addDrops(configNode);
+}
+
+void BlockType::addDrops(pugi::xml_node& configNode){
+	auto dropNode = configNode.child("drops");
+	if (dropNode){
+		drops.load(dropNode);
+	}
+
+	if (!dropNode || dropNode.attribute("drop_this").as_bool()){
+		int iconFrame = configNode.child("frame").attribute("id").as_int();
+		auto dropTag = configNode.attribute("tag").as_string();
+		int dropID = g_ItemDefs.find(dropTag);
+		g_ItemDefs[dropID].loadBlock("BlockItem", id, iconFrame);
+		drops.addDrop(dropID);
 	}
 }
 
@@ -68,41 +85,4 @@ int BlockType::getModelId() const{
 	if (models.empty())
 		return -1;
 	return rand() % models.size();
-}
-
-BlockTypeManager::BlockTypeManager(){
-}
-
-void BlockTypeManager::loadXml(const std::string& fileName){
-	pugi::xml_document doc;
-	auto result = doc.load_file(fileName.c_str());
-	if (result){
-		auto parentNode = doc.child("root");
-		for (auto blockNode : parentNode){
-			BlockType block = BlockType(blockNode);
-			auto dropNode = blockNode.child("drops");
-			if (dropNode){
-				block.drops.load(dropNode);
-			}
-
-			if (!dropNode || dropNode.attribute("drop_this").as_bool()) {
-				int blockID = blocks.size();
-				int iconFrame = blockNode.child("frame").attribute("id").as_int();
-				auto dropTag = blockNode.attribute("tag").as_string();
-				int dropID = g_ItemDefs.find(dropTag);
-				g_ItemDefs[dropID].loadBlock("BlockItem", blockID, iconFrame);
-				block.drops.addDrop(dropID);
-			}
-			blocks.push_back(block);
-		}
-	} else {
-		std::cerr << result.description();
-	}
-}
-
-BlockTypeManager::~BlockTypeManager(){
-}
-
-BlockType& BlockTypeManager::operator[](int id){
-	return blocks[id];
 }

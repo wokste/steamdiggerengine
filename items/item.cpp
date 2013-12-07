@@ -30,14 +30,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <assert.h>
 
-ItemType::ItemType(){
+ItemType::ItemType(int id){
+	this->id = id;
 	maxStack=250;
 	consumable=true;
 	useTime=0.4;
 	frameID=0;
 }
 
-void ItemType::loadFromXml(pugi::xml_node& configNode){
+void ItemType::loadXml(pugi::xml_node& configNode){
 	maxStack=configNode.attribute("stack").as_int(1);
 	consumable=configNode.attribute("consumable").as_bool(false);
 	useTime=configNode.attribute("use-time").as_double(0.4);

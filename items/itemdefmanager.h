@@ -21,25 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma once
-#include <vector>
-#include <map>
+#include "src/items/item.h"
+#include "src/utils/resourcemanager.h"
 #include <string>
-#include <memory>
 
 class ItemType;
-class Texture;
-class Game;
 
-class ItemDefManager{
-	std::vector<std::unique_ptr<ItemType>> items;
-	std::map<std::string, int> tags;
-public:
-	ItemDefManager();
-	~ItemDefManager();
-	void loadXml(const std::string& configFileName);
-	ItemType& operator[](int id){return *items[id];}
-	int find(const std::string& tag, bool forCreation = false);
-	std::unique_ptr<Texture> textureSet;
+class ItemDefManager : public ResourceManager<ItemType>{
 };
 
 extern ItemDefManager g_ItemDefs;

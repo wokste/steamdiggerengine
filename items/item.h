@@ -33,10 +33,11 @@ class Screen;
 
 class ItemType{
 public:
-	ItemType();
+	int id;
+	ItemType(int id);
 	~ItemType();
 
-	void loadFromXml(pugi::xml_node& configNode);
+	void loadXml(pugi::xml_node& configNode);
 	void loadBlock(const std::string& objectType, int blockID, int newFrameID);
 
 	int use(Creature& owner, const Screen& screen);
