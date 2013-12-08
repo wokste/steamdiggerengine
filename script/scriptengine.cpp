@@ -66,36 +66,36 @@ namespace ScriptUtils{
 
 	void Vector2iNew(void *memory){new(memory) Vector2i();}
 	Vector2i Vector2iNewXY(int x, int y){return Vector2i(x,y);}
-	Vector2i Vector2iAdd(Vector2i& v1, Vector2i v2) {return v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
+	Vector2i Vector2iAdd(Vector2i* v1, Vector2i v2) {return *v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
 	void Vector2iDel(void *memory){((Vector2i*)memory)->~Vector2i();}
 	void Vector2dNew(void *memory){new(memory) Vector2d();}
 	Vector2d Vector2dNewXY(double x, double y){return Vector2d(x,y);}
-	Vector2d Vector2dAdd(Vector2d& v1, Vector2d v2) {return v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
+	Vector2d Vector2dAdd(Vector2d* v1, Vector2d v2) {return *v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
 
 	void Vector2dDel(void *memory){((Vector2d*)memory)->~Vector2d();}
 
-	int XmlGetInt(pugi::xml_node& node, std::string name){
-		return node.attribute(name.c_str()).as_int();
+	int XmlGetInt(pugi::xml_node* asThis, std::string name){
+		return asThis->attribute(name.c_str()).as_int();
 	}
-	bool XmlGetBool(pugi::xml_node& node, std::string name){
-		return node.attribute(name.c_str()).as_bool();
+	bool XmlGetBool(pugi::xml_node* asThis, std::string name){
+		return asThis->attribute(name.c_str()).as_bool();
 	}
-	float XmlGetFloat(pugi::xml_node& node, std::string name){
-		return node.attribute(name.c_str()).as_float();
+	float XmlGetFloat(pugi::xml_node* asThis, std::string name){
+		return asThis->attribute(name.c_str()).as_float();
 	}
-	std::string XmlGetString(pugi::xml_node& node, std::string name){
-		return node.attribute(name.c_str()).as_string();
+	std::string XmlGetString(pugi::xml_node* asThis, std::string name){
+		return asThis->attribute(name.c_str()).as_string();
 	}
 
-	bool healCreature(Creature& c, std::string name, int amount){
+	bool healCreature(Creature* asThis, std::string name, int amount){
 		if (name == "hp")
-			return c.HP.heal(amount);
+			return asThis->HP.heal(amount);
 		return 0;
 	}
 
-	EntityIterator* entitiesInArea(World& world, Vector2d centerPosition, Vector2d size){
+	EntityIterator* entitiesInArea(World* asThis, Vector2d centerPosition, Vector2d size){
 		// TODO: Complete this function
-		return new EntityIterator(world.entities->begin(), world.entities->end(), Rect4d(centerPosition - size * 0.5, size));
+		return new EntityIterator(asThis->entities->begin(), asThis->entities->end(), Rect4d(centerPosition - size * 0.5, size));
 	}
 
 	template <class T>
