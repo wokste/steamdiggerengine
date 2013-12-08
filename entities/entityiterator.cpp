@@ -26,10 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/entities/creature.h"
 #include "src/utils/vector2.h"
 
-EntityIterator::EntityIterator(std::vector<Entity*> list, Rect4d area){
-	this->list = list;
-	this->area = area;
-	this->id = 0;
+EntityIterator::EntityIterator(std::vector<Entity*>::iterator begin, std::vector<Entity*>::iterator end, Rect4d area){
+	this->current = begin;
+	this->end     = end;
+	this->area    = area;
 }
 
 EntityIterator::~EntityIterator(){
@@ -37,8 +37,9 @@ EntityIterator::~EntityIterator(){
 }
 
 Entity* EntityIterator::nextEntity(){
-	while(id < list.size()){
-		Entity* e = list[id++];
+	while(current != end){
+		Entity* e = *current;
+		++current;
 		if (area.intersects(e->getBoundingBox()))
 			return e;
 	}

@@ -95,7 +95,7 @@ namespace ScriptUtils{
 
 	EntityIterator* entitiesInArea(World& world, Vector2d centerPosition, Vector2d size){
 		// TODO: Complete this function
-		return new EntityIterator(std::vector<Entity*>(), Rect4d(centerPosition - size * 0.5, size));
+		return new EntityIterator(world.entities->begin(), world.entities->end(), Rect4d(centerPosition - size * 0.5, size));
 	}
 
 	template <class T>
@@ -110,7 +110,7 @@ namespace ScriptUtils{
 	void registerCreature (asIScriptEngine* engine, const char* className) {
 		int r;
 		r = engine->RegisterObjectMethod(className, "bool heal(string, int)", asFUNCTION(ScriptUtils::healCreature), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
-		r = engine->RegisterObjectMethod(className, "void damage(Creature@, int, int)", asMETHOD(T, push), asCALL_THISCALL); assert( r >= 0 );
+		r = engine->RegisterObjectMethod(className, "void damage(Creature@, int, int)", asMETHOD(T, takeDamage), asCALL_THISCALL); assert( r >= 0 );
 		r = engine->RegisterObjectMethod(className, "bool aggressiveTo(Creature@)", asMETHOD(T, aggressiveTo), asCALL_THISCALL); assert( r >= 0 );
 		registerEntity<T>(engine, className);
 	}

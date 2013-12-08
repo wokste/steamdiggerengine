@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "src/entities/entitylist.h"
 #include "src/entities/entity.h"
+#include "src/entities/entityiterator.h"
 #include "src/utils/skybox.h"
 #include "src/map/map.h"
 #include "creature.h"

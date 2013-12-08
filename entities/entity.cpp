@@ -131,7 +131,7 @@ bool Entity::isInArea(Vector2d px1, Vector2d px2){
 	   (pos.y - collision.y < px2.y));
 }
 
-void Entity::push(Vector2d dir , double force){
+void Entity::push(Vector2d dir, double force){
 	speed = force * Vector2::normalize(dir);
 	if (physicsMode == PhysicsMode::Walking){
 		physicsMode = PhysicsMode::Falling;

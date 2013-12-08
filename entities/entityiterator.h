@@ -29,11 +29,11 @@ class Entity;
 
 class EntityIterator : public RefCounted{
 	Rect4d area;
-	std::vector<Entity*> list;
-	int id;
+	std::vector<Entity*>::iterator current;
+	std::vector<Entity*>::iterator end;
 
 public:
-	EntityIterator(std::vector<Entity*> list, Rect4d area);
+	EntityIterator(std::vector<Entity*>::iterator begin, std::vector<Entity*>::iterator end, Rect4d area);
 	~EntityIterator();
 	Entity* nextEntity();
 	Creature* nextCreature();
