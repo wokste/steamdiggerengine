@@ -42,7 +42,7 @@ double Vector2::length(Vector2d& source){
 	return std::hypot(source.x, source.y);
 }
 
-double Vector2::lengthTo(Vector2d& v1, Vector2d& v2){
+double Vector2::lengthTo(Vector2d& v1, Vector2d v2){
 	return std::hypot(v1.x - v2.x, v1.y - v2.y);
 }
 

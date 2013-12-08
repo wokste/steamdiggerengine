@@ -35,7 +35,7 @@ typedef sf::Rect<double> Rect4d;
 namespace Vector2{
     Vector2d setLength(Vector2d source, double newLength);
     double length(Vector2d& source);
-    double lengthTo(Vector2d&, Vector2d&);
+    double lengthTo(Vector2d&, Vector2d);
     Vector2d iToD(Vector2i& source);
     Vector2i floorVec(Vector2d& source);
     Vector2i ceilVec(Vector2d& source);
