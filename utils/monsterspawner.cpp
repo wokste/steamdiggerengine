@@ -44,9 +44,8 @@ SpawnConfig::SpawnConfig(){
 	auto result = doc.load_file(g_FileSystem.fullpath("monsters.xml").c_str());
 	if (result){
 		auto spawnConfigNode = doc.first_child();
-		newWaveChance = spawnConfigNode.attribute("long-delay-odd").as_double();
-		delayWaves = spawnConfigNode.attribute("long-delay").as_double();
-		delaySpawns = spawnConfigNode.attribute("short-delay").as_double(5);
+		delayWaves = spawnConfigNode.attribute("delay").as_double();
+		monstersPerWave = spawnConfigNode.attribute("waye-monsters").as_double(3);
 		maxMonsters = spawnConfigNode.attribute("max-monsters").as_int(5);
 
 		// TODO: Add more properties
@@ -83,7 +82,6 @@ void MonsterSpawner::logic(World& world, double time){
 				for (auto other : world.creatures()){
 					if (other->aggressiveTo(test) && Vector2::lengthTo(other->pos, test->pos) < despawnRadius){
 						numMonsters++;
-						// TODO: Optimize
 					}
 				}
 				if (numMonsters < spawnConfig.maxMonsters)
@@ -105,18 +103,11 @@ void MonsterSpawner::logic(World& world, double time){
 
 		// Step 2: Spawn around those creatures
 		for(auto player: spawnAround){
-			for (int attempt = 0; attempt < spawnAttempts; ++attempt ){
-				if (trySpawn(world, player)){
-					break;
-				}
-			}
+			spawnWave(world, player);
 		}
 
 		// Step 3: Set cooldown
-		if (g_Random.generate() > spawnConfig.newWaveChance)
-			cooldown.set(g_Random.poisson(spawnConfig.delayWaves));
-		else
-			cooldown.set(g_Random.poisson(spawnConfig.delaySpawns));
+		cooldown.set(spawnConfig.delayWaves);
 	}
 }
 
@@ -129,15 +120,30 @@ bool MonsterSpawner::validSpawnPos(Vector2d& desiredPosition, World& world, Crea
 	return true;
 }
 
-bool MonsterSpawner::trySpawn(World& world, Creature* player){
-	Vector2d spawnPos = Vector2::randomize(player->pos, 28, 32);
+bool MonsterSpawner::spawnWave(World& world, Creature* player){
+	for (int attempt = 0; attempt < 10; ++attempt ){
+		Vector2d spawnPos = Vector2::randomize(player->pos, 28, 32);
+		Monster* typeToSpawn = basicSpawnConfig.getMonsterType();
+		if (typeToSpawn && validSpawnPos(spawnPos, world, *typeToSpawn)){
+			int successes = 0;
+			for (int spawnAttempt = 0; spawnAttempt < 100; ++spawnAttempt ){
+				if (spawnMonster(world, spawnPos, typeToSpawn, player))
+					successes++;
+
+				if (successes >= 3)
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool MonsterSpawner::spawnMonster(World& world, Vector2d& location, Monster* typeToSpawn, Creature* player){
+	Vector2d spawnPos = Vector2::randomize(location, 0, 4);
 
 	// TODO: randomly chosen biome dependant mobs
-	Monster* typeToSpawn = basicSpawnConfig.getMonsterType();
 	if (!typeToSpawn || !validSpawnPos(spawnPos, world, *typeToSpawn))
 		return false;
-
-
 
 	Monster* spawned = world.spawn(*typeToSpawn, spawnPos);
 

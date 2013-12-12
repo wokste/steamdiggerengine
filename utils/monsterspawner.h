@@ -34,9 +34,8 @@ class SpawnConfig{
 public:
 	SpawnConfig();
 	Monster* getMonsterType();
-	double newWaveChance;
 	int delayWaves;
-	int delaySpawns;
+	int monstersPerWave;
 	int maxMonsters;
 private:
 	std::vector<std::unique_ptr<Monster>> prototypes;
@@ -51,10 +50,12 @@ public:
 private:
 	Cooldown cooldown;
 	SpawnConfig basicSpawnConfig;
-	bool trySpawn(World& world, Creature* player);
 	bool validSpawnPos(Vector2d& desiredPosition, World& world, Creature& monster);
 	static constexpr int despawnRadius = 48;
 	static constexpr int spawnRadiusMin = 28;
 	static constexpr int spawnRadiusMax = 32;
 	static constexpr int spawnAttempts = 256;
+
+	bool spawnWave(World& world, Creature* player);
+	bool spawnMonster(World& world, Vector2d& location, Monster* typeToSpawn, Creature* player);
 };
