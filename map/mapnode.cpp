@@ -58,7 +58,7 @@ sf::Color MapNode::getLight(const sf::Color& skyColor) const{
 void MapNode::render(const sf::Color& skyColor, Vector2i pos, int focussedLayer) const{
 	sf::Color currentLight = getLight(skyColor);
 	for (int layer = 0; layer < Layer::count; ++layer){
-		double brightness = (layer == focussedLayer) ? 1.0 : 0.75;
+		double brightness = (layer == focussedLayer) ? 1.0 : 0.5;
 		glColor3ub(currentLight.r * brightness, currentLight.g * brightness, currentLight.b * brightness);
 		if (modelId[layer] >= 0){
 			glPushMatrix();
