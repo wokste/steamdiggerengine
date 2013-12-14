@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "src/script/scriptengine.h"
+#include "src/script/scriptutils.h"
 
 #include <iostream>
 #include <scriptbuilder/scriptbuilder.h>
@@ -41,80 +42,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "src/utils/attack.h"
 #include "src/map/mapwriter.h"
-#include "src/world.h"
-#include <new>
 
 ScriptEngine g_ScriptEngine;
-
-namespace ScriptUtils{
-	template<class A, class B>
-	B* cast(A* a){
-		return a;
-	}
-
-	void print(std::string& str){
-		std::cout << str << '\n';
-	}
-
-	void error(std::string& str){
-		std::cout << str << '\n';
-	}
-
-	MapWriter* getMapWriter(World& world){
-		return new MapWriter(world);
-	}
-
-	void Vector2iNew(void *memory){new(memory) Vector2i();}
-	Vector2i Vector2iNewXY(int x, int y){return Vector2i(x,y);}
-	Vector2i Vector2iAdd(Vector2i* v1, Vector2i v2) {return *v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
-	void Vector2iDel(void *memory){((Vector2i*)memory)->~Vector2i();}
-	void Vector2dNew(void *memory){new(memory) Vector2d();}
-	Vector2d Vector2dNewXY(double x, double y){return Vector2d(x,y);}
-	Vector2d Vector2dAdd(Vector2d* v1, Vector2d v2) {return *v1+v2;} // The first value is the object and passed by reference, the second is a parameter and passed by value.
-
-	void Vector2dDel(void *memory){((Vector2d*)memory)->~Vector2d();}
-
-	int XmlGetInt(pugi::xml_node* asThis, std::string name){
-		return asThis->attribute(name.c_str()).as_int();
-	}
-	bool XmlGetBool(pugi::xml_node* asThis, std::string name){
-		return asThis->attribute(name.c_str()).as_bool();
-	}
-	float XmlGetFloat(pugi::xml_node* asThis, std::string name){
-		return asThis->attribute(name.c_str()).as_float();
-	}
-	std::string XmlGetString(pugi::xml_node* asThis, std::string name){
-		return asThis->attribute(name.c_str()).as_string();
-	}
-
-	bool healCreature(Creature* asThis, std::string name, int amount){
-		if (name == "hp")
-			return asThis->HP.heal(amount);
-		return 0;
-	}
-
-	EntityIterator* entitiesInArea(World* asThis, Vector2d centerPosition, Vector2d size){
-		// TODO: Complete this function
-		return new EntityIterator(asThis->entities->begin(), asThis->entities->end(), Rect4d(centerPosition - size * 0.5, size));
-	}
-
-	template <class T>
-	void registerEntity (asIScriptEngine* engine, const char* className) {
-		int r;
-		r = engine->RegisterObjectMethod(className, "void push(Vector2d, double)", asMETHOD(T, push), asCALL_THISCALL); assert( r >= 0 );
-		r = engine->RegisterObjectProperty(className, "World@ world", asOFFSET(T,world)); assert( r >= 0 );
-		r = engine->RegisterObjectProperty(className, "Vector2d pos", asOFFSET(T,pos)); assert( r >= 0 );
-	}
-
-	template <class T>
-	void registerCreature (asIScriptEngine* engine, const char* className) {
-		int r;
-		r = engine->RegisterObjectMethod(className, "bool heal(string, int)", asFUNCTION(ScriptUtils::healCreature), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
-		r = engine->RegisterObjectMethod(className, "void damage(Creature@, int, int)", asMETHOD(T, takeDamage), asCALL_THISCALL); assert( r >= 0 );
-		r = engine->RegisterObjectMethod(className, "bool aggressiveTo(Creature@)", asMETHOD(T, aggressiveTo), asCALL_THISCALL); assert( r >= 0 );
-		registerEntity<T>(engine, className);
-	}
-};
 
 ScriptEngine::ScriptEngine(){}
 
@@ -162,6 +91,10 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterGlobalFunction("void print(string)", asFUNCTION(ScriptUtils::print), asCALL_CDECL); assert(r >= 0);
 	r = engine->RegisterGlobalFunction("void error(string)", asFUNCTION(ScriptUtils::error), asCALL_CDECL); assert(r >= 0);
 
+	r = engine->RegisterGlobalFunction("void playSound(string)", asFUNCTION(ScriptUtils::playSound), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("int blockIdByTag(string)", asFUNCTION(ScriptUtils::blockIdByTag), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("int itemIdByTag(string)", asFUNCTION(ScriptUtils::itemIdByTag), asCALL_CDECL); assert(r >= 0);
+
 	// XML
 	r = engine->RegisterObjectMethod("Xml", "int getInt(string)", asFUNCTION(ScriptUtils::XmlGetInt), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Xml", "bool getBool(string)", asFUNCTION(ScriptUtils::XmlGetBool), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
@@ -175,6 +108,8 @@ void ScriptEngine::registerFunctions(){
 	r = engine->RegisterObjectProperty("Vector2i", "int y", asOFFSET(Vector2i,y)); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Vector2i", "Vector2i opAdd(Vector2i) const",  asFUNCTION(ScriptUtils::Vector2iAdd), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("Vector2d", "Vector2d opAdd(Vector2d) const",  asFUNCTION(ScriptUtils::Vector2dAdd), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("Vector2i", "Vector2i opSub(Vector2i) const",  asFUNCTION(ScriptUtils::Vector2iSubstract), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
+	r = engine->RegisterObjectMethod("Vector2d", "Vector2d opSub(Vector2d) const",  asFUNCTION(ScriptUtils::Vector2dSubstract), asCALL_CDECL_OBJFIRST); assert( r >= 0 );
 	r = engine->RegisterGlobalFunction("Vector2i makeVector2i(int, int)", asFUNCTION(ScriptUtils::Vector2iNewXY), asCALL_CDECL); assert( r >= 0 );
 	r = engine->RegisterGlobalFunction("Vector2d makeVector2d(double, double)", asFUNCTION(ScriptUtils::Vector2dNewXY), asCALL_CDECL); assert( r >= 0 );
 

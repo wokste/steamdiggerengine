@@ -26,12 +26,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/map/mapnode.h"
 #include <cmath>
 #include "src/enums.h"
+#include "src/map/blocktype.h"
+
+int g_DirtTextureId;
+int g_StoneTextureId;
 
 MapGenerator::MapGenerator(int seed, Map& newMap) : map(newMap)
 {
 	caveNoise.reset(new PerlinNoise(seed + 1, 5, 0.5, 30));
 	groundNoise.reset(new PerlinNoise(seed + 2, 5, 0.5, 10));
 	typeNoise.reset(new PerlinNoise(seed + 3, 5, 0.5,5));
+
+	g_DirtTextureId = g_BlockDefs.find("dirt");
+	g_StoneTextureId = g_BlockDefs.find("stone");
 }
 
 MapGenerator::~MapGenerator(){
@@ -47,5 +54,6 @@ int MapGenerator::getBlock(int x, int y, int layer) const{
 	if (layer == Layer::front && std::abs(caveVal) < 0.05) // The caves
 		return 0;
 
-	return (typeVal > 0.0) ? 1 : 2; // The stone and dirt
+	// The basic materials
+	return (typeVal > 0.0) ? g_DirtTextureId : g_StoneTextureId;
 }
